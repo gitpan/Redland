@@ -2,7 +2,7 @@
  *
  * rdf_hash.c - RDF Hash Implementation
  *
- * $Id: rdf_hash.c,v 1.67 2003/08/27 10:36:30 cmdjb Exp $
+ * $Id: rdf_hash.c,v 1.68 2003/09/04 10:07:25 cmdjb Exp $
  *
  * Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
  * Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -1411,6 +1411,33 @@ librdf_hash_get_as_long (librdf_hash* hash, char *key)
 
   LIBRDF_FREE(cstring, value);
   return lvalue;
+}
+
+/**
+ * librdf_hash_put_strings - Insert key/value pairs into the hash as strings
+ * @hash: hash object
+ * @key: key 
+ * @value: value
+ * 
+ * The key and values are copied into the hash, no sharing i s done.
+ * 
+ * Return value: non 0 on failure
+ **/
+int
+librdf_hash_put_strings(librdf_hash* hash, const char *key, const char *value) {
+  librdf_hash_datum key_hd; /* static */
+  librdf_hash_datum value_hd;
+
+  /* Note: We do not have to init the world field of
+   * these librdf_hash_datum since they are never put on the
+   * hash datums free list
+   */
+
+  key_hd.data=(void*)key;
+  key_hd.size=strlen(key);
+  value_hd.data=(void*)value;
+  value_hd.size=strlen(value);
+  return librdf_hash_put(hash, &key_hd, &value_hd);
 }
 
 #endif

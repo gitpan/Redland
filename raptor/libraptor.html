@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<!-- Creator     : groff version 1.18.1 --><!-- CreationDate: Tue Aug 26 01:39:38 2003 -->
+<!-- Creator     : groff version 1.18.1 --><!-- CreationDate: Mon Sep  8 16:58:02 2003 -->
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Raptor RDF Parser Toolkit - Raptor API</title>
@@ -294,7 +294,27 @@ cc file.c -lraptor
 <tr valign="top" align="left">
 <td width="21%"></td>
 <td width="77%">
-<p>Parse the given filename (a URI like file:filename) according to the base URI <i>base_uri</i>, or NULL if not needed.</p>
+<p>Parse the given filename (a URI like file:filename) according to the optional base URI <i>base_uri</i>. If <i>uri</i> is NULL, read from standard input and <i>base_uri</i> is then required.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>int raptor_parse_file_stream(raptor_parser*</b> <i>parser</i><b>, FILE*</b> <i>stream</i><b>, const char*</b> <i>filename</i><b>, raptor_uri *</b><i>base_uri</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Parse the given C FILE* stream according to the base URI <i>base_uri</i> (required). <i>filename</i> is optional and if given, is used for error messages via the raptor_locator structure.</p>
 </td>
 </tr>
 </table>
@@ -412,7 +432,7 @@ cc file.c -lraptor
 <tr valign="top" align="left">
 <td width="21%"></td>
 <td width="77%">
-<p>Set a parser feature <i>feature</i> to a particular <i>value</i>. The current defined features are: <i>Feature Values</i> <b>RAPTOR_FEATURE_SCANNING</b> Boolean (non 0 true) <b>RAPTOR_FEATURE_ASSUME_IS_RDF</b> Boolean (non 0 true) <b>RAPTOR_FEATURE_ALLOW_NON_NS_ATTRIBUTES</b> Boolean (non 0 true) <b>RAPTOR_FEATURE_ALLOW_OTHER_PARSETYPES</b> Boolean (non 0 true) <b>RAPTOR_FEATURE_ALLOW_BAGID</b> Boolean (non 0 true) <b>RAPTOR_FEATURE_ALLOW_RDF_TYPE_RDF_LIST</b> Boolean (non 0 true) If the <i>scanning</i> feature is true, then the RDF/XML parser will look for embedded rdf:RDF elements inside the XML content, and not require that the XML start with an rdf:RDF root element.</p>
+<p>Set a parser feature <i>feature</i> to a particular <i>value</i>. The current defined features are: <i>Feature Values</i> <b>RAPTOR_FEATURE_SCANNING</b> Boolean (non 0 true) <b>RAPTOR_FEATURE_ASSUME_IS_RDF</b> Boolean (non 0 true) <b>RAPTOR_FEATURE_ALLOW_NON_NS_ATTRIBUTES</b> Boolean (non 0 true) <b>RAPTOR_FEATURE_ALLOW_OTHER_PARSETYPES</b> Boolean (non 0 true) <b>RAPTOR_FEATURE_ALLOW_BAGID</b> Boolean (non 0 true) <b>RAPTOR_FEATURE_ALLOW_RDF_TYPE_RDF_LIST</b> Boolean (non 0 true) <b>RAPTOR_FEATURE_NORMALIZE_LANGUAGE</b> Boolean (non 0 true) If the <i>scanning</i> feature is true (default false), then the RDF/XML parser will look for embedded rdf:RDF elements inside the XML content, and not require that the XML start with an rdf:RDF root element.</p>
 </td>
 </tr>
 </table>
@@ -422,19 +442,22 @@ cc file.c -lraptor
 <tr valign="top" align="left">
 <td width="10%"></td>
 <td width="89%">
-<p>If the <i>assume_is_rdf</i> feature is true, then the RDF/XML parser will assume the content is RDF/XML, not require that rdf:RDF root element, and immediately interpret the content as RDF/XML.</p>
+<p>If the <i>assume_is_rdf</i> feature is true (default false), then the RDF/XML parser will assume the content is RDF/XML, not require that rdf:RDF root element, and immediately interpret the content as RDF/XML.</p>
 
 <!-- INDENTATION -->
-<p>If the <i>allow_non_ns_attributes</i> feature is true, then the RDF/XML parser will allow non-XML namespaced attributes to be accepted as well as rdf: namespaced ones. For example, &rsquo;about&rsquo; and &rsquo;ID&rsquo; will be interpreted as if they were rdf:about and rdf:ID respectively.</p>
+<p>If the <i>allow_non_ns_attributes</i> feature is true (default true), then the RDF/XML parser will allow non-XML namespaced attributes to be accepted as well as rdf: namespaced ones. For example, &rsquo;about&rsquo; and &rsquo;ID&rsquo; will be interpreted as if they were rdf:about and rdf:ID respectively.</p>
 
 <!-- INDENTATION -->
-<p>If the <i>allow_other_parsetypes</i> feature is true then the RDF/XML parser will allow unknown parsetypes to be present and will pass them on to the user. Unimplemented at present.</p>
+<p>If the <i>allow_other_parsetypes</i> feature is true (default true) then the RDF/XML parser will allow unknown parsetypes to be present and will pass them on to the user. Unimplemented at present.</p>
 
 <!-- INDENTATION -->
-<p>If the <i>allow_bagid</i> feature is true then the RDF/XML parser will support the rdf:bagID attribute that was removed from the RDF/XML language when it was revised. This support may be removed in future.</p>
+<p>If the <i>allow_bagid</i> feature is true (default true) then the RDF/XML parser will support the rdf:bagID attribute that was removed from the RDF/XML language when it was revised. This support may be removed in future.</p>
 
 <!-- INDENTATION -->
-<p>If the <i>allow_rdf_type_rdf_list</i> feature is true then the RDF/XML parser will generate the idList rdf:type rdf:List triple in the handling of rdf:parseType="Collection". This triple was removed during the revising of RDF/XML after collections were initially added.</p>
+<p>If the <i>allow_rdf_type_rdf_list</i> feature is true (default false) then the RDF/XML parser will generate the idList rdf:type rdf:List triple in the handling of rdf:parseType="Collection". This triple was removed during the revising of RDF/XML after collections were initially added.</p>
+
+<!-- INDENTATION -->
+<p>If the <i>normalize_language</i> feature is true (default true) then XML language values such as from xml:lang will be normalized to lowercase.</p>
 </td>
 </tr>
 </table>
@@ -724,6 +747,160 @@ cc file.c -lraptor
 <td width="21%"></td>
 <td width="77%">
 <p>Apply the XML escaping rules to the string given in (string, len) into the buffer of size length. If quote is given, the escaped content is for an XML attribute and the appropriate quote character XML element content (CDATA). The <i>error_handler</i> method along with <i>error_data</i> allow error reporting to be given. If buffer is NULL, returns the size of the buffer required to escape. Otherwise the return value is the number of bytes used or 0 on failure.</p>
+</td>
+</tr>
+</table>
+
+<a id="STATIC_VARIABLES" name="STATIC_VARIABLES"></a> 
+
+<h2>STATIC VARIABLES</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>There are several read-only static variables in the raptor library:</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>const char * const raptor_short_copyright_string</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Short copyright string, suitable for one line.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>const char * const raptor_copyright_string</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Full copyright over several lines including URLs.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>const char * const raptor_version_string</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>The version as a string</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>const unsigned int raptor_version_major</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>The major version number as an integer.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>const unsigned int raptor_version_minor</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>The minor version number as an integer.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>const unsigned int raptor_version_release</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>The release version number as an integer.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>const unsigned int raptor_version_decimal</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>The version number as a single decimal.</p>
 </td>
 </tr>
 </table>
@@ -1153,11 +1330,11 @@ cc file.c -lraptor
 <!-- TABS -->
 <table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 <tr valign="top" align="left">
-<td width="11%"></td>
+<td width="13%"></td>
 <td width="5%">
 <p>NOTE</p>
 </td>
-<td width="4%"></td>
+<td width="2%"></td>
 <td width="77%">
 <p>Several of the WWW library implementations require once-only initialisation and termination functions to be called, however raptor cannot determine whether this is already done before the library is initialised in <b>raptor_www_init</b> or terminated in <b>raptor_www_finish</b>, so always performs it. This can be changed by <b>raptor_www_no_www_library_init_finish</b>.</p>
 </td>
@@ -1427,6 +1604,40 @@ cc file.c -lraptor
 <!-- TABS -->
 <table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 <tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+<p>1.0.0</p>
+</td>
+<td width="2%"></td>
+<td width="77%">
+<p>Removed the following deprecated methods and functions (see 0.9.6 changes for the new names):</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>raptor_free, raptor_new, raptor_ntriples_free, raptor_ntriples_new, raptor_ntriples_parse_file, raptor_ntriples_set_error_handler, raptor_ntriples_set_fatal_error_handler, raptor_ntriples_set_statement_handler and raptor_parser_abort.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="20%"></td>
+<td width="79%">
+<p>Added <b>raptor_parse_file_stream</b> for reading FILE* streams without necessarily having a file.</p>
+</td>
+</tr>
+</table>
+
+<!-- TABS -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
 <td width="14%"></td>
 <td width="8%">
 <p>0.9.12</p>
@@ -1572,16 +1783,19 @@ Deprecated <b>raptor_parser_abort</b>.</p>
 <td width="7%">
 <p>0.9.6</p>
 </td>
-<td width="80%"></td>
+<td width="2%"></td>
+<td width="77%">
+<p>In this version, the raptor/ntriples parser calling APIs were modified. The following table lists the changes:</p>
+</td>
 </tr>
 </table>
 
 <!-- INDENTATION -->
 <table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
 <tr valign="top" align="left">
-<td width="10%"></td>
-<td width="89%">
-<p>In this version, the raptor/ntriples parser calling APIs were modified. The following table lists the changes: <i>OLD API NEW API (0.9.6+)</i> <b>raptor_new() raptor_new_parser("rdfxml") ntriples_new() raptor_new_parser("ntriples") raptor_free raptor_free_parser ntriples_free raptor_ntriples_parser raptor_ntriples_parse_file raptor_parse_file raptor_ntriples_set_error_handler raptor_set_error_handler raptor_ntriples_set_fatal_error_handler raptor_set_fatal_error_handler raptor_ntriples_set_statement_handler raptor_set_statement_handler</b></p>
+<td width="20%"></td>
+<td width="79%">
+<p><i>OLD API NEW API (0.9.6+)</i> <b>raptor_new() raptor_new_parser("rdfxml") ntriples_new() raptor_new_parser("ntriples") raptor_free raptor_free_parser ntriples_free raptor_ntriples_parser raptor_ntriples_parse_file raptor_parse_file raptor_ntriples_set_error_handler raptor_set_error_handler raptor_ntriples_set_fatal_error_handler raptor_set_fatal_error_handler raptor_ntriples_set_statement_handler raptor_set_statement_handler</b></p>
 </td>
 </tr>
 </table>

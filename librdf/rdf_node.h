@@ -2,7 +2,7 @@
  *
  * rdf_node.h - RDF Node definition
  *
- * $Id: rdf_node.h,v 1.38 2003/08/19 15:31:52 cmdjb Exp $
+ * $Id: rdf_node.h,v 1.39 2003/08/30 20:12:16 cmdjb Exp $
  *
  * Copyright (C) 2000-2001 David Beckett - http://purl.org/net/dajobe/
  * Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -59,6 +59,7 @@ struct librdf_node_s
 {
   librdf_world *world;
   librdf_node_type type;
+  int usage;
   union 
   {
     struct
@@ -79,12 +80,11 @@ struct librdf_node_s
 
       /* Language of literal (xml:lang) */
       char *xml_language;
+
+      /* Hash key & size */
+      unsigned char *key;
+      size_t size;
     } literal;
-    struct 
-    {
-      /* rdf:li and rdf:_-s have an ordinal */ 
-      int ordinal;
-    } li;
     struct 
     {
       /* blank nodes have an identifier */

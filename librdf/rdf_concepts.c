@@ -2,7 +2,7 @@
  *
  * rdf_concepts.c - Nodes representing concepts from RDF Model and Syntax 
  *
- * $Id: rdf_concepts.c,v 1.21 2003/08/27 10:36:25 cmdjb Exp $
+ * $Id: rdf_concepts.c,v 1.22 2003/08/30 20:11:21 cmdjb Exp $
  *
  * Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
  * Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -196,9 +196,11 @@ main(int argc, char *argv[])
   librdf_init_digest(world);
   librdf_init_hash(world);
   librdf_init_uri(world);
+  librdf_init_node(world);
   librdf_init_concepts(world);
   
   librdf_finish_concepts(world);
+  librdf_finish_node(world);
   librdf_finish_uri(world);
   librdf_finish_hash(world);
   librdf_finish_digest(world);

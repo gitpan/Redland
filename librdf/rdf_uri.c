@@ -2,7 +2,7 @@
  *
  * rdf_uri.c - RDF URI Implementation
  *
- * $Id: rdf_uri.c,v 1.53 2003/08/27 10:36:52 cmdjb Exp $
+ * $Id: rdf_uri.c,v 1.55 2003/08/30 21:51:14 cmdjb Exp $
  *
  * Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
  * Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -105,6 +105,9 @@ librdf_new_uri (librdf_world *world,
   librdf_hash_datum key, value; /* on stack - not allocated */
   librdf_hash_datum *old_value;
 
+  if(!uri_string)
+    return NULL;
+
 #ifdef WITH_THREADS
   pthread_mutex_lock(world->mutex);
 #endif
@@ -130,11 +133,7 @@ librdf_new_uri (librdf_world *world,
       new_uri->max_usage=new_uri->usage;
 #endif    
 
-#ifdef WITH_THREADS
-    pthread_mutex_unlock(world->mutex);
-#endif
-
-    return new_uri;
+    goto unlock;
   }
   
 
@@ -145,12 +144,8 @@ librdf_new_uri (librdf_world *world,
 #endif
 
   new_uri = (librdf_uri*)LIBRDF_CALLOC(librdf_uri, 1, sizeof(librdf_uri));
-  if(!new_uri) {
-#ifdef WITH_THREADS
-    pthread_mutex_unlock(world->mutex);
-#endif
-    return NULL;
-  }
+  if(!new_uri)
+    goto unlock;
 
   new_uri->world=world;
   new_uri->string_length=length;
@@ -158,10 +153,8 @@ librdf_new_uri (librdf_world *world,
   new_string=(char*)LIBRDF_MALLOC(librdf_uri, length+1);
   if(!new_string) {
     LIBRDF_FREE(librdf_uri, new_uri);
-#ifdef WITH_THREADS
-    pthread_mutex_unlock(world->mutex);
-#endif
-    return NULL;
+    new_uri=NULL;
+    goto unlock;
   }
   
   strcpy(new_string, uri_string);
@@ -176,13 +169,12 @@ librdf_new_uri (librdf_world *world,
   
   /* store in hash: URI-string => (librdf_uri*) */
   if(librdf_hash_put(world->uris_hash, &key, &value)) {
+    LIBRDF_FREE(librdf_uri, new_string);
     LIBRDF_FREE(librdf_uri, new_uri);
-#ifdef WITH_THREADS
-    pthread_mutex_unlock(world->mutex);
-#endif
     new_uri=NULL;
   }
 
+ unlock:
 #ifdef WITH_THREADS
   pthread_mutex_unlock(world->mutex);
 #endif
@@ -199,7 +191,8 @@ librdf_new_uri (librdf_world *world,
  **/
 librdf_uri*
 librdf_new_uri_from_uri (librdf_uri* old_uri) {
-  return librdf_new_uri (old_uri->world, old_uri->string);
+  old_uri->usage++;
+  return old_uri;
 }
 
 
@@ -215,6 +208,9 @@ librdf_new_uri_from_uri_local_name (librdf_uri* old_uri, const char *local_name)
   int len=old_uri->string_length + strlen(local_name) +1 ; /* +1 for \0 */
   char *new_string;
   librdf_uri* new_uri;
+
+  if(!old_uri)
+    return NULL;
   
   new_string=(char*)LIBRDF_CALLOC(cstring, 1, len);
   if(!new_string)
@@ -249,8 +245,11 @@ librdf_new_uri_normalised_to_base(const char *uri_string,
   librdf_uri *new_uri;
   librdf_world *world=source_uri->world;
                                     
-  /* no URI or empty URI - easy, just make from base_uri */
-  if((!uri_string || !*uri_string) && base_uri)
+  if(!uri_string)
+    return NULL;
+
+  /* empty URI - easy, just make from base_uri */
+  if(!*uri_string && base_uri)
     return librdf_new_uri_from_uri(base_uri);
 
   /* not a fragment, and no match - easy */
@@ -306,8 +305,11 @@ librdf_new_uri_relative_to_base(librdf_uri* base_uri,
   librdf_uri* new_uri;
   librdf_world *world=base_uri->world;
                                   
+  if(!uri_string)
+    return NULL;
+  
   /* If URI string is empty, just copy base URI */
-  if(!uri_string || !*uri_string)
+  if(!*uri_string)
     return librdf_new_uri_from_uri(base_uri);
   
   buffer_length=base_uri->string_length + strlen(uri_string) +1;
@@ -533,9 +535,7 @@ librdf_uri_equals(librdf_uri* first_uri, librdf_uri* second_uri)
 {
   if(!first_uri || !second_uri)
     return 0;
-  if(first_uri->string_length != second_uri->string_length)
-    return 0;
-  return !strcmp(first_uri->string, second_uri->string);
+  return (first_uri == second_uri);
 }
 
 

@@ -2,7 +2,7 @@
  *
  * rdf_model_storage.c - RDF Model Storage implementation
  *
- * $Id: rdf_model_storage.c,v 1.2 2003/08/23 21:37:57 cmdjb Exp $
+ * $Id: rdf_model_storage.c,v 1.3 2003/08/31 11:27:24 cmdjb Exp $
  *
  * Copyright (C) 2003 David Beckett - http://purl.org/net/dajobe/
  * Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -382,6 +382,25 @@ librdf_model_storage_context_add_statement(librdf_model* model,
 
 
 /**
+ * librdf_model_storage_context_add_statements - Add statements to a model with a context
+ * @model: &librdf_model object
+ * @context: &librdf_node context
+ * @stream: &librdf_stream stream object
+ * 
+ * Return value: Non 0 on failure
+ **/
+static int
+librdf_model_storage_context_add_statements(librdf_model* model, 
+                                            librdf_node* context,
+                                            librdf_stream* stream) 
+{
+  librdf_model_storage_context *mcontext=(librdf_model_storage_context *)model->context;
+  return librdf_storage_context_add_statements(mcontext->storage, 
+                                               context, stream);
+}
+
+
+/**
  * librdf_model_storage_context_remove_statement - Remove a statement from a model in a context
  * @model: &librdf_model object
  * @context: &librdf_uri context
@@ -397,6 +416,22 @@ librdf_model_storage_context_remove_statement(librdf_model* model,
   librdf_model_storage_context *mcontext=(librdf_model_storage_context *)model->context;
   return librdf_storage_context_remove_statement(mcontext->storage,
                                                  context, statement);
+}
+
+
+/**
+ * librdf_model_storage_context_remove_statements - Remove statements from a model with the given context
+ * @model: &librdf_model object
+ * @context: &librdf_uri context
+ * 
+ * Return value: Non 0 on failure
+ **/
+static int
+librdf_model_storage_context_remove_statements(librdf_model* model,
+                                               librdf_node* context) 
+{
+  librdf_model_storage_context *mcontext=(librdf_model_storage_context *)model->context;
+  return librdf_storage_context_remove_statements(mcontext->storage, context);
 }
 
 
@@ -490,7 +525,9 @@ librdf_model_storage_register_factory(librdf_model_factory *factory)
   factory->has_arc_out        = librdf_model_storage_has_arc_out;
 
   factory->context_add_statement    = librdf_model_storage_context_add_statement;
+  factory->context_add_statements    = librdf_model_storage_context_add_statements;
   factory->context_remove_statement = librdf_model_storage_context_remove_statement;
+  factory->context_remove_statements    = librdf_model_storage_context_remove_statements;
   factory->context_serialize        = librdf_model_storage_context_serialize;
 
 

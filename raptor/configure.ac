@@ -3,7 +3,7 @@ dnl
 dnl configure.in - autoconf file for Raptor
 dnl (Process this file with autoconf to produce a configure script.)
 dnl
-dnl $Id: configure.ac,v 1.34 2003/08/25 19:30:03 cmdjb Exp $
+dnl $Id: configure.ac,v 1.40 2003/09/08 14:30:48 cmdjb Exp $
 dnl
 dnl Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
 dnl Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -20,10 +20,10 @@ dnl full license terms.
 dnl 
 
 
-AC_INIT(Raptor RDF Parser, 0.9.13, redland-dev@lists.librdf.org, raptor)
+AC_INIT(Raptor RDF Parser, 1.1.0, redland-dev@lists.librdf.org, raptor)
 AC_PREREQ(2.50)
 AC_CONFIG_SRCDIR(raptor_parse.c)
-AC_REVISION($Revision: 1.34 $)
+AC_REVISION($Revision: 1.40 $)
 
 libxml_min_version=2.4.0
 
@@ -90,12 +90,53 @@ version_minor=`echo $VERSION | sed -e 's/^\([^\.]*\)\.\([^\.]*\)\.\(.*\)$/\2/'`
 version_release=`echo $VERSION | sed -e 's/^\([^\.]*\)\.\([^\.]*\)\.\(.*\)$/\3/'`
 changequote([, ])dnl
 
+version_decimal=`expr $version_major \* 10000 + $version_minor \* 100 + $version_release`
+
 AC_DEFINE_UNQUOTED(RAPTOR_VERSION_MAJOR, $version_major, [Major version number])
 AC_DEFINE_UNQUOTED(RAPTOR_VERSION_MINOR, $version_minor, [Minor version number])
 AC_DEFINE_UNQUOTED(RAPTOR_VERSION_RELEASE, $version_release, [Release version number])
+AC_DEFINE_UNQUOTED(RAPTOR_VERSION_DECIMAL, $version_decimal, [Release version as a decimal])
 
+# for raptor-config.in
+RAPTOR_VERSION_DECIMAL=$version_decimal
+AC_SUBST(RAPTOR_VERSION_DECIMAL)
+
+# Libtool versioning
+#
+# CURRENT
+#      The most recent interface number that this library implements.
+# 
+# REVISION
+#      The implementation number of the CURRENT interface.
+# 
+# AGE
+#      The difference between the newest and oldest interfaces that this
+#      library implements.  In other words, the library implements all the
+#      interface numbers in the range from number `CURRENT - AGE' to
+#      `CURRENT'.
+#
+# Rules:
+#  1. Start with version information of `0:0:0' for each libtool library.
+#
+#  2. Update the version information only immediately before a public
+#     release of your software.  More frequent updates are unnecessary,
+#     and only guarantee that the current interface number gets larger
+#     faster.
+#
+#  3. If the library source code has changed at all since the last
+#     update, then increment REVISION (`C:R:A' becomes `C:r+1:A').
+#
+#  4. If any interfaces have been added, removed, or changed since the
+#     last update, increment CURRENT, and set REVISION to 0.
+#
+#  5. If any interfaces have been added since the last public release,
+#     then increment AGE.
+#
+#  6. If any interfaces have been removed since the last public release,
+#     then set AGE to 0.
+#
 # syntax: CURRENT[:REVISION[:AGE]]
-RAPTOR_LIBTOOL_VERSION=0:0:0
+RAPTOR_LIBTOOL_VERSION=1:0:0
 AC_SUBST(RAPTOR_LIBTOOL_VERSION)
 
 
@@ -695,6 +736,9 @@ if test $need_expat = 1; then
   fi
 fi
 
+RAPTOR_LIBTOOLLIBS=libraptor.la
+AC_SUBST(RAPTOR_LIBTOOLLIBS)
+
 
 xml_parsers_available=
 if test $need_libxml = 1; then
@@ -721,13 +765,26 @@ fi
 MEM=
 MEM_LIBS=
 CPPFLAGS="-DRAPTOR_INTERNAL=1 $CPPFLAGS"
+AC_ARG_WITH(dmalloc, [  --with-dmalloc          Use dmalloc debugging library (default=auto)], use_dmalloc="$withval", use_dmalloc="auto") 
+AC_MSG_CHECKING(using dmalloc library)
 if test "$USE_MAINTAINER_MODE" = yes; then
   if test "$ac_cv_header_dmalloc_h" = yes; then
-    MEM=-DRAPTOR_MEMORY_DEBUG_DMALLOC=1
-    MEM_LIBS=-ldmalloc
+    if test "X$use_dmalloc" = Xauto; then
+      use_dmalloc=yes
+    fi
+  else
+    use_dmalloc=no
   fi
   CPPFLAGS="-g -DRAPTOR_DEBUG=1 $CPPFLAGS"
+else
+  use_dmalloc=no
 fi
+AC_MSG_RESULT($use_dmalloc);
+if test $use_dmalloc = yes; then
+  MEM=-DRAPTOR_MEMORY_DEBUG_DMALLOC=1
+  MEM_LIBS=-ldmalloc
+fi
+
 STANDARD_CFLAGS="$STANDARD_CFLAGS $CFLAGS"
 if test "$USE_MAINTAINER_MODE" = yes; then
   CFLAGS="$MAINTAINER_CFLAGS $CFLAGS"

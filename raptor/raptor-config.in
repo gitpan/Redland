@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $Id: raptor-config.in,v 1.2 2003/02/14 20:20:08 cmdjb Exp $
+# $Id: raptor-config.in,v 1.5 2003/09/04 21:52:12 cmdjb Exp $
 #
 # Copyright (C) 2002-2003 David Beckett - http://purl.org/net/dajobe/
 # Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -19,6 +19,7 @@
 #
 
 prefix=@prefix@
+exec_prefix=@exec_prefix@
 
 if test "@includedir@" != /usr/include ; then
   includes="-I@includedir@"
@@ -36,9 +37,11 @@ known values for OPTION are:
 
   --prefix[=DIR]        change raptor prefix [default $prefix]
   --libs                print library linking information
-  --cflags              print pre-processor and compiler flags
+  --libtool-libs        print linking information for use with libtool
+  --cflags		print pre-processor and compiler flags
   --help                display this help and exit
   --version             output version information
+  --version-decimal     output version as a decimal integer
 EOF
   exit $1
 }
@@ -66,11 +69,18 @@ while test $# -gt 0; do
       echo @VERSION@
       exit 0
       ;;
+    --version-decimal)
+      echo @RAPTOR_VERSION_DECIMAL@
+      exit 0
+      ;;
     --cflags)
       echo_cflags=yes
       ;;
     --libs)
       echo_libs=yes
+      ;;
+    --libtool-libs)
+      echo_libtool_libs=yes
       ;;
     --usage)
       usage 0 1>&2
@@ -91,5 +101,8 @@ if test "$echo_cflags" = "yes"; then
   echo $includes
 fi
 if test "$echo_libs" = "yes"; then
-  echo -L@libdir@ @LDFLAGS@ @LIBS@
+  echo -L@libdir@ -lraptor @LDFLAGS@ @LIBS@
+fi
+if test "$echo_libtool_libs" = "yes"; then
+  echo @libdir@/@RAPTOR_LIBTOOLLIBS@
 fi

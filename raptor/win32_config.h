@@ -2,7 +2,7 @@
  *
  * win32_config.h - Raptor WIN32 hard-coded config
  *
- * $Id: win32_config.h,v 1.6 2003/03/04 13:27:46 cmdjb Exp $
+ * $Id: win32_config.h,v 1.7 2003/09/08 10:53:13 cmdjb Exp $
  *
  * Copyright (C) 2002 David Beckett - http://purl.org/net/dajobe/
  * Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -50,6 +50,10 @@ extern "C" {
 
 #define HAVE_C99_VSNPRINTF 1
 
+/* for access() which is POSIX but doesn't seem to have the defines in VC */
+#ifndef R_OK
+#define R_OK 4
+#endif
 
 #include <windows.h>
 

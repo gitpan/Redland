@@ -3,7 +3,7 @@ dnl
 dnl configure.in - top level autoconf file for Redland
 dnl (Process this file with autoconf to produce a configure script.)
 dnl
-dnl $Id: configure.ac,v 1.31 2003/08/28 15:10:10 cmdjb Exp $
+dnl $Id: configure.ac,v 1.41 2003/09/08 14:38:42 cmdjb Exp $
 dnl
 dnl Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
 dnl Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -21,10 +21,10 @@ dnl
 dnl 
 
 
-AC_INIT([Redland RDF Library], 0.9.13, redland-dev@lists.librdf.org, redland)
+AC_INIT([Redland RDF Library], 0.9.14, redland-dev@lists.librdf.org, redland)
 AC_PREREQ(2.53)
 AC_CONFIG_SRCDIR(librdf/rdf_node.c)
-AC_REVISION($Revision: 1.31 $)dnl
+AC_REVISION($Revision: 1.41 $)dnl
 
 AM_INIT_AUTOMAKE(1.6)
 AM_CONFIG_HEADER(librdf/rdf_config.h)
@@ -33,27 +33,22 @@ AM_MAINTAINER_MODE
 AC_CANONICAL_HOST
 
 
-LIBRDF_VERSION_MAJOR=0
-LIBRDF_VERSION_MINOR=9
-LIBRDF_VERSION_RELEASE=13
-LIBRDF_VERSION=$LIBRDF_VERSION_MAJOR.$LIBRDF_VERSION_MINOR.$LIBRDF_VERSION_RELEASE
-LIBRDF_VERSION_INFO=`expr $LIBRDF_VERSION_MAJOR + $LIBRDF_VERSION_MINOR`:$LIBRDF_VERSION_RELEASE:$LIBRDF_VERSION_MINOR
+changequote(<<, >>)dnl
+version_major=`echo $VERSION | sed -e 's/^\([^\.]*\)\.\([^\.]*\)\.\(.*\)$/\1/'`
+version_minor=`echo $VERSION | sed -e 's/^\([^\.]*\)\.\([^\.]*\)\.\(.*\)$/\2/'`
+version_release=`echo $VERSION | sed -e 's/^\([^\.]*\)\.\([^\.]*\)\.\(.*\)$/\3/'`
+changequote([, ])dnl
 
-LIBRDF_VERSION_NUMBER=`expr $LIBRDF_VERSION_MAJOR \* 10000 + $LIBRDF_VERSION_MINOR \* 100 + $LIBRDF_VERSION_RELEASE`
+version_decimal=`expr $version_major \* 10000 + $version_minor \* 100 + $version_release`
 
-AC_SUBST(LIBRDF_VERSION_MAJOR)
-AC_SUBST(LIBRDF_VERSION_MINOR)
-AC_SUBST(LIBRDF_VERSION_RELEASE)
-AC_SUBST(LIBRDF_VERSION)
-AC_SUBST(LIBRDF_VERSION_INFO)
-AC_SUBST(LIBRDF_VERSION_NUMBER)
-AC_DEFINE_UNQUOTED(LIBRDF_VERSION_MAJOR, $LIBRDF_VERSION_MAJOR, [Redland major version number])
-AC_DEFINE_UNQUOTED(LIBRDF_VERSION_MINOR, $LIBRDF_VERSION_MINOR, [Redland minor version number])
-AC_DEFINE_UNQUOTED(LIBRDF_VERSION_RELEASE, $LIBRDF_VERSION_RELEASE, [Redland release version number])
+AC_DEFINE_UNQUOTED(LIBRDF_VERSION_MAJOR, $version_major, [Major version number])
+AC_DEFINE_UNQUOTED(LIBRDF_VERSION_MINOR, $version_minor, [Minor version number])
+AC_DEFINE_UNQUOTED(LIBRDF_VERSION_RELEASE, $version_release, [Release version number])
+AC_DEFINE_UNQUOTED(LIBRDF_VERSION_DECIMAL, $version_decimal, [Release version as a decimal])
 
-VERSION=${LIBRDF_VERSION}
-
-AM_INIT_AUTOMAKE(redland, $VERSION)
+# for redland-config.in
+LIBRDF_VERSION_DECIMAL=$version_decimal
+AC_SUBST(REDLAND_VERSION_DECIMAL)
 
 
 # Libtool versioning
@@ -378,7 +373,7 @@ fi
 
 
 
-AC_ARG_WITH(jdk, [  --with-jdk=DIR          Java JDK location []], jdk="$withval", jdk="")
+AC_ARG_WITH(jdk, [  --with-jdk=DIR          Java JDK location (default auto)], jdk="$withval", jdk="")
 AC_MSG_CHECKING(Java JDK includes)
 if test "X$JAVA_VERSION" != X; then
   if test "X$jdk" = X ; then
@@ -465,7 +460,15 @@ AC_ARG_WITH(bdb_lib, [  --with-bdb-lib=DIR      Berkeley DB lib directory (defau
 AC_ARG_WITH(bdb_include, [  --with-bdb-include=DIR  Berkeley DB include directory (default=/usr/include)], bdb_include_dir="$withval", bdb_include_dir="none") 
 AC_ARG_WITH(bdb_dbname, [  --with-bdb-dbname=NAME  Berkeley DB library name (auto)], bdb_dbname="$withval", bdb_dbname="none")
 
-bdb_version=none
+bdb_version=unknown
+
+# Only prefix given - set lib and include
+if test "X$bdb_prefix" != "Xnone" -a "X$bdb_lib_dir" = "Xnone" -a "X$bdb_include_dir" = "Xnone" ; then
+  bdb_lib_dir="$bdb_prefix/lib"
+  bdb_include_dir="$bdb_prefix/include"
+fi
+
+# Nothing given - search
 if test "X$bdb_prefix" = "Xnone" -a "X$bdb_lib_dir" = "Xnone" -a "X$bdb_include_dir" = "Xnone" -a "X$bdb_dbname" = "Xnone" ; then
   bdb_prefix="/usr"
   bdb_lib_dir="/usr/lib"
@@ -648,7 +651,7 @@ fi
 
 dnl Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS(errno.h stdlib.h unistd.h string.h fcntl.h dmalloc.h time.h sys/time.h)
+AC_CHECK_HEADERS(errno.h stdlib.h unistd.h string.h fcntl.h dmalloc.h time.h sys/time.h getopt.h)
 AC_HEADER_TIME
 
 dnl Checks for typedefs, structures, and compiler characteristics.
@@ -657,7 +660,13 @@ AC_C_BIGENDIAN
 
 dnl Checks for library functions.
 AC_FUNC_MEMCMP
-AC_CHECK_FUNCS(mkstemp mktemp tmpnam gettimeofday)
+AC_CHECK_FUNCS(getopt getopt_long mkstemp mktemp tmpnam gettimeofday)
+
+RDFPROC_EXTRA_OBJS=
+if test $ac_cv_func_getopt = no -a $ac_cv_func_getopt_long = no; then
+  RDFPROC_EXTRA_OBJS='getopt.$(OBJEXT)'
+  AC_SUBST([RDFPROC_EXTRA_OBJS])
+fi
 
 dnl Checks for URI resolvers
 AC_ARG_WITH(libwww, [  --with-libwww           Use libwww [yes]], enable_libwww="$withval", enable_libwww="no") 
@@ -686,13 +695,46 @@ LIBS="$LIBRDF_LIBS"
 dnl Checks for XML parsers
 
 # At present this is for passing on to raptor and not used here
-AC_ARG_WITH(xml-parser, [  --with-xml-parser=NAME  Use XML parser - expat, libxml [expat]], xml_parser="$withval", xml_parser="libxml") 
+AC_ARG_WITH(xml-parser, [  --with-xml-parser=NAME  Use XML parser - expat, libxml (default libxml)], xml_parser="$withval", xml_parser="libxml") 
 
 
 
 
 dnl Checks for RDF parsers
 parser_modules="raptor"
+
+AC_CHECK_PROG(RAPTOR_CONFIG, raptor-config, raptor-config)
+AC_ARG_WITH(raptor, [  --with-raptor=SOURCE    Pick raptor source - system/internal (default auto)], with_raptor="$withval", with_raptor="auto")
+
+RAPTOR_VERSION=`$RAPTOR_CONFIG --version 2>/dev/null`
+RAPTOR_MIN_VERSION=1.0.0
+
+# FIXME - could use raptor-config --decimal-version at some point
+RAPTOR_VERSION_DEC=`echo $RAPTOR_VERSION | $AWK -F. '{printf("%d\n", 10000*$1 + 100*$2 + $3)};'`
+RAPTOR_MIN_VERSION_DEC=`echo $RAPTOR_MIN_VERSION | $AWK -F. '{printf("%d\n", 10000*$1 + 100*$2 + $3)};'`
+
+if test "X$with_raptor" = Xauto; then
+  if test "X$RAPTOR_VERSION" -a $RAPTOR_VERSION_DEC -ge $RAPTOR_MIN_VERSION_DEC; then
+    with_raptor=system
+  else
+    with_raptor=internal
+  fi
+elif test $with_raptor = system; then
+  if test $RAPTOR_VERSION_DEC -lt $RAPTOR_MIN_VERSION_DEC; then
+    AC_MSG_WARN(System raptor $RAPTOR_VERSION is too old - need $RAPTOR_MIN_VERSION)
+    AC_MSG_WARN(Proceeding anyway since --with-raptor=system was given)
+    AC_MSG_WARN(To use the internal raptor use --with-raptor=internal)
+    AC_MSG_WARN(or omit any --with-raptor argument.)
+  fi
+fi
+
+AC_MSG_CHECKING(raptor library source)
+if test $with_raptor = system; then
+  AC_MSG_RESULT(system $RAPTOR_VERSION)
+else
+  RAPTOR_VERSION=internal
+  AC_MSG_RESULT(internal)
+fi
 
 AC_MSG_CHECKING(RDF parsers required)
 AC_ARG_ENABLE(parsers, [  --enable-parsers=LIST   Use RDF parsers [raptor]], parser_modules="$enableval") 
@@ -715,6 +757,7 @@ fi
 # Always have these
 have_raptor=1
 
+raptor_dir=raptor
 
 need_raptor=1
 rdf_parsers_available=
@@ -745,8 +788,19 @@ for parser in $parser_modules; do
     PARSER_SRCS="$PARSER_SRCS rdf_parser_$parser.c"
 
     if test $parser = raptor; then
-      LIBRDF_INTERNAL_CPPFLAGS="-I\$(top_srcdir)/raptor $LIBRDF_INTERNAL_CPPFLAGS"
-      LIBRDF_INTERNAL_LIBS="\$(top_builddir)/raptor/libraptor.la $LIBRDF_INTERNAL_LIBS"
+      if test $with_raptor = internal; then
+        LIBRDF_INTERNAL_CPPFLAGS="-I\$(top_srcdir)/raptor $LIBRDF_INTERNAL_CPPFLAGS"
+        LIBRDF_INTERNAL_LIBS="\$(top_builddir)/raptor/libraptor.la $LIBRDF_INTERNAL_LIBS"
+      else
+        LIBRDF_CPPFLAGS="$LIBRDF_CPPFLAGS `$RAPTOR_CONFIG --cflags`"
+        # Work around broken raptor-config 0.9.12 and earlier
+        if test $RAPTOR_VERSION_DEC -lt 000913; then
+          rp=`$RAPTOR_CONFIG --prefix`
+          LIBRDF_LIBS="$LIBRDF_LIBS -L$rp/lib -lraptor"
+        fi
+        LIBRDF_LIBS="$LIBRDF_LIBS `$RAPTOR_CONFIG --libs`"
+        raptor_dir=
+      fi
     fi
 
     n=HAVE_${uname}_RDF_PARSER
@@ -814,7 +868,7 @@ AC_MSG_RESULT($digest_modules)
 DIGEST_OBJS=
 DIGEST_SRCS=
 
-AC_ARG_WITH(openssl-digests, [  --with-openssl-digests  Use openssl digests [yes]], enable_openssl_digests="$withval", enable_openssl_digests="yes") 
+AC_ARG_WITH(openssl-digests, [  --with-openssl-digests  Use openssl digests (default yes)], enable_openssl_digests="$withval", enable_openssl_digests="yes") 
 
 # This is needed because autoheader can't work out which computed
 # symbols must be pulled from acconfig.h into config.h.in
@@ -868,7 +922,7 @@ fi
 
 dnl Check for use of threads
 
-AC_ARG_WITH(threads, [  --with-threads          With POSIX thread support. default=no], with_threads="yes", with_threads="no")
+AC_ARG_WITH(threads, [  --with-threads          With POSIX thread support (default=no)], with_threads="yes", with_threads="no")
 
 AC_CHECK_HEADERS(pthread.h)
 
@@ -931,7 +985,7 @@ AC_SUBST(HASH_SRCS)
 
 
 dnl Checks for building sub-packages in sub directories
-SD="docs $languages"
+SD="docs $raptor_dir $languages"
 
 
 AC_SUBST(SD)
@@ -941,13 +995,26 @@ AC_SUBST(SD)
 CFLAGS="-DLIBRDF_INTERNAL=1 $CFLAGS"
 MEM=
 MEM_LIBS=
+AC_ARG_WITH(dmalloc, [  --with-dmalloc          Use dmalloc debugging library (default=auto)], use_dmalloc="$withval", use_dmalloc="auto") 
+AC_MSG_CHECKING(using dmalloc library)
 if test "$USE_MAINTAINER_MODE" = yes; then
   if test "$ac_cv_header_dmalloc_h" = yes; then
-    MEM=-DLIBRDF_MEMORY_DEBUG_DMALLOC=1
-    MEM_LIBS=-ldmalloc
+    if test "X$use_dmalloc" = Xauto; then
+      use_dmalloc=yes
+    fi
+  else
+    use_dmalloc=no
   fi
   CFLAGS="-DLIBRDF_DEBUG=1 $CFLAGS"
+else
+  use_dmalloc=no
 fi
+AC_MSG_RESULT($use_dmalloc);
+if test $use_dmalloc = yes; then
+  MEM=-DLIBRDF_MEMORY_DEBUG_DMALLOC=1
+  MEM_LIBS=-ldmalloc
+fi
+
 STANDARD_CFLAGS="$STANDARD_CFLAGS $CFLAGS"
 if test "$USE_MAINTAINER_MODE" = yes; then
   CFLAGS="$MAINTAINER_CFLAGS $CFLAGS"
@@ -957,12 +1024,15 @@ LIBS=
 CPPFLAGS=
 LDFLAGS=
 
+LIBRDF_LIBTOOLLIBS=librdf.la
+
 AC_SUBST(LIBRDF_INTERNAL_CPPFLAGS)
 AC_SUBST(LIBRDF_INTERNAL_LIBS)
 
 AC_SUBST(LIBRDF_CPPFLAGS)
 AC_SUBST(LIBRDF_LDFLAGS)
 AC_SUBST(LIBRDF_LIBS)
+AC_SUBST(LIBRDF_LIBTOOLLIBS)
 
 AC_SUBST(MEM)
 AC_SUBST(MEM_LIBS)

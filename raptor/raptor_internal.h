@@ -2,7 +2,7 @@
  *
  * raptor_internal.h - Redland Parser Toolkit for RDF (Raptor) internals
  *
- * $Id: raptor_internal.h,v 1.60 2003/08/13 22:19:07 cmdjb Exp $
+ * $Id: raptor_internal.h,v 1.63 2003/09/04 19:07:21 cmdjb Exp $
  *
  * Copyright (C) 2002-2003 David Beckett - http://purl.org/net/dajobe/
  * Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -191,11 +191,17 @@ struct raptor_namespace_s {
   int is_rdf_schema;
 };
 
+#ifdef RAPTOR_XML_LIBXML
+#define RAPTOR_LIBXML_MAGIC 0x8AF108
+#endif
 
 /*
  * Raptor parser object
  */
 struct raptor_parser_s {
+#ifdef RAPTOR_XML_LIBXML
+  int magic;
+#endif
 
   /* stack of namespaces, most recently added at top */
   raptor_namespace_stack namespaces;
@@ -211,9 +217,6 @@ struct raptor_parser_s {
 
   /* base URI of RDF/XML */
   raptor_uri *base_uri;
-
-  /* Reading from this file */
-  FILE *fh;
 
   /* static statement for use in passing to user code */
   raptor_statement statement;
@@ -256,6 +259,13 @@ struct raptor_parser_s {
    * the rules to not generate this.
    */
   int feature_allow_rdf_type_rdf_List;
+
+  /* FEATURE: 
+   * non 0 if normalizing xml:lang attribute values to lowercase.
+   * http://www.w3.org/TR/rdf-concepts/#dfn-language-identifier
+   * says this is done when language-tagged literals are in the graph.
+   */
+  int feature_normalize_language;
 
   /* stuff for our user */
   void *user_data;

@@ -2,7 +2,7 @@
  *
  * rdf_stream.h - RDF Stream interface and definitions
  *
- * $Id: rdf_stream.h,v 1.11 2002/12/10 21:39:25 cmdjb Exp $
+ * $Id: rdf_stream.h,v 1.12 2003/08/30 21:56:26 cmdjb Exp $
  *
  * Copyright (C) 2000-2001 David Beckett - http://purl.org/net/dajobe/
  * Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -34,6 +34,7 @@ struct librdf_stream_s {
   librdf_world *world;
   void *context;
   int is_finished; /* 1 when have no more statements */
+  int is_updated; /* 1 when we know there is a current item */
   
   /* Used when mapping */
   librdf_statement *current;

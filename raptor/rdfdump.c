@@ -2,7 +2,7 @@
  *
  * rdfdump.c - Raptor RDF Parser example code 
  *
- * $Id: rdfdump.c,v 1.56 2003/08/17 19:47:43 cmdjb Exp $
+ * $Id: rdfdump.c,v 1.61 2003/09/04 20:36:03 cmdjb Exp $
  *
  * Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
  * Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -102,12 +102,14 @@ void print_statements(void *user_data, const raptor_statement *statement)
 
 #ifdef HAVE_GETOPT_LONG
 #define HELP_TEXT(short, long, description) "  -" #short ", --" long "  " description "\n"
+#define HELP_ARG(short, long) "--" #long
 #else
 #define HELP_TEXT(short, long, description) "  -" #short "  " description "\n"
+#define HELP_ARG(short, long) "-" #short
 #endif
 
 
-#define GETOPT_STRING "nsahrqi:o:wcm:e"
+#define GETOPT_STRING "nsahrqo:wecm:i:v"
 
 #ifdef HAVE_GETOPT_LONG
 static struct option long_options[] =
@@ -125,6 +127,7 @@ static struct option long_options[] =
   {"count", 0, 0, 'c'},
   {"mode", 1, 0, 'm'},
   {"input", 1, 0, 'i'},
+  {"version", 0, 0, 'v'},
   {NULL, 0, 0, 0}
 };
 #endif
@@ -135,6 +138,8 @@ static int warning_count=0;
 
 static int ignore_warnings=0;
 static int ignore_errors=0;
+
+static const char *title_format_string="Raptor RDF parser utility %s\n";
 
 
 static void
@@ -185,14 +190,22 @@ main(int argc, char *argv[])
   int rss_tag_soup=0;
   int strict_mode=0;
   int usage=0;
+  int help=0;
   const char *parser_name="rdfxml";
   raptor_uri *base_uri;
   raptor_uri *uri;
+  char *p;
+  char *filename=NULL;
 #ifdef RAPTOR_IN_REDLAND
   librdf_world *world;
 #endif
 
   program=argv[0];
+  if((p=strrchr(program, '/')))
+    program=p+1;
+  else if((p=strrchr(program, '\\')))
+    program=p+1;
+  argv[0]=program;
 
 #ifdef RAPTOR_IN_REDLAND
   world=librdf_new_world();
@@ -201,7 +214,7 @@ main(int argc, char *argv[])
   raptor_init();
 #endif
   
-  while (!usage)
+  while (!usage && !help)
   {
     int c;
 #ifdef HAVE_GETOPT_LONG
@@ -217,12 +230,7 @@ main(int argc, char *argv[])
     switch (c) {
       case 0:
       case '?': /* getopt() - unknown option */
-#ifdef HAVE_GETOPT_LONG
-        fprintf(stderr, "Unknown option %s\n", long_options[option_index].name);
-#else
-        fprintf(stderr, "Unknown option %s\n", argv[optind]);
-#endif
-        usage=2; /* usage and error */
+        usage=1;
         break;
         
       case 'a':
@@ -234,7 +242,7 @@ main(int argc, char *argv[])
         break;
 
       case 'h':
-        usage=1;
+        help=1;
         break;
 
       case 'n':
@@ -260,12 +268,10 @@ main(int argc, char *argv[])
           else if (!strcmp(optarg, "lax"))
             strict_mode=0;
           else {
-            fprintf(stderr, "%s: invalid argument `%s' for `--mode'", program,
-                    optarg);
+            fprintf(stderr, "%s: invalid argument `%s' for `" HELP_ARG(m, mode) "'\n",
+                    program, optarg);
             fprintf(stderr, "Valid arguments are:\n  - `lax'\n  - `strict'\n");
-            fprintf(stderr, "Try `%s --help' for more information.\n",
-                    program);
-            exit(1);
+            usage=1;
           }
         }
         break;
@@ -277,12 +283,10 @@ main(int argc, char *argv[])
           else if (!strcmp(optarg, "ntriples"))
             output_format=OUTPUT_FORMAT_NTRIPLES;
           else {
-            fprintf(stderr, "%s: invalid argument `%s' for `--output'",
+            fprintf(stderr, "%s: invalid argument `%s' for `" HELP_ARG(o, output) "'\n",
                     program, optarg);
             fprintf(stderr, "Valid arguments are:\n  - `simple'\n  - `ntriples'\n");
-            fprintf(stderr, "Try `%s --help' for more information.\n",
-                    program);
-            exit(1);
+            usage=1;
           }
         }
         break;
@@ -296,12 +300,12 @@ main(int argc, char *argv[])
           } else if (!strcmp(optarg, "rss-tag-soup")) {
             rdfxml=0; rss_tag_soup=1;
           } else {
-            fprintf(stderr, "%s: invalid argument `%s' for `--input'",
+            fprintf(stderr, "%s: invalid argument `%s' for `" HELP_ARG(i, input) "'\n",
                     program, optarg);
-            fprintf(stderr, "Valid arguments are:\n  - `rdfxml'\n  - `ntriples'\n\n  - `rss-tag-soup'\n");
-            fprintf(stderr, "Try `%s --help' for more information.\n",
-                    program);
-            exit(1);
+            fprintf(stderr, "Valid arguments are:\n  `rdfxml'        for RDF/XML content \n  `ntriples'      for N-Triples\n  `rss-tag-soup'  for RSS Tag Soup\n");
+            usage=1;
+            break;
+            
           }
         }
         break;
@@ -313,35 +317,54 @@ main(int argc, char *argv[])
       case 'e':
         ignore_errors=1;
         break;
+
+      case 'v':
+        fputs(raptor_version_string, stdout);
+        fputc('\n', stdout);
+        exit(0);
     }
     
   }
 
-  if(optind != argc-1 && optind != argc-2)
-    usage=2; /* usage and error */
-  
+  if(optind != argc-1 && optind != argc-2 && !help && !usage) {
+    usage=2; /* Title and usage */
+  }
 
+  
   if(usage) {
-    fprintf(stderr, "Usage: %s [OPTIONS] <source URI> [base URI]\n", program);
-    fprintf(stderr, "Parse RDF content at the source URI into RDF triples using the\n");
-    fprintf(stderr, "Raptor RDF parser toolkit %s\n", raptor_version_string);
-    fprintf(stderr, "\nMain options:\n");
-    fprintf(stderr, HELP_TEXT(h, "help            ", "Print this help, then exit"));
-    fprintf(stderr, HELP_TEXT(i, "input FORMAT    ", "Set input format to one of:"));
-    fprintf(stderr, "    'rdfxml' (default)  RDF/XML\n    'ntriples'          N-Triples\n    'rss-tag-soup'      RSS tag soup\n");
-    fprintf(stderr, HELP_TEXT(o, "output FORMAT   ", "Set output format to one of:"));
-    fprintf(stderr, "    'simple' (default)  a simple format\n    'ntriples'          N-Triples\n");
-    fprintf(stderr, HELP_TEXT(m, "mode            ", "Set parser mode - 'lax' (default) or 'strict'"));
-    fprintf(stderr, "\nAdditional options:\n");
-    fprintf(stderr, HELP_TEXT(a, "assume          ", "Assume document is rdf/xml (rdf:RDF optional)"));
-    fprintf(stderr, HELP_TEXT(c, "count           ", "Count triples - no output"));
-    fprintf(stderr, HELP_TEXT(e, "ignore-errors   ", "Ignore error messages"));
-    fprintf(stderr, HELP_TEXT(q, "quiet           ", "No extra information messages"));
-    fprintf(stderr, HELP_TEXT(r, "replace-newlines", "Replace newlines with spaces in literals"));
-    fprintf(stderr, HELP_TEXT(s, "scan            ", "Scan for <rdf:RDF> element in source"));
-    fprintf(stderr, HELP_TEXT(w, "ignore-warnings ", "Ignore warning messages"));
-    fprintf(stderr, "\nReport bugs to <redland-dev@lists.librdf.org>.\n");
-    return(usage>1);
+    if(usage>1) {
+      fprintf(stderr, title_format_string, raptor_version_string);
+      fprintf(stderr, "%s\n", raptor_short_copyright_string);
+    }
+    fprintf(stderr, "Try `%s " HELP_ARG(h, help) "' for more information.\n",
+                    program);
+    exit(1);
+  }
+
+  if(help) {
+    printf("Usage: %s [OPTIONS] <source URI> [base URI]\n", program);
+    printf(title_format_string, raptor_version_string);
+    printf("%s\n", raptor_short_copyright_string);
+    printf("Parse RDF content at the source URI into RDF triples.\n");
+    printf("\nMain options:\n");
+    printf(HELP_TEXT(h, "help            ", "Print this help, then exit"));
+    printf(HELP_TEXT(i, "input FORMAT    ", "Set input format to one of:"));
+    printf("    'rdfxml'                RDF/XML (default)\n    'ntriples'              N-Triples\n    'rss-tag-soup'          RSS tag soup\n");
+    printf(HELP_TEXT(o, "output FORMAT   ", "Set output format to one of:"));
+    printf("    'simple'                A simple format (default)\n    'ntriples'              N-Triples\n");
+    printf(HELP_TEXT(m, "mode            ", "Set parser mode - 'lax' (default) or 'strict'"));
+    printf("\nAdditional options:\n");
+    printf(HELP_TEXT(a, "assume          ", "Assume document is rdf/xml (rdf:RDF optional)"));
+    printf(HELP_TEXT(c, "count           ", "Count triples - no output"));
+    printf(HELP_TEXT(e, "ignore-errors   ", "Ignore error messages"));
+    printf(HELP_TEXT(q, "quiet           ", "No extra information messages"));
+    printf(HELP_TEXT(r, "replace-newlines", "Replace newlines with spaces in literals"));
+    printf(HELP_TEXT(s, "scan            ", "Scan for <rdf:RDF> element in source"));
+    printf(HELP_TEXT(w, "ignore-warnings ", "Ignore warning messages"));
+    printf(HELP_TEXT(v, "version         ", "Print the Raptor version"));
+    printf("\nReport bugs to <redland-dev@lists.librdf.org>.\n");
+    printf("Raptor home page: http://www.redland.opensource.ac.uk/raptor/\n");
+    exit(0);
   }
 
 
@@ -353,17 +376,29 @@ main(int argc, char *argv[])
   }
 
   /* If uri_string is "path-to-file", turn it into a file: URI */
-  if(!access(uri_string, R_OK)) {
+  if(!strcmp(uri_string, "-")) {
+    if(!base_uri_string) {
+      fprintf(stderr, "%s: A Base URI is required when reading from standard input.\n",
+              program);
+      return(1);
+    }
+    uri_string=NULL;
+  } else if(!access(uri_string, R_OK)) {
+    filename=uri_string;
     uri_string=raptor_uri_filename_to_uri_string(uri_string);
     free_uri_string=1;
   }
-  
-  uri=raptor_new_uri(uri_string);
-  if(!uri) {
-    fprintf(stderr, "%s: Failed to create URI for %s\n",
-            program, uri_string);
-    return(1);
-  }
+
+  if(uri_string) {
+    uri=raptor_new_uri(uri_string);
+    if(!uri) {
+      fprintf(stderr, "%s: Failed to create URI for %s\n",
+              program, uri_string);
+      return(1);
+    }
+  } else
+    uri=NULL; /* stdin */
+
 
   if(!base_uri_string) {
     base_uri=raptor_uri_copy(uri);
@@ -388,30 +423,47 @@ main(int argc, char *argv[])
   raptor_set_error_handler(rdf_parser, rdf_parser, rdfdump_error_handler);
   raptor_set_warning_handler(rdf_parser, rdf_parser, rdfdump_warning_handler);
   
+  raptor_set_parser_strict(rdf_parser, strict_mode);
+  
   if(scanning)
     raptor_set_feature(rdf_parser, RAPTOR_FEATURE_SCANNING, 1);
   if(assume)
     raptor_set_feature(rdf_parser, RAPTOR_FEATURE_ASSUME_IS_RDF, 1);
-  
-  
+
   if(!quiet) {
-    if(base_uri_string)
-      fprintf(stdout, "%s: Parsing URI %s with base URI %s\n", program,
-              uri_string, base_uri_string);
-    else
-      fprintf(stdout, "%s: Parsing URI %s\n", program, uri_string);
+    if (filename) {
+      if(base_uri_string)
+        fprintf(stdout, "%s: Parsing file %s with base URI %s\n", program,
+                filename, base_uri_string);
+      else
+        fprintf(stdout, "%s: Parsing file %s\n", program, filename);
+    } else {
+      if(base_uri_string)
+        fprintf(stdout, "%s: Parsing URI %s with base URI %s\n", program,
+                uri_string, base_uri_string);
+      else
+        fprintf(stdout, "%s: Parsing URI %s\n", program, uri_string);
+    }
   }
   
   raptor_set_statement_handler(rdf_parser, NULL, print_statements);
 
 
   /* PARSE the URI as RDF/XML */
-  if(raptor_parse_uri(rdf_parser, uri, base_uri)) {
-    fprintf(stderr, "%s: Failed to parse %s content into model\n", program, 
-            parser_name);
-    rc=1;
-  } else
-    rc=0;
+  rc=0;
+  if(!uri || filename) {
+    if(raptor_parse_file(rdf_parser, uri, base_uri)) {
+      fprintf(stderr, "%s: Failed to parse file %s %s content\n", program, 
+              filename, parser_name);
+      rc=1;
+    }
+  } else {
+    if(raptor_parse_uri(rdf_parser, uri, base_uri)) {
+      fprintf(stderr, "%s: Failed to parse URI %s %s content\n", program, 
+              uri_string, parser_name);
+      rc=1;
+    }
+  }
 
 #ifdef RAPTOR_DEBUG
   raptor_stats_print(rdf_parser, stderr);

@@ -129,6 +129,9 @@
 /* Building RSS Tag Soup parser */
 #undef RAPTOR_PARSER_RSS
 
+/* Release version as a decimal */
+#undef RAPTOR_VERSION_DECIMAL
+
 /* Major version number */
 #undef RAPTOR_VERSION_MAJOR
 

@@ -2,7 +2,7 @@
  *
  * rdf_init.h - Overall library initialisation / termination prototypes
  *
- * $Id: rdf_init.h,v 1.10 2003/08/26 23:05:15 cmdjb Exp $
+ * $Id: rdf_init.h,v 1.11 2003/08/30 20:10:13 cmdjb Exp $
  *
  * Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
  * Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -39,8 +39,12 @@ struct librdf_world_s
   char *digest_factory_name;
   librdf_digest_factory* digest_factory;
 
+  /* URI interning */
   librdf_hash* uris_hash;
   int uris_hash_allocated_here;
+
+  /* Node interning */
+  librdf_hash* nodes_hash[3]; /* resource, literal, blank */
 
   /* List of parser factories */
   librdf_parser_factory* parsers;
@@ -69,6 +73,9 @@ struct librdf_world_s
 #ifdef WITH_THREADS
   /* mutex so we can lock around this when we need to */
   pthread_mutex_t* mutex;
+
+  /* mutex to lock the nodes class */
+  pthread_mutex_t* nodes_mutex;
 #endif
 };
 #endif
@@ -101,7 +108,7 @@ const unsigned char* librdf_world_get_genid(librdf_world* world);
 #endif
 
 /* OLD INTERFACES */
-void librdf_init_world(char *digest_factory_name, librdf_hash* uris_hash);
+void librdf_init_world(char *digest_factory_name, void* not_used2);
 void librdf_destroy_world(void);
 
 #ifdef __cplusplus

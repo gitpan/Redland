@@ -2,7 +2,7 @@
  *
  * rdf_parser.c - RDF Parser using Raptor
  *
- * $Id: rdf_parser_raptor.c,v 1.50 2003/08/26 23:11:40 cmdjb Exp $
+ * $Id: rdf_parser_raptor.c,v 1.51 2003/09/04 17:28:24 cmdjb Exp $
  *
  * Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
  * Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -933,7 +933,10 @@ librdf_parser_raptor_constructor(librdf_world *world)
 
   raptor_uri_set_handler(&librdf_raptor_uri_handler, world);
 
-  librdf_parser_register_factory(world, "raptor", "application/rdf+xml", NULL,
+  librdf_parser_register_factory(world, "rdfxml", "application/rdf+xml", 
+                                 "http://www.w3.org/TR/rdf-syntax-grammar",
+                                 &librdf_parser_raptor_register_factory);
+  librdf_parser_register_factory(world, "raptor", NULL, NULL,
                                  &librdf_parser_raptor_register_factory);
   librdf_parser_register_factory(world, "ntriples", "text/plain",
                                  "http://www.w3.org/TR/rdf-testcases/#ntriples",

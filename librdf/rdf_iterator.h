@@ -2,7 +2,7 @@
  *
  * rdf_iterator.h - RDF Iterator definition
  *
- * $Id: rdf_iterator.h,v 1.14 2002/11/21 21:40:00 cmdjb Exp $
+ * $Id: rdf_iterator.h,v 1.15 2003/08/30 21:56:19 cmdjb Exp $
  *
  * Copyright (C) 2000-2001 David Beckett - http://purl.org/net/dajobe/
  * Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -41,6 +41,7 @@ struct librdf_iterator_s {
   librdf_world *world;
   void *context;
   int is_finished; /* 1 when have no more elements */
+  int is_updated; /* 1 when we know there is a current item */
 
   /* Used when mapping */
   void *current;            /* stores current element */

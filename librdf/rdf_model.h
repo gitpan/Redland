@@ -2,7 +2,7 @@
  *
  * rdf_model.h - RDF Model definition
  *
- * $Id: rdf_model.h,v 1.31 2003/08/28 15:34:57 cmdjb Exp $
+ * $Id: rdf_model.h,v 1.32 2003/08/31 11:24:46 cmdjb Exp $
  *
  * Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
  * Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -122,8 +122,18 @@ struct librdf_model_factory_s {
   /* query the model */
   librdf_stream* (*query)(librdf_model* model, librdf_query* query);
 
-  /* sync the model to the storage */
+  /* sync the model to the storage - OPTIONAL */
   void (*sync)(librdf_model* model);
+
+  /* add a statement from the context - OPTIONAL (librdf_model will
+   * implement using context_add_statement if missing) 
+   */
+  int (*context_add_statements)(librdf_model* model, librdf_node* context, librdf_stream *stream);
+
+  /* remove a statement from the context - OPTIONAL (librdf_model will
+   * implement using context_remove_statement if missing) 
+   */
+  int (*context_remove_statements)(librdf_model* model, librdf_node* context);
 
 };
 

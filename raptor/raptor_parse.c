@@ -2,7 +2,7 @@
  *
  * raptor_parse.c - Redland Parser for RDF (RAPTOR)
  *
- * $Id: raptor_parse.c,v 1.241 2003/08/25 16:37:18 cmdjb Exp $
+ * $Id: raptor_parse.c,v 1.245 2003/09/04 19:07:12 cmdjb Exp $
  *
  * Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
  * Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -732,7 +732,24 @@ raptor_xml_start_element_handler(void *user_data,
           raptor_parser_fatal_error(rdf_parser, "Out of memory");
           return;
         }
-        strcpy((char*)xml_language, (char*)atts[i+1]);
+
+        if(rdf_parser->feature_normalize_language) {
+          char *from=(char*)atts[i+1];
+          char *to=xml_language;
+          
+          /* Normalize language to lowercase
+           * http://www.w3.org/TR/rdf-concepts/#dfn-language-identifier
+           */
+          while(*from) {
+            if(isupper(*from))
+              *to++ =tolower(*from++);
+            else
+              *to++ =*from++;
+          }
+          *to='\0';
+        } else
+          strcpy((char*)xml_language, (char*)atts[i+1]);
+
         atts[i]=NULL; 
         continue;
       }
@@ -939,7 +956,8 @@ raptor_xml_start_element_handler(void *user_data,
   element->state=RAPTOR_STATE_UNKNOWN;
   element->content_type=RAPTOR_ELEMENT_CONTENT_TYPE_UNKNOWN;
 
-  if(!rdf_parser->feature_scanning_for_rdf_RDF && element->parent) {
+  if(element->parent && 
+     element->parent->child_content_type != RAPTOR_ELEMENT_CONTENT_TYPE_UNKNOWN) {
     element->content_type=element->parent->child_content_type;
       
     if(element->parent->content_type == RAPTOR_ELEMENT_CONTENT_TYPE_RESOURCE &&
@@ -1004,8 +1022,8 @@ raptor_xml_start_element_handler(void *user_data,
    */
   if (rdf_content_type_info[element->content_type].rdf_processing &&
       non_nspaced_count) {
-    raptor_parser_warning(rdf_parser, "element %s has non-namespaced parts, skipping.", 
-                          element->sax2->name->local_name);
+    raptor_parser_error(rdf_parser, "Using an element %s without a namespace is forbidden.", 
+                        element->sax2->name->local_name);
     element->state=RAPTOR_STATE_SKIPPING;
     /* Remove count above so that parent thinks this is empty */
     if(count_bumped)
@@ -1311,10 +1329,6 @@ raptor_xml_parse_terminate(raptor_parser *rdf_parser)
 
   RAPTOR_FREE(raptor_sax2, rdf_xml_parser->sax2);
 
-  if(rdf_parser->fh) {
-    fclose(rdf_parser->fh);
-    rdf_parser->fh=NULL;
-  }
   while((element=raptor_element_pop(rdf_xml_parser))) {
     raptor_free_element(element);
   }
@@ -1708,7 +1722,7 @@ raptor_process_property_attributes(raptor_parser *rdf_parser,
     
     if(!attr->nspace) {
       raptor_update_document_locator(rdf_parser);
-      raptor_parser_error(rdf_parser, "Using a property attribute %s without a namespace is forbidden.", name);
+      raptor_parser_error(rdf_parser, "Using property attribute %s without a namespace is forbidden.", name);
       continue;
     }
 
@@ -1970,6 +1984,17 @@ raptor_start_element_grammar(raptor_parser *rdf_parser,
          *
          * Only create a bag if bagID given
          */
+
+        if(!sax2_element->name->uri) {
+          /* We cannot handle this */
+          raptor_parser_warning(rdf_parser, "Using node element %s without a namespace is forbidden.", 
+                                element->sax2->name->local_name);
+          raptor_update_document_locator(rdf_parser);
+          element->state=RAPTOR_STATE_SKIPPING;
+          element->child_state=RAPTOR_STATE_SKIPPING;
+          finished=1;
+          break;
+        }
 
         if(element->content_type !=RAPTOR_ELEMENT_CONTENT_TYPE_COLLECTION &&
            element->content_type !=RAPTOR_ELEMENT_CONTENT_TYPE_DAML_COLLECTION && 
@@ -2307,6 +2332,16 @@ raptor_start_element_grammar(raptor_parser *rdf_parser,
          */
       case RAPTOR_STATE_MEMBER_PROPERTYELT:
       case RAPTOR_STATE_PROPERTYELT:
+
+        if(!sax2_element->name->uri) {
+          raptor_parser_error(rdf_parser, "Using property element %s without a namespace is forbidden.", 
+                              element->sax2->name->local_name);
+          raptor_update_document_locator(rdf_parser);
+          element->state=RAPTOR_STATE_SKIPPING;
+          element->child_state=RAPTOR_STATE_SKIPPING;
+          finished=1;
+          break;
+        }
 
         /* Handling rdf:li as a property, noting special processing */ 
         if(element_in_rdf_ns && 

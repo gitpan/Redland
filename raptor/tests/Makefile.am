@@ -2,7 +2,7 @@
 #
 # Makefile.am - automake file for Raptor tests
 #
-# $Id: Makefile.am,v 1.77 2003/08/25 15:40:11 cmdjb Exp $
+# $Id: Makefile.am,v 1.84 2003/09/08 10:23:09 cmdjb Exp $
 #
 # Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
 # Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -33,14 +33,17 @@ owl-schema.rdf daml-oil.rdf
 
 RDF_BAD_TEST_FILES=bad-00.rdf bad-01.rdf bad-02.rdf bad-03.rdf \
 bad-04.rdf bad-05.rdf bad-06.rdf bad-07.rdf bad-08.rdf bad-09.rdf \
-bad-10.rdf bad-11.rdf bad-12.rdf bad-13.rdf bad-14.rdf
+bad-10.rdf bad-11.rdf bad-12.rdf bad-13.rdf bad-14.rdf bad-18.rdf \
+bad-19.rdf
 
 RDF_BAD_NFC_TEST_FILES=bad-15.rdf bad-16.rdf bad-17.rdf
 
-RDF_WARN_TEST_FILES=warn-00.rdf warn-01.rdf warn-02.rdf warn-03.rdf \
+RDF_WARN_TEST_FILES=warn-00.rdf warn-02.rdf \
 $(RDF_BAGID_TEST_FILES)
 
 RDF_ASSUME_TEST_FILES=ex-19.rdf
+
+RDF_SCAN_TEST_FILES=ex-52.svg
 
 RDF_OUT_FILES=ex-00.out ex-01.out ex-02.out ex-03.out ex-04.out ex-05.out \
 ex-06.out ex-07.out ex-08.out ex-09.out ex-10.out ex-11.out ex-12.out \
@@ -53,15 +56,17 @@ ex-48.out ex-49.out ex-50.out ex-51.out \
 22-rdf-syntax-ns.out rdfs-namespace.out rdf-schema.out \
 owl-schema.out daml-oil.out
 
-RDF_WARN_OUT_FILES=warn-00.out warn-01.out warn-02.out
+RDF_WARN_OUT_FILES=warn-00.out warn-02.out
 
 RDF_ASSUME_OUT_FILES=ex-19.out
+
+RDF_SCAN_OUT_FILES=ex-52.out
 
 NT_TEST_FILES=test.nt
 
 NT_OUT_FILES=test.out
 
-NT_BAD_TEST_FILES=bad-00.nt bad-01.nt bad-02.nt bad-03.nt
+NT_BAD_TEST_FILES=bad-00.nt bad-01.nt bad-02.nt bad-03.nt bad-04.nt bad-05.nt
 
 
 # Used to make N-triples output consistent
@@ -78,11 +83,13 @@ DAML_OIL_DOC_URI="http://www.daml.org/2001/03/daml+oil"
 EXTRA_DIST = \
 	$(RDF_TEST_FILES) \
 	$(RDF_ASSUME_TEST_FILES) \
+	$(RDF_SCAN_TEST_FILES) \
 	$(RDF_BAD_TEST_FILES) \
 	$(RDF_BAD_NFC_TEST_FILES) \
 	$(RDF_WARN_TEST_FILES) \
 	$(RDF_OUT_FILES) \
 	$(RDF_ASSUME_OUT_FILES) \
+	$(RDF_SCAN_OUT_FILES) \
 	$(RDF_WARN_OUT_FILES) \
 	$(NT_TEST_FILES) \
 	$(NT_OUT_FILES) \
@@ -92,8 +99,9 @@ EXTRA_DIST = \
 $(top_builddir)/rapper:
 	@(cd $(top_builddir) ; $(MAKE) rapper)
 
-check-local: check-rdf check-assume-rdf check-bad-rdf check-bad-nfc-rdf \
-check-warn-rdf check-nt check-bad-nt
+check-local: check-rdf check-assume-rdf check-scan-rdf \
+check-bad-rdf check-bad-nfc-rdf check-warn-rdf \
+check-nt check-bad-nt
 
 check-rdf: $(top_builddir)/rapper $(RDF_TEST_FILES)
 	@result=0; \
@@ -148,9 +156,27 @@ check-assume-rdf: $(top_builddir)/rapper $(RDF_ASSUME_TEST_FILES)
 	done; \
 	exit $$result
 
+check-scan-rdf: $(top_builddir)/rapper $(RDF_SCAN_TEST_FILES)
+	@result=0; \
+	$(ECHO) "Testing rdf/xml insider other XML"; \
+	for test in $(RDF_SCAN_TEST_FILES); do \
+	  name=`echo $$test | sed -e 's/\..*//'` ; \
+	  baseuri=$(BASE_URI)$$name.rdf; \
+	  $(ECHO) $(ECHO_N) "Checking $$test $(ECHO_C)"; \
+	  $(top_builddir)/rapper -q -s -o ntriples file:$(srcdir)/$$test $$baseuri > $$name.res 2>/dev/null; \
+	  if cmp $(srcdir)/$$name.out $$name.res >/dev/null 2>&1; then \
+	    $(ECHO) "ok"; \
+	  else \
+	    $(ECHO) "FAILED"; \
+	    diff $(srcdir)/$$name.out $$name.res; result=1; \
+	  fi; \
+	  rm -f $$name.res ; \
+	done; \
+	exit $$result
+
 check-bad-rdf: $(top_builddir)/rapper $(RDF_BAD_TEST_FILES)
 	@set +e; result=0; \
-	$(ECHO) "Testing bad rdf/xml fails"; \
+	$(ECHO) "Testing that bad rdf/xml fails"; \
 	for test in $(RDF_BAD_TEST_FILES); do \
 	  name=`basename $$test .rdf` ; \
 	  baseuri=$(BASE_URI)$$name.rdf; \
@@ -175,7 +201,7 @@ check-bad-rdf: $(top_builddir)/rapper $(RDF_BAD_TEST_FILES)
 
 check-bad-nfc-rdf: $(top_builddir)/rapper $(RDF_BAD_NFC_TEST_FILES)
 	@set +e; result=0; \
-	$(ECHO) "Testing bad rdf/xml that should fail for Unicode NFC checking"; \
+	$(ECHO) "Testing that rdf/xml with bad Unicode NFC fails"; \
 	for test in $(RDF_BAD_NFC_TEST_FILES); do \
 	  name=`basename $$test .rdf` ; \
 	  baseuri=$(BASE_URI)$$name.rdf; \
@@ -239,12 +265,12 @@ check-nt: $(top_builddir)/rapper $(NT_TEST_FILES)
 
 check-bad-nt: $(top_builddir)/rapper $(NT_BAD_TEST_FILES)
 	@set +e; result=0; \
-	$(ECHO) "Testing bad N-Triples fails"; \
+	$(ECHO) "Testing that bad N-Triples fails"; \
 	for test in $(NT_BAD_TEST_FILES); do \
 	  name=`basename $$test .nt` ; \
 	  baseuri=$(BASE_URI)$$name.nt; \
 	  $(ECHO) $(ECHO_N) "Checking $$test $(ECHO_C)"; \
-	  $(top_builddir)/rapper -q -o ntriples file:$(srcdir)/$$test $$baseuri > $$name.res 2> $$name.err; \
+	  $(top_builddir)/rapper -q -o ntriples -n file:$(srcdir)/$$test $$baseuri > $$name.res 2> $$name.err; \
 	  status=$$?; \
 	  if test $$status -eq 1 ; then \
 	    $(ECHO) "ok"; \

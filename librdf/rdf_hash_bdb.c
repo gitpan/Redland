@@ -2,7 +2,7 @@
  *
  * rdf_hash_bdb.c - RDF hash Berkeley DB Interface Implementation
  *
- * $Id: rdf_hash_bdb.c,v 1.46 2003/08/27 13:46:05 cmdjb Exp $
+ * $Id: rdf_hash_bdb.c,v 1.48 2003/09/08 16:28:12 cmdjb Exp $
  *
  * Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
  * Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -167,10 +167,6 @@ librdf_hash_bdb_open(void* context, char *identifier,
   /* V3 prototype:
    * int DB->open(DB *db, const char *file, const char *database,
    *              DBTYPE type, u_int32_t flags, int mode);
-   *
-   * V4.1+ prototype:
-   * int DB->open(DB *db, DB_TXN *txnid, const char *file, 
-   *              const char *database, DBTYPE type, u_int32_t flags, int mode);
    */
   flags=is_writable ? DB_CREATE : DB_RDONLY;
   if(is_new)
@@ -246,7 +242,11 @@ librdf_hash_bdb_open(void* context, char *identifier,
   }
   ret=0;
 #else
+#ifdef HAVE_DB_CREATE
+/* earlier */
+#else
 ERROR - no idea how to use Berkeley DB
+#endif
 #endif
 #endif
 #endif

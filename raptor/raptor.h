@@ -2,7 +2,7 @@
  *
  * raptor.h - Redland Parser Toolkit for RDF (Raptor) interfaces and definition
  *
- * $Id: raptor.h,v 1.80 2003/08/21 16:55:48 cmdjb Exp $
+ * $Id: raptor.h,v 1.84 2003/09/08 12:49:42 cmdjb Exp $
  *
  * Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
  * Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -57,6 +57,7 @@ typedef void* raptor_uri;
 
 
 /* Public statics */
+extern const char * const raptor_short_copyright_string;
 extern const char * const raptor_copyright_string;
 extern const char * const raptor_version_string;
 extern const unsigned int raptor_version_major;
@@ -106,7 +107,8 @@ typedef enum {
   RAPTOR_FEATURE_ALLOW_NON_NS_ATTRIBUTES,
   RAPTOR_FEATURE_ALLOW_OTHER_PARSETYPES,
   RAPTOR_FEATURE_ALLOW_BAGID,
-  RAPTOR_FEATURE_ALLOW_RDF_TYPE_RDF_LIST
+  RAPTOR_FEATURE_ALLOW_RDF_TYPE_RDF_LIST,
+  RAPTOR_FEATURE_NORMALIZE_LANGUAGE
 } raptor_feature;
 
 
@@ -207,11 +209,11 @@ RAPTOR_API void raptor_set_default_generate_id_parameters(raptor_parser* rdf_par
 
 /* Parsing functions */
 RAPTOR_API int raptor_parse_chunk(raptor_parser* rdf_parser, const unsigned char *buffer, size_t len, int is_end);
+RAPTOR_API int raptor_parse_file_stream(raptor_parser* rdf_parser, FILE *stream, const char *filename, raptor_uri *base_uri);
 RAPTOR_API int raptor_parse_file(raptor_parser* rdf_parser, raptor_uri *uri, raptor_uri *base_uri);
 RAPTOR_API int raptor_parse_uri(raptor_parser* rdf_parser, raptor_uri *uri, raptor_uri *base_uri);
 RAPTOR_API int raptor_parse_uri_with_connection(raptor_parser* rdf_parser, raptor_uri *uri, raptor_uri *base_uri, void *connection);
 RAPTOR_API void raptor_parse_abort(raptor_parser* rdf_parser);
-RAPTOR_API RAPTOR_DEPRECATED void raptor_parser_abort(raptor_parser* rdf_parser, char *reason);
 
 /* Utility functions */
 RAPTOR_API void raptor_print_locator(FILE *stream, raptor_locator* locator);
@@ -286,23 +288,6 @@ RAPTOR_API int raptor_www_fetch(raptor_www *www, raptor_uri *uri);
 RAPTOR_API void* raptor_www_get_connection(raptor_www *www);
 RAPTOR_API void raptor_www_abort(raptor_www *www, const char *reason);
 
-
-
-/* OLD RDF/XML Parser Public functions */
-
-RAPTOR_API raptor_parser* RAPTOR_DEPRECATED raptor_new(void);
-RAPTOR_API void RAPTOR_DEPRECATED raptor_free(raptor_parser *rdf_parser);
-
-/* OLD N-Triples Parser Public functions */
-
-RAPTOR_API raptor_parser* RAPTOR_DEPRECATED raptor_ntriples_new(void);
-RAPTOR_API void RAPTOR_DEPRECATED raptor_ntriples_free(raptor_parser *parser);
-
-RAPTOR_API void RAPTOR_DEPRECATED raptor_ntriples_set_error_handler(raptor_parser* parser, void *user_data, raptor_message_handler handler);
-RAPTOR_API void RAPTOR_DEPRECATED raptor_ntriples_set_fatal_error_handler(raptor_parser* parser, void *user_data, raptor_message_handler handler);
-RAPTOR_API void RAPTOR_DEPRECATED raptor_ntriples_set_statement_handler(raptor_parser* parser, void *user_data, raptor_statement_handler handler);
-
-RAPTOR_API int RAPTOR_DEPRECATED raptor_ntriples_parse_file(raptor_parser* parser, raptor_uri *uri, raptor_uri *base_uri);
 
 #ifdef __cplusplus
 }

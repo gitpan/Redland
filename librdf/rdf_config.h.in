@@ -48,6 +48,15 @@
 /* Define to 1 if you have the <fcntl.h> header file. */
 #undef HAVE_FCNTL_H
 
+/* Define to 1 if you have the `getopt' function. */
+#undef HAVE_GETOPT
+
+/* Define to 1 if you have the <getopt.h> header file. */
+#undef HAVE_GETOPT_H
+
+/* Define to 1 if you have the `getopt_long' function. */
+#undef HAVE_GETOPT_LONG
+
 /* Define to 1 if you have the `gettimeofday' function. */
 #undef HAVE_GETTIMEOFDAY
 
@@ -117,13 +126,16 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
-/* Redland major version number */
+/* Release version as a decimal */
+#undef LIBRDF_VERSION_DECIMAL
+
+/* Major version number */
 #undef LIBRDF_VERSION_MAJOR
 
-/* Redland minor version number */
+/* Minor version number */
 #undef LIBRDF_VERSION_MINOR
 
-/* Redland release version number */
+/* Release version number */
 #undef LIBRDF_VERSION_RELEASE
 
 /* Name of package */

@@ -2,7 +2,7 @@
  *
  * rdf_hash.h - RDF Hash Factory and Hash interfaces and definitions
  *
- * $Id: rdf_hash.h,v 1.27 2001/09/07 10:22:41 cmdjb Exp $
+ * $Id: rdf_hash.h,v 1.28 2003/09/04 10:07:38 cmdjb Exp $
  *
  * Copyright (C) 2000-2001 David Beckett - http://purl.org/net/dajobe/
  * Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -158,6 +158,7 @@ librdf_iterator* librdf_hash_get_all(librdf_hash* hash, librdf_hash_datum *key, 
 
 /* insert a key/value pair */
 int librdf_hash_put(librdf_hash* hash, librdf_hash_datum *key, librdf_hash_datum *value);
+int librdf_hash_put_strings(librdf_hash* hash, const char *key, const char *value);
 
   /* returns true if key exists in hash, without returning value */
 int librdf_hash_exists(librdf_hash* hash, librdf_hash_datum *key, librdf_hash_datum *value);

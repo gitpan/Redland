@@ -2,7 +2,7 @@
  *
  * raptor_general.c - Raptor general routines
  *
- * $Id: raptor_general.c,v 1.222 2003/08/20 10:46:52 cmdjb Exp $
+ * $Id: raptor_general.c,v 1.229 2003/09/08 12:49:43 cmdjb Exp $
  *
  * Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
  * Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -55,6 +55,8 @@ static raptor_parser_factory* raptor_get_parser_factory(const char *name);
 /* list of parser factories */
 static raptor_parser_factory* parsers=NULL;
 
+const char * const raptor_short_copyright_string = "Copyright (C) 2000-2003 David Beckett, ILRT, University of Bristol";
+
 const char * const raptor_copyright_string = "Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/ - Institute for Learning and Research Technology, University of Bristol.";
 
 const char * const raptor_version_string = VERSION;
@@ -63,7 +65,7 @@ const unsigned int raptor_version_major = RAPTOR_VERSION_MAJOR;
 const unsigned int raptor_version_minor = RAPTOR_VERSION_MINOR;
 const unsigned int raptor_version_release = RAPTOR_VERSION_RELEASE;
 
-const unsigned int raptor_version_decimal = (RAPTOR_VERSION_MAJOR * 10000)+(RAPTOR_VERSION_MINOR * 100) + RAPTOR_VERSION_RELEASE;
+const unsigned int raptor_version_decimal = RAPTOR_VERSION_DECIMAL;
 
 
 
@@ -252,6 +254,9 @@ raptor_new_parser(const char *name) {
     return NULL;
   }
   
+#ifdef RAPTOR_XML_LIBXML
+  rdf_parser->magic=RAPTOR_LIBXML_MAGIC;
+#endif  
   rdf_parser->factory=factory;
 
   rdf_parser->failed=0;
@@ -344,11 +349,56 @@ raptor_free_parser(raptor_parser* rdf_parser)
 /* Size of XML buffer to use when reading from a file */
 #define RAPTOR_READ_BUFFER_SIZE 1024
 
+
 /**
- * raptor_parse_file - Retrieve the RDF/XML content at URI
+ * raptor_parse_file_stream - Retrieve the RDF/XML content from a FILE*
  * @rdf_parser: parser
- * @uri: URI of RDF content
+ * @stream: FILE* of RDF content
+ * @filename: filename of content or NULL if it has no name
+ * @base_uri: the base URI to use
+ *
+ * After draining the stream, fclose is not called on it internally.
+ *
+ * Return value: non 0 on failure
+ **/
+int
+raptor_parse_file_stream(raptor_parser* rdf_parser,
+                         FILE *stream, const char* filename,
+                         raptor_uri *base_uri)
+{
+  /* Read buffer */
+  unsigned char buffer[RAPTOR_READ_BUFFER_SIZE];
+  int rc=0;
+  raptor_locator *locator=&rdf_parser->locator;
+
+  if(!stream || !base_uri)
+    return 1;
+
+  locator->line= locator->column = -1;
+  locator->file= filename;
+
+  if(raptor_start_parse(rdf_parser, base_uri))
+    return 1;
+  
+  while(!feof(stream)) {
+    int len=fread(buffer, 1, RAPTOR_READ_BUFFER_SIZE, stream);
+    int is_end=(len < RAPTOR_READ_BUFFER_SIZE);
+    rc=raptor_parse_chunk(rdf_parser, buffer, len, is_end);
+    if(rc || is_end)
+      break;
+  }
+
+  return (rc != 0);
+}
+
+
+/**
+ * raptor_parse_file - Retrieve the RDF/XML content at a file URI
+ * @rdf_parser: parser
+ * @uri: URI of RDF content or NULL to read from standard input
  * @base_uri: the base URI to use (or NULL if the same)
+ *
+ * If uri is NULL (source is stdin), then the base_uri is required.
  * 
  * Return value: non 0 on failure
  **/
@@ -356,46 +406,36 @@ int
 raptor_parse_file(raptor_parser* rdf_parser, raptor_uri *uri,
                   raptor_uri *base_uri) 
 {
-  /* Read buffer */
-  unsigned char buffer[RAPTOR_READ_BUFFER_SIZE];
   int rc=0;
-  const char *filename=raptor_uri_uri_string_to_filename(raptor_uri_as_string(uri));
-  raptor_locator *locator=&rdf_parser->locator;
+  const char *filename=NULL;
+  FILE *fh;
 
-  if(!filename)
-    return 1;
+  if(uri) {
+    filename=raptor_uri_uri_string_to_filename(raptor_uri_as_string(uri));
+    if(!filename)
+      return 1;
 
-  locator->file=filename;
-  locator->line= locator->column = -1;
-
-  if(!strcmp(filename, "-"))
-    rdf_parser->fh=stdin;
-  else {
-    rdf_parser->fh=fopen(filename, "r");
-    if(!rdf_parser->fh) {
+    fh=fopen(filename, "r");
+    if(!fh) {
       raptor_parser_error(rdf_parser, "file '%s' open failed - %s",
                           filename, strerror(errno));
-      RAPTOR_FREE(cstring, (void*)filename);
-      return 1;
+      goto cleanup;
     }
+  } else {
+    if(!base_uri)
+      return 1;
+    fh=stdin;
   }
 
-  if(raptor_start_parse(rdf_parser, base_uri)) {
+  rc=raptor_parse_file_stream(rdf_parser, fh, filename, base_uri);
+
+  cleanup:
+  if(uri) {
+    fclose(fh);
     RAPTOR_FREE(cstring, (void*)filename);
-    return 1;
-  }
-  
-  while(rdf_parser->fh && !feof(rdf_parser->fh)) {
-    int len=fread(buffer, 1, RAPTOR_READ_BUFFER_SIZE, rdf_parser->fh);
-    int is_end=(len < RAPTOR_READ_BUFFER_SIZE);
-    rc=raptor_parse_chunk(rdf_parser, buffer, len, is_end);
-    if(rc || is_end)
-      break;
   }
 
-  RAPTOR_FREE(cstring, (void*)filename);
-
-  return (rc != 0);
+  return rc;
 }
 
 
@@ -689,36 +729,6 @@ raptor_parser_warning_varargs(raptor_parser* parser, const char *message,
 /* PUBLIC FUNCTIONS */
 
 /**
- * raptor_new - Initialise the Raptor RDF parser
- *
- * OLD API - use raptor_new_parser("rdfxml")
- *
- * Return value: non 0 on failure
- **/
-raptor_parser*
-raptor_new(void)
-{
-  return raptor_new_parser("rdfxml");
-}
-
-
-
-
-/**
- * raptor_free - Free the Raptor RDF parser
- * @rdf_parser: parser object
- *
- * OLD API - use raptor_free_parser
- * 
- **/
-void
-raptor_free(raptor_parser *rdf_parser) 
-{
-  raptor_free_parser(rdf_parser);
-}
-
-
-/**
  * raptor_set_fatal_error_handler - Set the parser error handling function
  * @parser: the parser
  * @user_data: user data to pass to function
@@ -830,6 +840,7 @@ raptor_set_generate_id_handler(raptor_parser* parser,
  *   RAPTOR_FEATURE_ALLOW_OTHER_PARSETYPES  - allow user defined rdf:parseType values
  *   RAPTOR_FEATURE_ALLOW_BAGID             - allow deprecated rdf:bagID
  *   RAPTOR_FEATURE_ALLOW_RDF_TYPE_RDF_LIST - generate the rdf:type rdf:List triple for rdf:parseType="Collection"
+ *   RAPTOR_FEATURE_NORMALIZE_LANGUAGE      - normalize xml:lang values to lowercase
  **/
 void
 raptor_set_feature(raptor_parser *parser, raptor_feature feature, int value)
@@ -859,6 +870,10 @@ raptor_set_feature(raptor_parser *parser, raptor_feature feature, int value)
       parser->feature_allow_rdf_type_rdf_List=value;
       break;
 
+    case RAPTOR_FEATURE_NORMALIZE_LANGUAGE:
+      parser->feature_normalize_language=value;
+      break;
+      
     default:
       break;
   }
@@ -877,13 +892,14 @@ raptor_set_parser_strict(raptor_parser* rdf_parser, int is_strict)
   is_strict=(is_strict) ? 1 : 0;
 
   /* Initialise default parser mode */
-  rdf_parser->feature_scanning_for_rdf_RDF=is_strict;
-  rdf_parser->feature_assume_is_rdf=is_strict;
+  rdf_parser->feature_scanning_for_rdf_RDF=0;
+  rdf_parser->feature_assume_is_rdf=0;
 
   rdf_parser->feature_allow_non_ns_attributes=!is_strict;
   rdf_parser->feature_allow_other_parseTypes=!is_strict;
   rdf_parser->feature_allow_bagID=!is_strict;
   rdf_parser->feature_allow_rdf_type_rdf_List=0;
+  rdf_parser->feature_normalize_language=1;
 }
 
 
@@ -972,13 +988,6 @@ raptor_get_label(raptor_parser *rdf_parser)
 void
 raptor_parse_abort(raptor_parser *parser)
 {
-  parser->failed=1;
-}
-
-
-/* 0.9.9 added, deprecated */
-void
-raptor_parser_abort(raptor_parser *parser, char *reason) {
   parser->failed=1;
 }
 

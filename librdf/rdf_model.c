@@ -2,7 +2,7 @@
  *
  * rdf_model.c - RDF Model implementation
  *
- * $Id: rdf_model.c,v 1.64 2003/08/28 15:35:28 cmdjb Exp $
+ * $Id: rdf_model.c,v 1.66 2003/08/31 11:26:16 cmdjb Exp $
  *
  * Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
  * Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -877,6 +877,9 @@ librdf_model_context_add_statements(librdf_model* model,
   if(!stream)
     return 1;
 
+  if(model->factory->context_add_statements)
+    return model->factory->context_add_statements(model, context, stream);
+
   while(!librdf_stream_end(stream)) {
     librdf_statement* statement=librdf_stream_get_object(stream);
     if(!statement)
@@ -926,7 +929,11 @@ int
 librdf_model_context_remove_statements(librdf_model* model,
                                        librdf_node* context) 
 {
-  librdf_stream *stream=librdf_model_context_serialize(model, context);
+  librdf_stream *stream;
+  if(model->factory->context_remove_statements)
+    return model->factory->context_remove_statements(model, context);
+
+  stream=librdf_model_context_as_stream(model, context);
   if(!stream)
     return 1;
 
@@ -1079,8 +1086,7 @@ main(int argc, char *argv[])
   librdf_stream* stream;
   const char *parser_name="raptor";
   #define URI_STRING_COUNT 2
-  const char *file_name_strings[URI_STRING_COUNT]={"model_test1.rdf", "model_test2.rdf"};
-  const char *file_uri_strings[URI_STRING_COUNT]={"file:model_test1.rdf", "file:model_test2.rdf"};
+  const char *file_uri_strings[URI_STRING_COUNT]={"http://example.org/test1.rdf", "http://example.org/test2.rdf"};
   const char *file_content[URI_STRING_COUNT]={EX1_CONTENT, EX2_CONTENT};
   librdf_uri* uris[URI_STRING_COUNT];
   librdf_node* nodes[URI_STRING_COUNT];
@@ -1140,26 +1146,13 @@ main(int argc, char *argv[])
   }
 
   for (i=0; i<URI_STRING_COUNT; i++) {
-    FILE *fh=fopen(file_name_strings[i], "w");
-    int len=strlen(file_content[i]);
-    if(!fh) {
-      fprintf(stderr, "%s: Failed to create example file %s - ", program,
-        file_name_strings[i]);
-      perror(NULL);
-      fputc('\n', stderr);
-      return(1);
-    }
-    fprintf(stderr, "%s: Creating file %s (%d bytes)\n", program, 
-            file_name_strings[i], len);
-    fwrite(file_content[i], len, 1, fh);
-    fclose(fh);
-
     uris[i]=librdf_new_uri(world, file_uri_strings[i]);
     nodes[i]=librdf_new_node_from_uri_string(world, file_uri_strings[i]);
 
     fprintf(stderr, "%s: Adding content from %s into statement context\n", program,
             librdf_uri_as_string(uris[i]));
-    if(!(stream=librdf_parser_parse_as_stream(parser, uris[i], NULL))) {
+    if(!(stream=librdf_parser_parse_string_as_stream(parser, 
+                                                     file_content[i], uris[i]))) {
       fprintf(stderr, "%s: Failed to parse RDF from %s as stream\n", program,
               librdf_uri_as_string(uris[i]));
       exit(1);
@@ -1169,8 +1162,6 @@ main(int argc, char *argv[])
 
     fprintf(stderr, "%s: Printing model\n", program);
     librdf_model_print(model, stderr);
-
-    remove(file_name_strings[i]);
   }
 
 

@@ -2,7 +2,7 @@
  *
  * redland.h - Redland RDF Application Framework main header
  *
- * $Id: librdf.h,v 1.34 2003/08/20 11:06:54 cmdjb Exp $
+ * $Id: librdf.h,v 1.36 2003/09/04 10:46:27 cmdjb Exp $
  *
  * Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
  * Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -26,6 +26,30 @@
 
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+#ifdef WIN32
+#  ifdef REDLAND_INTERNAL
+#    define REDLAND_API _declspec(dllexport)
+#  else
+#    define REDLAND_API _declspec(dllimport)
+#  endif
+#else
+#  define REDLAND_API
+#endif
+
+/* Use gcc 3.1+ feature to allow marking of deprecated API calls.
+ * This gives a warning during compiling.
+ */
+#if ( __GNUC__ == 3 && __GNUC_MINOR__ > 0 ) || __GNUC__ > 3
+#ifdef __APPLE_CC__
+/* OSX gcc cpp-precomp is broken */
+#define REDLAND_DEPRECATED
+#else
+#define REDLAND_DEPRECATED __attribute__((deprecated))
+#endif
+#else
+#define REDLAND_DEPRECATED
 #endif
 
 
@@ -52,6 +76,14 @@ typedef struct librdf_query_factory_s librdf_query_factory;
 typedef struct librdf_serializer_s librdf_serializer;
 typedef struct librdf_serializer_factory_s librdf_serializer_factory;
 
+/* Public statics */
+extern const char * const librdf_short_copyright_string;
+extern const char * const librdf_copyright_string;
+extern const char * const librdf_version_string;
+extern const unsigned int librdf_version_major;
+extern const unsigned int librdf_version_minor;
+extern const unsigned int librdf_version_release;
+extern const unsigned int librdf_version_decimal;
 
 /* error handling */
 #ifdef LIBRDF_DEBUG

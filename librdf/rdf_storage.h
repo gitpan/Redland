@@ -2,7 +2,7 @@
  *
  * rdf_storage.h - RDF Storage Factory and Storage interfaces and definitions
  *
- * $Id: rdf_storage.h,v 1.22 2003/08/26 20:47:49 cmdjb Exp $
+ * $Id: rdf_storage.h,v 1.24 2003/09/04 10:06:28 cmdjb Exp $
  *
  * Copyright (C) 2000-2001 David Beckett - http://purl.org/net/dajobe/
  * Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -73,13 +73,13 @@ struct librdf_storage_factory_s {
   /* return the number of statements in the storage for model */
   int (*size)(librdf_storage* storage);
   
-  /* add a statement to the storage from the given model */
+  /* add a statement to the storage from the given model - OPTIONAL */
   int (*add_statement)(librdf_storage* storage, librdf_statement* statement);
   
-  /* add a statement to the storage from the given model */
+  /* add a statement to the storage from the given model - OPTIONAL */
   int (*add_statements)(librdf_storage* storage, librdf_stream* statement_stream);
   
-  /* remove a statement from the storage  */
+  /* remove a statement from the storage - OPTIONAL */
   int (*remove_statement)(librdf_storage* storage, librdf_statement* statement);
   
   /* check if statement in storage  */
@@ -110,17 +110,27 @@ struct librdf_storage_factory_s {
   librdf_iterator* (*get_arcs_out)(librdf_storage *storage, librdf_node *node);
 
 
-  /* add a statement to the storage from the context */
+  /* add a statement to the storage from the context - OPTIONAL */
   int (*context_add_statement)(librdf_storage* storage, librdf_node* context, librdf_statement *statement);
   
-  /* remove a statement from the context  */
+  /* remove a statement from the context - OPTIONAL */
   int (*context_remove_statement)(librdf_storage* storage, librdf_node* context, librdf_statement *statement);
 
-  /* list statements in a context  */
+  /* list statements in a context - OPTIONAL */
   librdf_stream* (*context_serialise)(librdf_storage* storage, librdf_node* context);
 
-  /* synchronise to underlying storage */
+  /* synchronise to underlying storage - OPTIONAL */
   void (*sync)(librdf_storage* storage);
+
+  /* add statements to the context - OPTIONAL (rdf_storage will do it
+   * using context_add_statement if missing)
+  */
+  int (*context_add_statements)(librdf_storage* storage, librdf_node* context, librdf_stream *stream);
+
+  /* remove statements from the context - OPTIONAL (rdf_storage will do it
+   * using context_remove_statement if missing)
+   */
+  int (*context_remove_statements)(librdf_storage* storage, librdf_node* context);
 
 };
 
@@ -142,7 +152,8 @@ librdf_storage_factory* librdf_get_storage_factory(const char *name);
 
 /* constructor */
 librdf_storage* librdf_new_storage(librdf_world *world, char *storage_name, char *name, char *options_string);
-librdf_storage* librdf_new_storage_from_storage (librdf_storage* old_storage);
+librdf_storage* librdf_new_storage_with_options(librdf_world *world, char *storage_name, char *name, librdf_hash *options);
+librdf_storage* librdf_new_storage_from_storage(librdf_storage* old_storage);
 librdf_storage* librdf_new_storage_from_factory(librdf_world *world, librdf_storage_factory* factory, char *name, librdf_hash* options);
 
 /* destructor */
@@ -155,6 +166,7 @@ int librdf_storage_close(librdf_storage* storage);
 int librdf_storage_get(librdf_storage* storage, void *key, size_t key_len, void **value, size_t* value_len, unsigned int flags);
 
 int librdf_storage_size(librdf_storage* storage);
+
 int librdf_storage_add_statement(librdf_storage* storage, librdf_statement* statement);
 int librdf_storage_add_statements(librdf_storage* storage, librdf_stream* statement_stream);
 int librdf_storage_remove_statement(librdf_storage* storage, librdf_statement* statement);
@@ -177,9 +189,13 @@ int librdf_storage_has_arc_out(librdf_storage *storage, librdf_node *node, librd
 
 /* context methods */
 int librdf_storage_context_add_statement(librdf_storage* storage, librdf_node* context, librdf_statement* statement);
+int librdf_storage_context_add_statements(librdf_storage* storage, librdf_node* context, librdf_stream* stream);
 int librdf_storage_context_remove_statement(librdf_storage* storage, librdf_node* context, librdf_statement* statement);
+int librdf_storage_context_remove_statements(librdf_storage* storage, librdf_node* context);
+librdf_stream* librdf_storage_context_as_stream(librdf_storage* storage, librdf_node* context);
+/* DEPRECATED */
 librdf_stream* librdf_storage_context_serialise(librdf_storage* storage, librdf_node* context);
-
+  
 /* querying methods */
 int librdf_storage_supports_query(librdf_storage* storage, librdf_query *query);
 librdf_stream* librdf_storage_query(librdf_storage* storage, librdf_query *query);

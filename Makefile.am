@@ -2,7 +2,7 @@
 #
 # Makefile.am - top level automake file for Redland
 #
-# $Id: Makefile.am,v 1.120 2003/08/24 23:35:12 cmdjb Exp $
+# $Id: Makefile.am,v 1.121 2003/09/01 23:42:32 cmdjb Exp $
 #
 # Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
 # Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -25,11 +25,10 @@ noinst_SCRIPTS = redland-src-config
 man_MANS = redland-config.1
 
 # Subdirectories to build/install etc.
-SUBDIRS=raptor librdf @SD@
+SUBDIRS=librdf @SD@
 CONFIG_SUBDIRS=raptor
 # Subdirectories to use for distribution
-DIST_SUBDIRS=librdf docs perl raptor demos
-
+DIST_SUBDIRS=librdf docs perl demos
 
 EXTRA_DIST=ChangeLog \
 README      NEWS      LICENSE.txt  \

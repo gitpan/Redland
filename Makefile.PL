@@ -1,7 +1,7 @@
 #
 # Fake MakeMaker Makefile.PL - top level Makefile.PL for Redland
 #
-# $Id:$
+# $Id: Makefile.PL,v 1.2 2003/09/07 22:13:33 cmdjb Exp $
 #
 # Copyright (C) 2001-2003 David Beckett - http://purl.org/net/dajobe/
 # Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -53,23 +53,21 @@ my $program=basename $0;
 my $TOP_SRCDIR='.';
 my $PACKAGE="Redland";
 
-my $P=2;
+my $P=1;
 
 my $conf_in_file="$TOP_SRCDIR/configure.ac";
 open(CONF, $conf_in_file) or die "Cannot open $conf_in_file for version - $!\n";
-my $v;
+my $VERSION=undef;
 while(<CONF>) {
-  if(/LIBRDF_VERSION_(MAJOR|MINOR|RELEASE)=(\d+)$/) {
-    $v{$1}=$2;
+  if(/^AC_INIT\([^,]+,\s*(\d+\.\d+\.\d+)/) {
+    $VERSION=$1;
   }
 }
 close(CONF);
-$version=join(".",$v{MAJOR}, $v{MINOR}, $v{RELEASE});
 die "Cannot find AM_INIT_AUTOMAKE in $conf_in_file for version\n"
-  unless $version;
+  unless $VERSION;
 
 
-my $VERSION=$version;
 $VERSION.=".".$P if $P;
 
 
@@ -83,9 +81,6 @@ install-sh
 missing
 mkinstalldirs
 autogen.sh
-docs/build-docs
-docs/fix-python-xhtml
-docs/kernel-doc
 perl/example.pl
 perl/update-perl-api.pl
 raptor/compile
@@ -98,7 +93,6 @@ raptor/missing
 raptor/mkinstalldirs
 raptor/autogen.sh
 raptor/fix-groff-xhtml
-utils/update-api-0912.pl
 );
 
 # Archive::Tar looses the executable mode.
@@ -122,7 +116,7 @@ if ($args =~ m|CC=(\S+)|) {
   $ccarg = "CC=$1 ";
 }
 
-print "Writing $perl_makefile for RDF::Redland\n";
+print "Writing $perl_makefile for RDF::Redland version $VERSION\n";
 open(MK, ">$TOP_SRCDIR/$perl_makefile") 
   or die "Cannot create $TOP_SRCDIR/$perl_makefile - $!";
 

@@ -655,12 +655,12 @@ void librdf_perl_world_finish(void);
 
 #ifdef SWIGPYTHON
 /* swig doesn't declare all prototypes */
-static PyObject *_wrap_redland_copyright_string_get(void);
-static PyObject *_wrap_redland_version_string_get(void);
+static PyObject *_wrap_librdf_copyright_string_get(void);
+static PyObject *_wrap_librdf_version_string_get(void);
 
-static PyObject *_wrap_redland_version_major_get(void);
-static PyObject *_wrap_redland_version_minor_get(void);
-static PyObject *_wrap_redland_version_release_get(void);
+static PyObject *_wrap_librdf_version_major_get(void);
+static PyObject *_wrap_librdf_version_minor_get(void);
+static PyObject *_wrap_librdf_version_release_get(void);
 
 
 static PyObject *librdf_python_callback = NULL;
@@ -888,11 +888,13 @@ librdf_internal_test_warning(librdf_world *world)
 }
 
 
-extern char const *redland_copyright_string;
-extern char const *redland_version_string;
-extern int redland_version_major;
-extern int redland_version_minor;
-extern int redland_version_release;
+extern char const *const librdf_short_copyright_string;
+extern char const *const librdf_copyright_string;
+extern char const *const librdf_version_string;
+extern unsigned int const librdf_version_major;
+extern unsigned int const librdf_version_minor;
+extern unsigned int const librdf_version_release;
+extern unsigned int const librdf_version_decimal;
 #ifdef PERL_OBJECT
 #define MAGIC_CLASS _wrap_RDF::Redland::CORE_var::
 class _wrap_RDF::Redland::CORE_var : public CPerlObj {
@@ -906,11 +908,11 @@ SWIGCLASS_STATIC int swig_magic_readonly(pTHX_ SV *sv, MAGIC *mg) {
     croak("Value is read-only.");
     return 0;
 }
-SWIGCLASS_STATIC int _wrap_val_redland_copyright_string(pTHX_ SV *sv, MAGIC *mg) {
+SWIGCLASS_STATIC int _wrap_val_librdf_short_copyright_string(pTHX_ SV *sv, MAGIC *mg) {
     MAGIC_PPERL
     mg = mg;
-    if (redland_copyright_string) {
-        sv_setpv((SV*)sv, (char *) redland_copyright_string);
+    if (librdf_short_copyright_string) {
+        sv_setpv((SV*)sv, (char *) librdf_short_copyright_string);
     }else {
         sv_setsv((SV*)sv, &PL_sv_undef);
     }
@@ -918,11 +920,11 @@ SWIGCLASS_STATIC int _wrap_val_redland_copyright_string(pTHX_ SV *sv, MAGIC *mg)
 }
 
 
-SWIGCLASS_STATIC int _wrap_val_redland_version_string(pTHX_ SV *sv, MAGIC *mg) {
+SWIGCLASS_STATIC int _wrap_val_librdf_copyright_string(pTHX_ SV *sv, MAGIC *mg) {
     MAGIC_PPERL
     mg = mg;
-    if (redland_version_string) {
-        sv_setpv((SV*)sv, (char *) redland_version_string);
+    if (librdf_copyright_string) {
+        sv_setpv((SV*)sv, (char *) librdf_copyright_string);
     }else {
         sv_setsv((SV*)sv, &PL_sv_undef);
     }
@@ -930,26 +932,46 @@ SWIGCLASS_STATIC int _wrap_val_redland_version_string(pTHX_ SV *sv, MAGIC *mg) {
 }
 
 
-SWIGCLASS_STATIC int _wrap_val_redland_version_major(pTHX_ SV *sv, MAGIC *mg) {
+SWIGCLASS_STATIC int _wrap_val_librdf_version_string(pTHX_ SV *sv, MAGIC *mg) {
     MAGIC_PPERL
     mg = mg;
-    sv_setiv(sv, (IV) redland_version_major);
+    if (librdf_version_string) {
+        sv_setpv((SV*)sv, (char *) librdf_version_string);
+    }else {
+        sv_setsv((SV*)sv, &PL_sv_undef);
+    }
     return 1;
 }
 
 
-SWIGCLASS_STATIC int _wrap_val_redland_version_minor(pTHX_ SV *sv, MAGIC *mg) {
+SWIGCLASS_STATIC int _wrap_val_librdf_version_major(pTHX_ SV *sv, MAGIC *mg) {
     MAGIC_PPERL
     mg = mg;
-    sv_setiv(sv, (IV) redland_version_minor);
+    sv_setuv(sv, (UV) librdf_version_major);
     return 1;
 }
 
 
-SWIGCLASS_STATIC int _wrap_val_redland_version_release(pTHX_ SV *sv, MAGIC *mg) {
+SWIGCLASS_STATIC int _wrap_val_librdf_version_minor(pTHX_ SV *sv, MAGIC *mg) {
     MAGIC_PPERL
     mg = mg;
-    sv_setiv(sv, (IV) redland_version_release);
+    sv_setuv(sv, (UV) librdf_version_minor);
+    return 1;
+}
+
+
+SWIGCLASS_STATIC int _wrap_val_librdf_version_release(pTHX_ SV *sv, MAGIC *mg) {
+    MAGIC_PPERL
+    mg = mg;
+    sv_setuv(sv, (UV) librdf_version_release);
+    return 1;
+}
+
+
+SWIGCLASS_STATIC int _wrap_val_librdf_version_decimal(pTHX_ SV *sv, MAGIC *mg) {
+    MAGIC_PPERL
+    mg = mg;
+    sv_setuv(sv, (UV) librdf_version_decimal);
     return 1;
 }
 
@@ -4351,11 +4373,13 @@ static swig_constant_info swig_constants[] = {
 }
 #endif
 static swig_variable_info swig_variables[] = {
-    { "RDF::Redland::CORE::redland_copyright_string", MAGIC_CLASS swig_magic_readonly, MAGIC_CLASS _wrap_val_redland_copyright_string,0 },
-    { "RDF::Redland::CORE::redland_version_string", MAGIC_CLASS swig_magic_readonly, MAGIC_CLASS _wrap_val_redland_version_string,0 },
-    { "RDF::Redland::CORE::redland_version_major", MAGIC_CLASS swig_magic_readonly, MAGIC_CLASS _wrap_val_redland_version_major,0 },
-    { "RDF::Redland::CORE::redland_version_minor", MAGIC_CLASS swig_magic_readonly, MAGIC_CLASS _wrap_val_redland_version_minor,0 },
-    { "RDF::Redland::CORE::redland_version_release", MAGIC_CLASS swig_magic_readonly, MAGIC_CLASS _wrap_val_redland_version_release,0 },
+    { "RDF::Redland::CORE::librdf_short_copyright_string", MAGIC_CLASS swig_magic_readonly, MAGIC_CLASS _wrap_val_librdf_short_copyright_string,0 },
+    { "RDF::Redland::CORE::librdf_copyright_string", MAGIC_CLASS swig_magic_readonly, MAGIC_CLASS _wrap_val_librdf_copyright_string,0 },
+    { "RDF::Redland::CORE::librdf_version_string", MAGIC_CLASS swig_magic_readonly, MAGIC_CLASS _wrap_val_librdf_version_string,0 },
+    { "RDF::Redland::CORE::librdf_version_major", MAGIC_CLASS swig_magic_readonly, MAGIC_CLASS _wrap_val_librdf_version_major,0 },
+    { "RDF::Redland::CORE::librdf_version_minor", MAGIC_CLASS swig_magic_readonly, MAGIC_CLASS _wrap_val_librdf_version_minor,0 },
+    { "RDF::Redland::CORE::librdf_version_release", MAGIC_CLASS swig_magic_readonly, MAGIC_CLASS _wrap_val_librdf_version_release,0 },
+    { "RDF::Redland::CORE::librdf_version_decimal", MAGIC_CLASS swig_magic_readonly, MAGIC_CLASS _wrap_val_librdf_version_decimal,0 },
 {0}
 };
 static swig_command_info swig_commands[] = {
@@ -4523,7 +4547,7 @@ XS(SWIG_init) {
     
     
     #ifdef TCL_MAJOR_VERSION
-    Tcl_PkgProvide(interp, PACKAGE, (char*)redland_version_string);
+    Tcl_PkgProvide(interp, PACKAGE, (char*)librdf_version_string);
     #endif
     
     ST(0) = &PL_sv_yes;

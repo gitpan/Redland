@@ -2,7 +2,7 @@
 #
 # Makefile.am - automake file for Raptor
 #
-# $Id: Makefile.am,v 1.85 2003/08/21 18:05:13 cmdjb Exp $
+# $Id: Makefile.am,v 1.86 2003/09/08 12:49:52 cmdjb Exp $
 #
 # Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
 # Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -24,7 +24,7 @@ bin_SCRIPTS = raptor-config
 noinst_SCRIPTS = raptor-src-config
 lib_LTLIBRARIES = libraptor.la
 
-include_HEADERS = raptor.h ntriples.h
+include_HEADERS = raptor.h
 
 noinst_HEADERS = raptor_internal.h win32_config.h
 

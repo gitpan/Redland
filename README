@@ -1,12 +1,12 @@
-RDF::Redland 0.9.13 - Redland RDF Application Framework
+RDF::Redland 0.9.14.1 - Redland RDF Application Framework
 
 DESCRIPTION
 
-This is the second version of the CPAN-buildable package for the
-Redland C RDF library along with the perl interface (RDF::Redland)
-which comes with full POD documentation.  It allows you to
-manipulate, store and query the Resource Description Framework (RDF)
-graphs from Perl.
+This is the first version of the CPAN-buildable package for the
+Redland C RDF library version 0.9.14 along with the Perl interface
+(RDF::Redland) which comes with full POD documentation.  It allows
+you to manipulate, store and query the Resource Description Framework
+(RDF) graphs from Perl.
 
 This should(*) build with a standard CPAN install:
 
@@ -19,14 +19,38 @@ This should(*) build with a standard CPAN install:
   make install
 
 This isn't likely to work outside a POSIX system since building
-the C library assumes that kind of system.
+the C library assumes that.  An XML parser such as expat or libxml2
+is required and Sleepycat/Berkeley DB is needed if you want a
+persistent store.
 
-The description of Redland are given below and also in README.html
+The main description of Redland is given below and also in README.html
+
+CHANGES
+
+0.9.14.1  2003-09-08
+New major version of Redland
+
+0.9.13.3  2003-09-08 (not released)  
+
+Added patch to make the ancient Sleepycat/BDB 3.0.early (from 1999)
+work - as used on one of the testers.cpan.org machines.
+
+0.9.13.2  2003-09-07
+
+Fixes the execution bits on files before starting the perl
+Makefile.PL, gives some output and has more correct installation
+instructions.  The tarball has the other language interfaces removed
+and documentation for the C and non-perl APIs so the tarball size is
+about 30% smaller.
+
+0.9.13  2003-09-04 (deleted)
+
 
 LICENSE: LGPL/MPL
 
 Dave
 http://purl.org/net/dajobe/
+
 
 (*) If the above doesn't work, you can try the Redland native way:
   ./configure --with-perl

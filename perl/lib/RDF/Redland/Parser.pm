@@ -2,7 +2,7 @@
 #
 # Parser.pm - Redland Perl RDF Parser module
 #
-# $Id: Parser.pm,v 1.18 2003/08/22 16:49:49 cmdjb Exp $
+# $Id: Parser.pm,v 1.19 2003/08/29 11:27:20 cmdjb Exp $
 #
 # Copyright (C) 2000-2001 David Beckett - http://purl.org/net/dajobe/
 # Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -37,7 +37,8 @@ RDF::Redland::Parser - Redland RDF Syntax Parsers Class
   use RDF::Redland;
 
   ...
-  my $parser=new RDF::Redland::Parser("repat");
+  my $parser=new RDF::Redland::Parser("raptor");
+  my $parser2=new RDF::Redland::Parser(undef, "application/rdf+xml);
 
   # Return as an RDF::Redland::Stream
   my $stream=$parser->parse_as_stream($source_uri, $base_uri);

@@ -2,7 +2,7 @@
  *
  * ntriples_parse.c - Raptor N-Triples Parser implementation
  *
- * $Id: ntriples_parse.c,v 1.57 2003/08/13 22:20:07 cmdjb Exp $
+ * $Id: ntriples_parse.c,v 1.61 2003/09/08 12:49:39 cmdjb Exp $
  *
  * N-Triples
  * http://www.w3.org/TR/rdf-testcases/#ntriples
@@ -84,33 +84,6 @@ raptor_ntriples_parse_init(raptor_parser* rdf_parser, const char *name) {
 
 /* PUBLIC FUNCTIONS */
 
-/**
- * raptor_ntriples_new - Initialise the Raptor NTriples parser
- *
- * OLD API - use raptor_new_parser("ntriples")
- *
- * Return value: non 0 on failure
- **/
-
-raptor_parser*
-raptor_ntriples_new(void)
-{
-  return raptor_new_parser("ntriples");
-}
-
-
-/**
- * raptor_ntriples_free - Free the Raptor NTriples parser
- * @rdf_parser: parser object
- * 
- * OLD API - use raptor_free_parser
- **/
-void
-raptor_ntriples_free(raptor_parser *rdf_parser)
-{
-  raptor_free_parser(rdf_parser);
-}
-
 
 /*
  * raptor_ntriples_parse_terminate - Free the Raptor NTriples parser
@@ -122,62 +95,6 @@ raptor_ntriples_parse_terminate(raptor_parser *rdf_parser) {
   raptor_ntriples_parser_context *ntriples_parser=(raptor_ntriples_parser_context*)rdf_parser->context;
   if(ntriples_parser->line_length)
     RAPTOR_FREE(cdata, ntriples_parser->line);
-}
-
-
-/**
- * raptor_ntriples_set_error_handler - Set the parser error handling function
- * @parser: the parser
- * @user_data: user data to pass to function
- * @handler: pointer to the function
- * 
- * The function will receive callbacks when the parser fails.
- *
- * OLD API - use raptor_set_error_handler
- * 
- **/
-void
-raptor_ntriples_set_error_handler(raptor_parser* parser,
-                                  void *user_data,
-                                  raptor_message_handler handler)
-{
-  raptor_set_error_handler(parser, user_data, handler);
-}
-
-
-/**
- * raptor_ntriples_set_fatal_error_handler - Set the parser error handling function
- * @parser: the parser
- * @user_data: user data to pass to function
- * @handler: pointer to the function
- * 
- * The function will receive callbacks when the parser fails.
- * 
- * OLD API - use raptor_set_fatal_error_handler
- **/
-void
-raptor_ntriples_set_fatal_error_handler(raptor_parser* parser,
-                                        void *user_data,
-                                        raptor_message_handler handler)
-{
-  raptor_set_fatal_error_handler(parser, user_data, handler);
-}
-
-
-/**
- * raptor_ntriples_set_statement_handler - set the statement handler callback
- * @parser: ntriples parser
- * @user_data: user data for callback
- * @handler: callback function
- * 
- * OLD API - use raptor_set_statement_handler
- **/
-void
-raptor_ntriples_set_statement_handler(raptor_parser* parser,
-                                      void *user_data, 
-                                      raptor_statement_handler handler) 
-{
-  raptor_set_statement_handler(parser, user_data, handler);
 }
 
 
@@ -282,8 +199,10 @@ raptor_ntriples_generate_statement(raptor_parser *parser,
 
 /* These are for 7-bit ASCII and not locale-specific */
 #define IS_ASCII_ALPHA(c) (((c)>0x40 && (c)<0x5B) || ((c)>0x60 && (c)<0x7B))
+#define IS_ASCII_UPPER(c) ((c)>0x40 && (c)<0x5B)
 #define IS_ASCII_DIGIT(c) ((c)>0x2F && (c)<0x3A)
 #define IS_ASCII_PRINT(c) ((c)>0x1F && (c)<0x7F)
+#define TO_ASCII_LOWER(c) ((c)+0x20)
 
 typedef enum {
   RAPTOR_TERM_CLASS_URI,      /* ends on > */
@@ -361,6 +280,7 @@ raptor_ntriples_term(raptor_parser* rdf_parser,
   int ulen=0;
   unsigned long unichar=0;
   unsigned int position=0;
+  int end_char_seen=0;
   
   /* find end of string, fixing backslashed characters on the way */
   while(*lenp > 0) {
@@ -381,8 +301,10 @@ raptor_ntriples_term(raptor_parser* rdf_parser,
     
     if(c != '\\') {
       /* finish at non-backslashed end_char */
-      if(end_char && c == end_char)
+      if(end_char && c == end_char) {
+        end_char_seen=1;
         break;
+      }
 
       if(!raptor_ntriples_term_valid(rdf_parser, c, position, class)) {
         if(end_char) {
@@ -447,6 +369,11 @@ raptor_ntriples_term(raptor_parser* rdf_parser,
         rdf_parser->locator.column+=ulen;
         rdf_parser->locator.byte+=ulen;
         
+        if(unichar < 0 || unichar > 0x10ffff) {
+          raptor_parser_error(rdf_parser, "Illegal Unicode character with code point #x%lX.", unichar);
+          break;
+        }
+          
         dest+=raptor_unicode_char_to_utf8(unichar, dest);
         break;
 
@@ -458,6 +385,11 @@ raptor_ntriples_term(raptor_parser* rdf_parser,
     position++;
   } /* end while */
 
+  
+  if(end_char && !end_char_seen) {
+    raptor_parser_error(rdf_parser, "Missing terminating '%c' before end of line.", end_char);
+    return 1;
+  }
 
   /* terminate dest, can be shorter than source */
   *dest='\0';
@@ -822,6 +754,16 @@ raptor_ntriples_parse_line (raptor_parser* rdf_parser, char *buffer, int len)
   }
   
 
+  if(object_literal_language) {
+    /* Normalize language to lowercase
+     * http://www.w3.org/TR/rdf-concepts/#dfn-language-identifier
+     */
+    for(p=object_literal_language; *p; p++) {
+      if(IS_ASCII_UPPER(*p))
+        *p=TO_ASCII_LOWER(*p);
+    }
+  }
+
   raptor_ntriples_generate_statement(rdf_parser, 
                                      terms[0], term_types[0],
                                      terms[1], term_types[1],
@@ -972,24 +914,6 @@ raptor_ntriples_parse_start(raptor_parser *rdf_parser)
   locator->byte=0;
 
   return 0;
-}
-
-
-/**
- * raptor_ntriples_parse_file - Retrieve the Ntriples content at URI
- * @rdf_parser: parser
- * @uri: URI of NTriples content
- * @base_uri: the base URI to use (or NULL if the same)
- * 
- * OLD API - use raptor_parse_file
- *
- * Return value: non 0 on failure
- **/
-int
-raptor_ntriples_parse_file(raptor_parser* rdf_parser, raptor_uri *uri,
-                           raptor_uri *base_uri) 
-{
-  return raptor_parse_file(rdf_parser, uri, base_uri);
 }
 
 
