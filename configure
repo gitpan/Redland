@@ -12833,7 +12833,7 @@ abs_top_builddir=`pwd`
 subdirs="$subdirs raptor"
 
 
-                                                                                                                                                                                                                  ac_config_files="$ac_config_files Makefile docs/Makefile librdf/Makefile examples/Makefile perl/Makefile perl/t/Makefile perl/lib/Makefile perl/lib/RDF/Makefile perl/lib/RDF/Redland/Makefile php/Makefile python/Makefile python/test/Makefile tcl/Makefile java/Makefile java/org/Makefile java/org/librdf/Makefile java/org/librdf/redland/Makefile ruby/Makefile csharp/Makefile utils/Makefile demos/Makefile"
+                                                                                          ac_config_files="$ac_config_files Makefile docs/Makefile librdf/Makefile perl/Makefile perl/t/Makefile perl/lib/Makefile perl/lib/RDF/Makefile perl/lib/RDF/Redland/Makefile demos/Makefile"
 
           ac_config_files="$ac_config_files librdf/redland.spec"
 
@@ -13393,23 +13393,11 @@ do
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
   "docs/Makefile" ) CONFIG_FILES="$CONFIG_FILES docs/Makefile" ;;
   "librdf/Makefile" ) CONFIG_FILES="$CONFIG_FILES librdf/Makefile" ;;
-  "examples/Makefile" ) CONFIG_FILES="$CONFIG_FILES examples/Makefile" ;;
   "perl/Makefile" ) CONFIG_FILES="$CONFIG_FILES perl/Makefile" ;;
   "perl/t/Makefile" ) CONFIG_FILES="$CONFIG_FILES perl/t/Makefile" ;;
   "perl/lib/Makefile" ) CONFIG_FILES="$CONFIG_FILES perl/lib/Makefile" ;;
   "perl/lib/RDF/Makefile" ) CONFIG_FILES="$CONFIG_FILES perl/lib/RDF/Makefile" ;;
   "perl/lib/RDF/Redland/Makefile" ) CONFIG_FILES="$CONFIG_FILES perl/lib/RDF/Redland/Makefile" ;;
-  "php/Makefile" ) CONFIG_FILES="$CONFIG_FILES php/Makefile" ;;
-  "python/Makefile" ) CONFIG_FILES="$CONFIG_FILES python/Makefile" ;;
-  "python/test/Makefile" ) CONFIG_FILES="$CONFIG_FILES python/test/Makefile" ;;
-  "tcl/Makefile" ) CONFIG_FILES="$CONFIG_FILES tcl/Makefile" ;;
-  "java/Makefile" ) CONFIG_FILES="$CONFIG_FILES java/Makefile" ;;
-  "java/org/Makefile" ) CONFIG_FILES="$CONFIG_FILES java/org/Makefile" ;;
-  "java/org/librdf/Makefile" ) CONFIG_FILES="$CONFIG_FILES java/org/librdf/Makefile" ;;
-  "java/org/librdf/redland/Makefile" ) CONFIG_FILES="$CONFIG_FILES java/org/librdf/redland/Makefile" ;;
-  "ruby/Makefile" ) CONFIG_FILES="$CONFIG_FILES ruby/Makefile" ;;
-  "csharp/Makefile" ) CONFIG_FILES="$CONFIG_FILES csharp/Makefile" ;;
-  "utils/Makefile" ) CONFIG_FILES="$CONFIG_FILES utils/Makefile" ;;
   "demos/Makefile" ) CONFIG_FILES="$CONFIG_FILES demos/Makefile" ;;
   "librdf/redland.spec" ) CONFIG_FILES="$CONFIG_FILES librdf/redland.spec" ;;
   "redland-config" ) CONFIG_FILES="$CONFIG_FILES redland-config" ;;

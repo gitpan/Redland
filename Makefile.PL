@@ -1,7 +1,7 @@
 #
 # Fake MakeMaker Makefile.PL - top level Makefile.PL for Redland
 #
-# $Id: Makefile.PL,v 1.1 2002/01/02 13:53:41 cmdjb Exp $
+# $Id:$
 #
 # Copyright (C) 2001-2003 David Beckett - http://purl.org/net/dajobe/
 # Institute for Learning and Research Technology - http://www.ilrt.org/
@@ -50,25 +50,59 @@ my $program=basename $0;
 # All clear now?
 #
 
-$TOP_SRCDIR=$ENV{TOP_SRCDIR} || '.';
-$PACKAGE=$ENV{PACKAGE} || "Redland";
+my $TOP_SRCDIR='.';
+my $PACKAGE="Redland";
 
-my $version=$ENV{VERSION};
+my $P=2;
 
-if(!$version) {
-  my $conf_in_file="$TOP_SRCDIR/configure.ac";
-  open(CONF, $conf_in_file) or die "Cannot open $conf_in_file for version - $!\n";
-  my $v;
-  while(<CONF>) {
-    if(/LIBRDF_VERSION_(MAJOR|MINOR|RELEASE)=(\d+)$/) {
-      $v{$1}=$2;
-    }
+my $conf_in_file="$TOP_SRCDIR/configure.ac";
+open(CONF, $conf_in_file) or die "Cannot open $conf_in_file for version - $!\n";
+my $v;
+while(<CONF>) {
+  if(/LIBRDF_VERSION_(MAJOR|MINOR|RELEASE)=(\d+)$/) {
+    $v{$1}=$2;
   }
-  close(CONF);
-  $version=join(".",$v{MAJOR}, $v{MINOR}, $v{RELEASE});
-  die "Cannot find AM_INIT_AUTOMAKE in $conf_in_file for version\n"
-    unless $version;
 }
+close(CONF);
+$version=join(".",$v{MAJOR}, $v{MINOR}, $v{RELEASE});
+die "Cannot find AM_INIT_AUTOMAKE in $conf_in_file for version\n"
+  unless $version;
+
+
+my $VERSION=$version;
+$VERSION.=".".$P if $P;
+
+
+my(@scripts)=qw(
+compile
+config.guess
+config.sub
+configure
+depcomp
+install-sh
+missing
+mkinstalldirs
+autogen.sh
+docs/build-docs
+docs/fix-python-xhtml
+docs/kernel-doc
+perl/example.pl
+perl/update-perl-api.pl
+raptor/compile
+raptor/config.guess
+raptor/config.sub
+raptor/configure
+raptor/depcomp
+raptor/install-sh
+raptor/missing
+raptor/mkinstalldirs
+raptor/autogen.sh
+raptor/fix-groff-xhtml
+utils/update-api-0912.pl
+);
+
+# Archive::Tar looses the executable mode.
+chmod 0755, @scripts;
 
 
 my $perl_makefile="Makefile";
@@ -88,6 +122,7 @@ if ($args =~ m|CC=(\S+)|) {
   $ccarg = "CC=$1 ";
 }
 
+print "Writing $perl_makefile for RDF::Redland\n";
 open(MK, ">$TOP_SRCDIR/$perl_makefile") 
   or die "Cannot create $TOP_SRCDIR/$perl_makefile - $!";
 
@@ -99,7 +134,7 @@ print MK <<"EOM";
 #
 
 DISTNAME = $PACKAGE
-VERSION = $version
+VERSION = $VERSION
 
 SHELL = /bin/sh
 NOOP = \$(SHELL) -c true
@@ -125,11 +160,12 @@ DIST_DEFAULT = tardist
 all: config
 
 # MakeMaker target
-config:
+config: perl-config-stamp
+perl-config-stamp:
 	\@if [ ! -f ${standalone_makefile} ]; then \\
 	  cp ${perl_makefile} Makefile.perl; \\
-	  echo "${ccarg}PERL=$perl ./configure --prefix=$prefix"; \\
-	  ${ccarg}PERL=$perl ./configure --prefix=$prefix; \\
+	  echo "${ccarg}PERL=$perl ./configure --prefix=$prefix --with-perl"; \\
+	  ${ccarg}PERL=$perl ./configure --prefix=$prefix --with-perl; \\
 	  cp Makefile ${standalone_makefile}; \\
 	  cp Makefile.perl ${perl_makefile}; \\
 	  rm Makefile.perl; \\
@@ -144,10 +180,19 @@ config:
 	  echo "\$(MAKE) \$(MFLAGS) -f Makefile.perl all"; \\
 	  \$(MAKE) \$(MFLAGS) -f Makefile.perl all; \\
 	fi
+	touch config-stamp
 
 # MakeMaker targets
+# DYLD_LIBRARY_PATH - OSX
+# LD_LIBRARY_PATH - rest of world  
 test: config
-	cd perl && \$(MAKE) \$(MFLAGS) -f Makefile.perl \$@
+	here=`pwd`; \\
+	LD_LIBRARY_PATH=\$\$here/librdf/.libs:\$\$here/raptor/.libs; \\
+	export LD_LIBRARY_PATH; \\
+	DYLD_LIBRARY_PATH=\$\$here/librdf/.libs:\$\$here/raptor/.libs; \\
+	export DYLD_LIBRARY_PATH; \\
+	\$(MAKE) \$(MFLAGS) -f ${standalone_makefile} check
+#	cd perl && \$(MAKE) \$(MFLAGS) -f Makefile.perl \$@
 
 install: config
 	\@if [ -f ${standalone_makefile} ]; then \\
@@ -168,6 +213,7 @@ clean:
 	  echo "\$(MAKE) \$(MFLAGS) \$@\-perl"; \\
 	  \$(MAKE) \$(MFLAGS) \$\@-perl; \\
 	fi
+	rm -f perl-config-stamp
 
 # MakeMaker/GNU target
 distclean:
@@ -182,8 +228,8 @@ Makefile: Makefile.PL
 
 # MakeMaker[dist]/GNU targets
 # Pass on some targets to GNU autoconfigured makefile in order
-# so that 'make [all]' and 'make dist' work
-all-recursive all-am dist dist-hook: config
+# so that 'make [all]', 'make check' and 'make dist' work
+all-recursive all-am check-am clean-am distclean-am dvi-am info-am install-am install-data-am install-exec-am installcheck-am installdirs-am uninstall-am uninstall-info-am dist dist-hook: config
 	\$(MAKE) \$(MFLAGS) -f ${standalone_makefile} \$@
 
 

@@ -2,7 +2,7 @@ RDF::Redland 0.9.13 - Redland RDF Application Framework
 
 DESCRIPTION
 
-This is the first version of the CPAN-buildable package for the
+This is the second version of the CPAN-buildable package for the
 Redland C RDF library along with the perl interface (RDF::Redland)
 which comes with full POD documentation.  It allows you to
 manipulate, store and query the Resource Description Framework (RDF)
@@ -11,9 +11,11 @@ graphs from Perl.
 This should(*) build with a standard CPAN install:
 
   perl Makefile.PL
-    (wait some time as it configures and builds the C libraries)
+    (creates Makefile)
   make
-    (doesn't do much)
+    (wait some time as it runs configure and builds the C libraries)
+  make test
+    (runs lots of C checks and the perl interface ones)
   make install
 
 This isn't likely to work outside a POSIX system since building
@@ -27,15 +29,15 @@ Dave
 http://purl.org/net/dajobe/
 
 (*) If the above doesn't work, you can try the Redland native way:
-  ./configure
+  ./configure --with-perl
     (which writes a different Makefile :)
   make
+  make check    # optional
   make install
 
 ---
 
                      Redland RDF Application Framework
-                    http://www.redland.opensource.ac.uk/
 
                                 Dave Beckett
                Institute for Learning and Research Technology
@@ -96,8 +98,14 @@ Mailing Lists
    The  Redland  mailing lists discuss the development and use of Redland
    and Raptor as well as future plans and announcement of releases.
 
-   See http://www.redland.opensource.ac.uk/lists/
+See Also
 
+   If you want to know more about RDF and related work, try some of these
+   sites:
+     * W3C  Resource  Description Framework (RDF) activity page (official
+       home page)
+     * Dave Beckett's Resource Description Framework (RDF) Resource Guide
+       (yes that's me)
      _________________________________________________________________
 
    Copyright  2000-2003 Dave Beckett, Institute for Learning and Research

@@ -10912,7 +10912,7 @@ abs_top_srcdir=`cd $srcdir; pwd`
 abs_top_builddir=`pwd`
 
 
-                                                            ac_config_files="$ac_config_files Makefile raptor.spec examples/Makefile tests/Makefile win32/Makefile raptor.pc"
+                                        ac_config_files="$ac_config_files Makefile raptor.spec tests/Makefile raptor.pc"
 
           ac_config_files="$ac_config_files raptor-config"
 
@@ -11469,9 +11469,7 @@ do
   # Handling of arguments.
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
   "raptor.spec" ) CONFIG_FILES="$CONFIG_FILES raptor.spec" ;;
-  "examples/Makefile" ) CONFIG_FILES="$CONFIG_FILES examples/Makefile" ;;
   "tests/Makefile" ) CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
-  "win32/Makefile" ) CONFIG_FILES="$CONFIG_FILES win32/Makefile" ;;
   "raptor.pc" ) CONFIG_FILES="$CONFIG_FILES raptor.pc" ;;
   "raptor-config" ) CONFIG_FILES="$CONFIG_FILES raptor-config" ;;
   "raptor-src-config" ) CONFIG_FILES="$CONFIG_FILES raptor-src-config" ;;

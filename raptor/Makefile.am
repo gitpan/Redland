@@ -58,7 +58,7 @@ raptor.pc.in
 
 
 
-SUBDIRS= tests win32 examples
+SUBDIRS= tests
 
 TESTS=raptor_uri_test raptor_namespace_test strcasecmp_test \
 raptor_www_test raptor_set_test raptor_xml_test
