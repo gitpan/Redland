@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Redland RDF Application Framework - Perl RDF::Redland::URI Class</title>
+</head>
+<body bgcolor="#ffffff" text="#000085">
+
+<h1 align="center">Redland RDF Application Framework - Perl RDF::Redland::URI Class</h1>
+
+
+
+
+<!-- INDEX BEGIN --><!--
+
+<ul>
+
+    <li><a href="#name">NAME</a></li>
+    <li><a href="#synopsis">SYNOPSIS</a></li>
+    <li><a href="#description">DESCRIPTION</a></li>
+    <li><a href="#constructors">CONSTRUCTORS</a></li>
+    <li><a href="#methods">METHODS</a></li>
+    <li><a href="#old_methods">OLD METHODS</a></li>
+    <li><a href="#see_also">SEE ALSO</a></li>
+    <li><a href="#author">AUTHOR</a></li>
+</ul>
+--><!-- INDEX END -->
+
+<h2><a id="name" name="name">NAME</a></h2>
+
+<p>RDF::Redland::URI - Redland RDF URI Class</p>
+
+
+<h2><a id="synopsis" name="synopsis">SYNOPSIS</a></h2>
+
+<pre>
+  use RDF::Redland;
+</pre>
+
+<pre>
+  my $uri=new RDF::Redland::URI("<a href="http://example.com/&quot;">http://example.com/"</a>;);
+</pre>
+
+<pre>
+  my $uri2=RDF::Redland::URI-&gt;new_from_uri($uri);
+</pre>
+
+<pre>
+  print $uri2-&gt;as_string,"\n";
+</pre>
+
+
+<h2><a id="description" name="description">DESCRIPTION</a></h2>
+
+<p>Represents a URI as a mostly-opaque object for identifying things in the RDF world. The URIs are also used for identifying features for the RDF::Redland::Parser class.</p>
+
+
+<h2><a id="constructors" name="constructors">CONSTRUCTORS</a></h2>
+
+<dl>
+<dt><strong><a id="item_new" name="item_new">new STRING</a></strong><br />
+</dt>
+
+<dd>Create a new RDF::Redland::URI object from a URI string.</dd>
+
+<dt><strong><a id="item_clone" name="item_clone">clone URI</a></strong><br />
+</dt>
+
+<dd>Copy a RDF::Redland::URI</dd>
+</dl>
+
+
+<h2><a id="methods" name="methods">METHODS</a></h2>
+
+<dl>
+<dt><strong><a id="item_as_string" name="item_as_string">as_string</a></strong><br />
+</dt>
+
+<dd>Return the statement formatted as a string (UTF-8 encoded).</dd>
+
+<dt><strong><a id="item_equals" name="item_equals">equals URI</a></strong><br />
+</dt>
+
+<dd>Return non zero if this uri is equal to URI</dd>
+</dl>
+
+
+<h2><a id="old_methods" name="old_methods">OLD METHODS</a></h2>
+
+<dl>
+<dt><strong><a id="item_new_from_uri_uri" name="item_new_from_uri_uri">new_from_uri URI</a></strong><br />
+</dt>
+
+<dd>Create a new RDF::Redland::URI object from RDF::Redland::URI <em>URI</em> (copy constructor)</dd>
+
+<dd>
+<p>Use $u=$uri-&gt;clone</p>
+</dd>
+</dl>
+
+
+<h2><a id="see_also" name="see_also">SEE ALSO</a></h2>
+
+<p><a href="Parser.html">the RDF::Redland::Parser manpage</a></p>
+
+
+<h2><a id="author" name="author">AUTHOR</a></h2>
+
+<p>Dave Beckett - <a href="http://purl.org/net/dajobe/">http://purl.org/net/dajobe/</a></p>
+<hr />
+
+<p>Copyright 2000-2003 <a href="http://purl.org/net/dajobe/">Dave Beckett</a>, <a href="http://www.ilrt.bristol.ac.uk/">Institute for Learning and Research Technology</a>, <a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
+
+</body>
+</html>
+

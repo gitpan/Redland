@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/2000/REC-xhtml1-20000126/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+  <title>Raptor RDF Parser Toolkit - News</title>
+</head>
+<body bgcolor="#ffffff" text="#000085">
+
+<h1 align="center">Raptor RDF Parser Toolkit - News</h1>
+
+<h2>2003-08-25 Version 0.9.12 Released</h2>
+<p>Fix some XML memory leaks in Exclusive XML Canonicalization.<br />
+Stop parsing RSS tag soup after a user abort<br />
+Improved N-Triples syntax checking.<br />
+Crash fixes for 64 bit Alpha/Sparc Linux/Solaris (varargs, size_t)<br />
+Fixed some other minor memory leaks with <tt>rdf:datatype</tt> and <tt>rdf:ID</tt> attributes.
+</p>
+
+<h2>2003-07-29 Version 0.9.11 Released</h2>
+<p>Completely handles the <a href="http://www.w3.org/TR/rdf-syntax-grammar">revised RDF/XML syntax</a>
+(including post W3C Last Call changes)<br />
+Added Unicode Normal Form C (NFC) checking for literals (requires
+GNOME glib 2.0 at present)<br />
+Added Exclusive XML Canonicalization for XML Literals<br />
+Added many more checks for bad syntax (mostly illegal property
+attributes)<br />
+Updated <tt>parseType="Collection"</tt> triples after RDF Core WG change<br />
+Added an experimental RSS Tag Soup parser to read any pile of XML that has
+elements such as channel, image, item tags with title, description
+etc inside them into coherent RSS 1.0 RDF triples.
+(Requires libxml 2.5.0 or newer)<br />
+API: Added new methods raptor_get_name, raptor_get_label.<br />
+API: Added new methods raptor_set_default_generate_id_parameters and
+raptor_set_generate_id_handler to control generation of IDs.<br />
+API: Modified utility function raptor_xml_escape_string arguments.<br />
+Ripped out ISO 3166 country code parts since commercial use might be
+subject to a license fee.<br />
+Improvements to GTK example 'grapper'.<br />
+Several internal reorganisations for pulling out a SAX2 API, XML C14N.<br />
+Other minor bug fixes.
+</p>
+
+<h2>2003-04-17 Version 0.9.10 Released</h2>
+<p>Added parser lax / strict modes. lax is the default.<br />
+<tt>rdf:bagID</tt> now generates a warning in lax mode, an error in strict<br />
+Added raptor_www_no_www_library_init_finish to allow disabling of
+WWW library startup/shutdown.<br />
+Added raptor_parse_abort to abort parsing inside a callback.<br />
+Added a GTK GUI example program grapper<br />
+Other minor bug fixes.<br />
+</p>
+
+<h2>2003-03-28 Version 0.9.9 Released</h2>
+<p>Performance improvements - uses less memory, 
+less repeated small malloc/free sequences, faster for larger files.<br />
+Added WWW retrieval - can parse from an URI as well as files, given
+either <a href="http://curl.haxx.se/libcurl/">libcurl</a> or <a href="http://xmlsoft.org/">libxml2</a> is available.<br />
+Minor bug fixes.<br />
+Various Win32 configure, building patches<br />
+Sources updated to use autoconf 1.6+, automake 2.52+<br />
+More debian packaging updates.
+</p>
+
+<h2>2003-02-13 Version 0.9.8 Released</h2>
+<p>Minor bug fixes (synchronising with Redland 0.9.12 release).<br />
+Fixed crashing on empty files<br />
+Fixed accepting illegal <tt>xmlns:prefix=""</tt> (prefix without URI not allowed)<br />
+N-Triples bnodeIDs can now have '0's<br />
+Utility program rdfdump renamed to rapper; name conflicted with a common
+Linux utility.
+</p>
+
+<h2>2002-12-20 Version 0.9.7 Released</h2>
+<p>Passes about 90% of <a href="http://www.w3.org/2000/10/rdf-tests/rdfcore/">RDF Core WG Test Cases</a><br />
+All memory leaks fixed<br />
+Portability fixes - compilers, scripts, auto* tools, libxml2 version<br />
+<tt>rdf:ID</tt> syntax and duplicates checked<br />
+<tt>rdf:bagID</tt> supported<br />
+Added more conformance tests, errors and warnings.
+</p>
+
+<h2>2002-11-02 Version 0.9.6 Released</h2>
+<p><b>Calling API changed</b> to provide a common interface to
+the RDF parsers.  The libraptor.3 manual page describes the changes.<br />
+Added support for RDF datatyped literals in 
+<a href="http://www.w3.org/TR/rdf-syntax-grammar">RDF/XML</a> with
+<tt>rdf:datatype</tt> attribute on property elements and
+<a href="http://www.w3.org/2001/08/rdf-test/#ntriples">N-Triples</a>
+with the <tt>"string"^^&lt;datatypeURIref&gt;</tt>.<br />
+Added support for <tt>rdf:parseType="Collection"</tt> for RDF Collections<br />
+URI class allows swappable implementation by applications.<br />
+URI class now handles file: URIs for Win32 and Unix conventions.<br />
+Fixes to enable it to work on Apple OSX 10.1, 10.2
+(also tested working on Linux/x86, Solaris/sparc, FreeBSD/x86)<br />
+Many internal changes to support API changes, allow it to work
+with Redland when compiled as a separate library<br />
+Reorganised source into separate modules - URI, xml parser,
+ntriples parser, XML namespaces, XML qnames, locator.<br />
+More resilience with XML errors and XML parser errors - none of 
+libxml2's XML test suite examples crash raptor.<br />
+<a href="http://www.w3.org/2001/08/rdf-test/#ntriples">N-Triples</a>
+parser recovers gracefully from errors in content<br />
+Packing for debian included<br />
+Added manual pages libraptor.3 and rapper.1<br />
+Added raptor-config script for compiling with the library.
+</p>
+
+
+<h2>2002-06-08 Version 0.9.5 Released</h2>
+<p>Many bugs fixed<br />
+Added full relative URI resolving<br />
+Work around bugs in libxml and expat (older versions)<br />
+Support libxml with the use of entities in the document<br />
+Support <tt>xml:lang</tt> passing to application
+</p>
+
+<h2>2002-03-27 Version 0.9.4 Released</h2>
+<p>XML Base support (xml:base) added<br />
+xml:lang support added with <a href="http://www.w3.org/2001/08/rdf-test/#langString">N-Triples lang-string</a> support<br />
+All <a href="http://www.w3.org/2001/08/rdf-test/#ntrip_strings">N-Triples string escapes</a> implemented<br />
+<a href="http://www.w3.org/2001/08/rdf-test/#ntriples">N-Triples</a> support with <a href="http://www.w3.org/2001/08/rdf-test/#xmlString">XML literals</a> - xml("&lt;foo/&gt;") and plain "foo"<br />
+removed all special code for containers; treated as regular typedNodes<br />
+<tt>rdf:parseType="Literal"</tt> now working<br />
+Builds as shared and static libraries<br />
+Conformance test suite added
+</p>
+
+<h2>2001-08-21 Version 0.9.3 Released</h2>
+<p><a href="http://www.w3.org/TR/rdf-testcases/#ntriples">N-Triples</a>
+parser added<br />
+<tt>rdf:parseType="Literal"</tt> works much better (Aaron Michal and me)<br />
+DAML collections support added (Aaron Michal)<br />
+Win32 patch added - I can't confirm my merge didn't break this (Aaron Michal)<br />
+<a href="http://www.w3.org/TR/rdf-testcases/#ntriples">N-Triples</a> updated to support CR, LF and CR LF endings<br />
+Make parser generated ids appear distinguised from regular URIs<br />
+Added <a href="http://www.w3.org/TR/rdf-testcases/#ntriples">N-Triples</a> output<br />
+Made rdf:type, rdf:value as property attributes work<br />
+Made empty typed nodes work<br />
+GNOME xml / libxml error location (line, column) values corrected.
+</p>
+
+<h2>2001-07-03 Version 0.9.2 Released</h2>
+<p>Now called Raptor</p>
+
+<h2>2001-06-06 Version 0.9.1 Released</h2>
+<p>Many bug fixes<br />
+Updates for Redland API changes<br />
+Fixed <tt>rdf:parsetype="Literal"</tt> buffer overrun<br />
+Added better XML parser auto-detection for various expats and libxml
+</p>
+
+<h2>2001-01-22 Version 0.9.0 Released</h2>
+<p>First release</p>
+
+<hr />
+
+<p>Copyright 2001-2003 <a href="http://purl.org/net/dajobe/">Dave Beckett</a>, <a href="http://www.ilrt.bristol.ac.uk/">Institute for Learning and Research Technology</a>, <a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
+
+</body>
+</html>

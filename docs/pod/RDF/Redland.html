@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Redland RDF Application Framework - Perl RDF::Redland Class</title>
+</head>
+<body bgcolor="#ffffff" text="#000085">
+
+<h1 align="center">Redland RDF Application Framework - Perl RDF::Redland Class</h1>
+
+
+
+
+<!-- INDEX BEGIN --><!--
+
+<ul>
+
+    <li><a href="#name">NAME</a></li>
+    <li><a href="#synopsis">SYNOPSIS</a></li>
+    <li><a href="#description">DESCRIPTION</a></li>
+    <li><a href="#static_methods">STATIC METHODS</a></li>
+    <li><a href="#see_also">SEE ALSO</a></li>
+    <li><a href="#author">AUTHOR</a></li>
+</ul>
+--><!-- INDEX END -->
+
+<h2><a id="name" name="name">NAME</a></h2>
+
+<p>RDF::Redland - Redland RDF Class</p>
+
+
+<h2><a id="synopsis" name="synopsis">SYNOPSIS</a></h2>
+
+<pre>
+  use RDF::Redland;
+  my $storage=new RDF::Redland::Storage("hashes", "test", "new='yes',hash-type='memory'");
+  my $model=new RDF::Redland::Model($storage, "");
+</pre>
+
+<pre>
+  ...
+</pre>
+
+
+<h2><a id="description" name="description">DESCRIPTION</a></h2>
+
+<p>This class initialises the Redland RDF classes.</p>
+
+
+<h2><a id="static_methods" name="static_methods">STATIC METHODS</a></h2>
+
+<dl>
+<dt><strong><a id="item_set_error_handler_sub" name="item_set_error_handler_sub">set_error_handler SUB</a></strong><br />
+</dt>
+
+<dd>Set <em>SUB</em> as the subroutine to be called on a Redland error with the error message as the single argument. For example:</dd>
+
+<dd>
+<pre>
+  RDF::Redland::set_error_handler(sub {
+    my $msg=shift;
+    # Do something with $msg
+  });
+</pre>
+</dd>
+
+<dd>
+<p>The default if this is not set, is to run die $msg</p>
+</dd>
+
+<dt><strong><a id="item_set_warning_handler_sub" name="item_set_warning_handler_sub">set_warning_handler SUB</a></strong><br />
+</dt>
+
+<dd>Set <em>SUB</em> as the subroutine to be called on a Redland warning with the warning message as the single argument. For example:</dd>
+
+<dd>
+<pre>
+  RDF::Redland::set_warning_handler(sub {
+    my $msg=shift;
+    # Do something with $msg
+  });
+</pre>
+</dd>
+
+<dd>
+<p>The default if this is not set, is to run warn $msg</p>
+</dd>
+</dl>
+
+
+<h2><a id="see_also" name="see_also">SEE ALSO</a></h2>
+
+<p><a href="Redland/Node.html">the RDF::Redland::Node manpage</a>, <a href="Redland/Statement.html">the RDF::Redland::Statement manpage</a>, <a href="Redland/Model.html">the RDF::Redland::Model manpage</a>, <a href="Redland/Storage.html">the RDF::Redland::Storage manpage</a>, <a href="Redland/Parser.html">the RDF::Redland::Parser manpage</a>, <a href="Redland/Iterator.html">the RDF::Redland::Iterator manpage</a>, <a href="Redland/Stream.html">the RDF::Redland::Stream manpage</a>, <a href="Redland/URI.html">the RDF::Redland::URI manpage</a> and <a href="Redland/RSS.html">the RDF::Redland::RSS manpage</a>.</p>
+
+
+<h2><a id="author" name="author">AUTHOR</a></h2>
+
+<p>Dave Beckett - <a href="http://purl.org/net/dajobe/">http://purl.org/net/dajobe/</a></p>
+<hr />
+
+<p>Copyright 2000-2003 <a href="http://purl.org/net/dajobe/">Dave Beckett</a>, <a href="http://www.ilrt.bristol.ac.uk/">Institute for Learning and Research Technology</a>, <a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
+
+</body>
+</html>
+

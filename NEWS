@@ -1,0 +1,193 @@
+
+                   Redland RDF Application Framework - News
+
+2003-08-28 Redland 0.9.13 Released
+
+   API  CHANGE  Node  The  class  was  modifed to make objects immutable,
+   removing the set methods and to add new node type convienence methods.
+   API  addition  Model  Added  a method to sync the model to the backing
+   store.
+   API addition Parser Added methods to allow parsing from strings.
+   API addition Statement Added method to check for partial statements.
+   API addition Storage Added a method to sync the backing store.
+   Better error recovery - most errors return if possible.
+   Added initial simple threading support (patches by Seth Ladd)
+   Greatly  improved  Python API using 2.2 features (Edd Dumbill and Matt
+   Biddulph)
+   Updated  Perl,  Python  and  Java  APIs to always return new nodes and
+   statements, removing the need to consider shared object issues.
+   Updated serializing to RDF/XML to handle datatype literals
+   Update  to  Raptor version 0.9.12 (RDF/XML and N-Triples parser) - see
+   Raptor NEWS for changes since 0.9.8.
+   Extensive portability and other bug fixes.
+
+   See  the  Detailed  0.9.13  Release  Notes  for  the  full list of the
+   changes.
+
+2003-02-13 Redland 0.9.12 Released
+
+   FORMAT CHANGE The persistent storage format was changed to support RDF
+   typed  literals  and  this  will  require  an  upgrade of any existing
+   Berkeley/Sleepycat  DB  stores created by Redland 0.9.11 or earlier. A
+   utility  redland-db-upgrade  is provided that creates an updated store
+   from an existing one.
+   API  CHANGE  Iterator  and Stream classes. The next/get_next method is
+   split  into  get_object  always  returning  a  shared  object and next
+   methods.  get_context  method  added. (get_object is called current in
+   higher level language APIs)
+   API CHANGE Model class. Method add_statement no longer takes ownership
+   of the passed in statement. The caller now retains ownership.
+   API  CHANGE  Model  class.  Method  add_statements no longer frees the
+   passed in librdf_stream; the caller must free it now.
+   API CHANGE Node and Model classes. Added RDF Datatyped Literals. Other
+   literal is_wf_xml constructors and methods deprecated.
+   API  CHANGE  All  literals methods and constructors have no mention of
+   the never-used or supported XML Space argument which is not part of an
+   RDF literal.
+   Added  a  script  utils/update-api-0912.pl  to  help  automate the API
+   changes  as  far  as  possible  or  warn  about  those  that cannot be
+   automatically updated.
+   Added  contexts - Statements added to Model (when using a Storage that
+   supports  contexts)  can  take  an  optional Node, returned by the new
+   get_context method on Iterator and Stream classes.
+   Many  portability  and compiling fixes (OSX, gcc 3.x, FreeBSD, non-gcc
+   compiler)
+   Java API classes. Add finished() method replacing useless finalize().
+   Use Raptor message callbacks to get parser warnings and errors
+   Build  Java  API working around the stupid things recent SWIG versions
+   do.
+   Make Redland work with BDB/Sleepycat DB v4 (as well as v2 and v3)
+   Python API gains pydoc comments and HTML derived version
+   Perl and Python APIs now receive Redland message callbacks
+   Redland  URI  class  now  registers  with Raptor rather than specially
+   compile Raptor
+   Added  RDF/XML Serializer class and made higher level language APIs to
+   it
+   Update  to  Raptor  version 0.9.8 (RDF/XML and N-Triples parser) - see
+   Raptor NEWS for detailed changes since 0.9.5
+   Added skeleton Ruby and PHP APIs
+   Major source reorganisation.
+
+   See also the Detailed 0.9.12 Release Notes
+
+2002-06-08 Redland 0.9.11 Released
+
+   Update to Raptor version 0.9.5 (RDF/XML and N-Triples parser)
+   Added  serialization  to  a  syntax  API;  with N-Triples as the first
+   syntax
+   Added start of query language API
+   Updated Python interface to be more Pythonic, now requires python 2.1+
+   Added Ruby API
+   Redland will now work as a perl CPAN module
+   Updated  Perl interface - modules have been renamed. Fix programs with
+   update-perl-api.pl
+   Updated Java API
+   Now uses libtool to build dynamic and static libraries
+   Multiple startup/shutdowns of entire library now works.
+
+2001-08-28 Redland 0.9.10 Released
+
+   More work on debian packaging
+   Added Raptor N-Triples parser
+   Changes needed for _:name identifiers from N-Triples
+   Added Java API
+
+2001-06-07 Redland 0.9.9 Released
+
+   Added    librdf_world    class    to    manage   Redland   environment
+   startup/shutdown - pervasive change throughout all other classes
+   configure  improvements  to  try  to  get  expat variants detected and
+   working more automatically
+   Added Debian (.deb) package support
+   SiRPAC parser wrapper now handles multi-line literals
+   Changed  stream  and iterator interfaces and classes to be compatible,
+   in  preparation  for  unifying  in  one  new  filter class. NOTE: This
+   requires  changes  to user-code - librdf_iterator_have_elements is now
+   !librdf_iterator_is_end    and    librdf_iterator_set_map    is    now
+   librdf_iterator_add_map
+   Added perl and python interface warnings for above changes
+   Preparation  work  for  querying  for  arcs  to/from  a resource node,
+   filtering
+   Additional   examples   and   explanations  added  to  perl  interface
+   documentation
+   Updated to Raptor RDF/XML parser 0.9.1 - many bug fixes
+
+2001-02-05 Redland 0.9.8 Released
+
+   Added Tcl interface
+   Added  Raptor  RDF parser, written by me (alpha quality) and made some
+   changes to support it.
+   More fixes to Perl interface to fix crashes
+   Added  Perl  RDF::RSS  method  as_xhtml  for simple RSS 1.0 to (X)HTML
+   formatting.
+
+2001-01-05 Redland 0.9.7 Released
+
+   Changed  Perl Model API - renamed get_* method names, added deprecated
+   warnings for old names.
+   Updated Repat to 2000-12-24 version (plus some patches).
+   Added Perl Plain Old Documentation (POD).
+   Fixed subtle Perl interface object reference bugs.
+   Changed Model API - add_statement now does not own the added statement
+   Added  to  Model  API  -  get_source,  get_arc,  get_target return one
+   matching  librdf_node, not a list of them like get_sources etc. do via
+   librdf_iterator.
+   Added UTF-8 support for converting between UTF-8 and ISO Latin-1.
+
+2000-11-06 Redland 0.9.6 Released
+
+   Added python interface (2.0 and 1.5)
+   More perl interface fixes
+   Parser APIs updated to handle syntax specified by MIME type and/or URI
+   and now have features allowing the setting/querying of parser options.
+
+2000-10-20 Redland 0.9.5 Released
+
+   Added Repat RDF parser by Jason Diamond - jason at njektilo dot org
+   More perl API fixes and improvements
+   Internal  changes  preparing for proper reification support and use of
+   rdf:, rdfs: concepts
+
+2000-09-29 Redland 0.9.4 Released
+
+   Implemented perl interface
+   Created RPM construction support
+   Started work on internal RDF parser
+
+2000-08-30 Redland 0.9.3 Released
+
+   Implemented  fast  get sources, targets, arcs for storage models using
+   multiple hashes (Berkeley DB)
+   Made Berkeley DB support work for V3, two variants of V2
+   Implemented removing statements for stored models
+   Changed internal hash API arguments, which was nice.
+   Added  general RDF utility example code example4.c that parses RDF/XML
+   syntax, stores it and provides multiple query methods.
+   Added simple 10-line RDF example code example3.c
+   SiRPAC Java parser call changed to not discard error output
+   Use streaming part of SiRPAC Java parser
+   Didn't  do  anything on list :( but fixed several parts of code marked
+   FIXME :-).
+
+2000-08-21 Redland 0.9.2 Released
+
+   API HTML documentation added to release.
+   configure now splits and generates sub-version numbers.
+
+2000-08-18 Redland 0.9.1 Released
+
+   configure warns user if no persistant storage (BDB) found
+   configure warns user if no RDF parser configured
+   Made BDB V1 fail if found by configure - does not work with Redland.
+   Some improvements to installation document.
+
+2000-08-18 Redland 0.9.0 Released
+
+2000-08-17
+
+   Redland   renamed  from  librdf,  license  changed  to  LGPL/MPL  from
+   LGPL/BSD.
+     _________________________________________________________________
+
+   Copyright  2000-2003 Dave Beckett, Institute for Learning and Research
+   Technology, University of Bristol

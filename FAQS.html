@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <title>Redland RDF Application Framework - Frequently Asked Questions (FAQs)</title>
+</head>
+<body bgcolor="#ffffff" text="#000085">
+
+<h1 align="center">Redland RDF Application Framework - Frequently Asked Questions (FAQs)</h1>
+
+
+<ol>
+
+<li>What is the license?
+
+<p>Redland is
+<a href="http://www.gnu.org/philosophy/free-sw.html">Free Software</a>,
+or
+<a href="http://www.opensource.org/">Open Source</a> if you prefer.
+</p>
+</li>
+
+<li>Why is the code released under two licenses - LGPL and MPL?
+
+<p>I originally considered just a GPL version of the library but I
+considered this too restrictive, hence the LGPL version.  LGPL also
+allows the user, at their choice, to license the software under the
+GPL (See LGPL Term 3) in which case this software can also be used
+with all the other GPLed code -- see next answer.</p>
+
+<p>As an alternative, the entire library can be used under the terms
+of the 
+<a href="http://www.mozilla.org/MPL/MPL-1.1.html">Mozilla Public License V1.1</a>
+which allow you use it in other ways that aren't so <em>virus-y</em> (ahem)
+as the (L)GPL.</p>
+</li>
+
+<li>Can I link this library with code under license XXX?
+
+<p>Firstly, I am not a lawyer, so seek your own legal advice if you
+care about it seriously.  However, here is an overview of how you
+can use this software:</p>
+
+<ul>
+<li>If you choose the LGPL/GPL licenses, the <a href="http://www.gnu.org/philosophy/license-list.html">GNU project list of licenses page</a> says that you can link the following licensed software with the code:<br />
+GPLed, LGPLed, Guile, GNU Ada, X11, Expat, Standard ML of NJ, Cryptix, modified BSD, zlib,iMatrix, W3C, Berkeley/Sleepycat Database, OpenLDAP, Python 1.6a2 earlier, Python 2.0.1,2.1.1 and later, Perl (as GPL), Clarified Artistic, Artistic 2.0, Zope 2.0, Intel OSL, Netscape JavaScript, eCOS 2.0, Eiffel V2<br />
+and <b>not</b> these types:<br />
+Affero, Arphic, original BSD, Original BSD, AFL 1.1, OSL 1.0, Apache 1.0, Apache 1.1, Zope V1, xinetd, Python 1.6b1+ and 2.0 and 2.1, OpenLDAP V2.3, Vim 5.7, IBM PL 1.0, Phorum V1.2, LaTeX (LPPL), MPL, NOSL 1.0, Interbase 1.0, Sun PL, Nokia OSL, Netscape PL, Jabber OSL 1.0, Sun ISSL 1.0, QPL 1.0, Freetype License, PHP License, Zend License<br />
+check the link above for updates, since the above is not a definitive
+list.</li>
+
+<li>If you choose the MPL, you should be able to
+link with most anything else except you might have problems
+distributing stuff which includes GPLed/LGPLed parts, in which case,
+choose the LGPL or GPL licenses.</li>
+</ul>
+</li>
+
+<li>Why is Redland written in C?
+
+<p>Writing in C allows reuse in lots of ways and the library should
+be easy to call from languages since most of them allow importing of
+C libraries or calling of C functions.</p>
+
+<p>C is also more "portable" (subject to the usual C problems) and
+should be compilable on many different systems.  I have access to
+and have built it on (at various times):</p>
+
+<p>Linux 2.x (x86), Solaris 2.5, 7, 8 (Sparc), OSX (PPC), DEC Alpha, FreeBSD 4.7 (x86) and HP-UX 10.</p>
+
+<p>it configured, built and tested out of the box on all of these.</p>
+
+<p>See also the W3C Library note on
+<a href="http://www.w3.org/Library/User/Style/Cpp.html">C++ in C</a>
+which covers some of these issues, although I wrote the library before
+finding this.</p>
+</li>
+
+<li>Why is it called Redland?
+
+<p>Well, librdf was too boring <tt>:-)</tt>!  I work for
+the <a href="http://www.bristol.ac.uk/">University of Bristol</a>
+and <em>Redland</em> is an area of Bristol which has an 'R' and a 'D'
+in the name.  Plus I couldn't find a decent word with the letters 'RDF'
+in it.</p>
+</li>
+
+<li>Redmond?
+
+<p>No, Redland - not related to an area near Seattle, Washington
+State, USA home to an illegal monopolist.</p>
+</li>
+
+<li>Where is the <em>LANG</em> higher-level language interface?
+
+<p>Redland provides 6 language interfaces (at 2003-02-13)
+via <a href="http://www.swig.org/">SWIG</a>.  If SWIG does another
+language you want and supports it, you should be able to build one
+yourself relatively easily, following the existing scheme.</p>
+
+</li>
+
+<li>Does it support a query language?<br />
+
+<p>Not yet, but if it did, it would probably be
+<a href="http://www.hpl.hp.com/semweb/rdql.html">RDQL RDF Data Query Language
+</a>
+</p>
+
+</li>
+
+<li>Does it run on MS Windows?<br />
+
+<p>I don't know since I don't use it.  I've had reports it builds under the
+<a href="http://cygwin.com/">Cygwin</a> environment relatively
+easily.  As far as portability and "unix"-isms in the code, they are
+flagged in comments and only related to file name handling, maybe in
+creating temporary files.</p>
+</li>
+
+<li>Does it run on Apple OSX?<br />
+<p>Yes - mentioned above.  This was done with the
+<a href="http://fink.sourceforge.net/">Fink</a> environment
+to get some of the GNU toolchain (GNU make, others if you are
+building from CVS).  It probably can be done without Fink, since the
+external requirements are low - Berkeley/Sleepycat DB required and
+libxml2 recommended but not required.
+</p>
+</li>
+
+<li>Redland and Raptor - what are they?<br />
+
+<p><a href="http://www.redland.opensource.ac.uk/">Redland</a> is the
+RDF library written in C and including several high-level language
+APIs providing RDF manipulation and storage.  Redland requires Raptor
+and cannot be used without it since it uses URI and WWW retrieval
+parts even if no parsing is being performed.  The Redland sources
+currently include Raptor, although this may change.</p>
+
+<p><a href="http://www.redland.opensource.ac.uk/raptor/">Raptor</a> is the
+RDF parser library written in C dealing with reading RDF/XML and N-Triples
+syntaxes (more eventually) into RDF triples.  It is an entirely
+standalone and separate library from Redland, developed and released
+on a different schedule.</p>
+</li>
+
+</ol>
+
+<hr />
+
+<p>Copyright 2000-2003 <a href="http://purl.org/net/dajobe/">Dave Beckett</a>, <a href="http://www.ilrt.bristol.ac.uk/">Institute for Learning and Research Technology</a>, <a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
+
+</body>
+</html>

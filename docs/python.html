@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <title>Redland - RDF Application Framework - Python Interface</title>
+</head>
+<body bgcolor="#ffffff" text="#000085">
+
+<h1 align="center">Redland - RDF Application Framework - Python Interface</h1>
+
+<h2>Installing the Redland Python interface</h2>
+
+<p>This is built if <tt>--with-python</tt> is given to the configure
+line, or <tt>--with-python=python2.3</tt> to use a particular python
+version/program.  The standard 'make' at the top level will build it.</p>
+
+<p>You can also compile the python interface by hand as follows:</p>
+
+<pre>
+  cd python
+  make
+  make check   # optional
+</pre>
+
+<p>To install it system wide (this is optional) do this as <em>root</em>:</p>
+
+<pre>
+  root# make install
+</pre>
+
+<p>The python interface for Redland requires
+<a href="http://www.python.org/2.2/">Python 2.2</a>
+(it also works fine with 2.3).</p>
+
+
+<h2>Testing the Redland Python interface</h2>
+
+<p>If you did the install above, run the python example program with:</p>
+<pre>
+  python example.py
+</pre>
+<p>(Using the same chosen earlier)</p>
+
+<p>Otherwise, to run it in the source tree you need to find out the
+architecture-specific sub-directory it created in the <em>build</em>
+directory such as <em>build/lib.linux-i686-2.2</em> and run it with:</p>
+<pre>
+  PYTHONPATH=build/lib.linux-i686-2.3 python example.py
+</pre>
+
+<p>and the result should be:</p>
+<pre>
+  found statement: {[http://purl.org/net/dajobe/], [http://purl.org/dc/elements/1.1/creator], "Dave Beckett"}
+  Parsing URI (file) ../perl/dc.rdf
+  Parsing added 3 statements
+  Printing all statements
+  Statement: {[http://purl.org/net/dajobe/], [http://purl.org/dc/elements/1.1/description], "The generic home page of Dave Beckett."}
+  Statement: {[http://purl.org/net/dajobe/], [http://purl.org/dc/elements/1.1/title], "Dave Beckett's Home Page"}
+  Statement: {[http://purl.org/net/dajobe/], [http://purl.org/dc/elements/1.1/creator], "Dave Beckett"}
+  Statement: {[http://purl.org/net/dajobe/], [http://purl.org/dc/elements/1.1/creator], "Dave Beckett"}
+  Writing model to test-out.rdf as rdf/xml
+</pre>
+
+
+
+
+<h2>Redland Python API Introduction</h2>
+
+<p>The pydoc <a href="pydoc/RDF.html">Redland Python API</a>
+contains full details of the classes and methods provided.</p>
+
+<p>The Python API is an object-based API reflecting the same structure
+of the Redland objects with simple mappings between them:</p>
+
+<center>
+<table align="center" border="1">
+<tr>
+<th>Concept</th><th>Redland Class</th><th>Python Class</th><th>Purpose</th>
+</tr>
+<tr>
+<td>Resource / Literal</td><td><a href="api/node.html">librdf_node</a></td><td><a href="pydoc/RDF.html#Node"><tt>RDF.Node</tt></a></td>
+<td>RDF Model &amp; Syntax nodes</td>
+</tr>
+<tr>
+<td>Statement / Triple</td><td><a href="api/statement.html">librdf_statement</a></td><td><a href="pydoc/RDF.html#Statement"><tt>RDF.Statement</tt></a></td>
+<td>RDF Model &amp; Syntax arcs (statements, triples) [isa Resource]</td>
+</tr>
+<tr>
+<td>Model</td><td><a href="api/model.html">librdf_model</a></td><td><a href="pydoc/RDF.html#Model"><tt>RDF.Model</tt></a></td>
+<td>Set of <em>Statement</em>s usually held in one <em>Storage</em>.</td>
+</tr>
+<tr>
+<td>Storage</td><td><a href="api/storage.html">librdf_storage</a></td><td><a href="pydoc/RDF.html#Storage"><tt>RDF.Storage</tt></a></td>
+<td>Storage for <em>Model</em>s either persistant or in-memory.</td>
+</tr>
+<tr>
+<td>Stream</td><td><a href="api/stream.html">librdf_stream</a></td><td><a href="pydoc/RDF.html#Stream"><tt>RDF.Stream</tt></a></td>
+<td>Providing sequences of <em>Statement</em>s from <em>Parser</em>s, queries.</td>
+</tr>
+<tr>
+<td>Parser</td><td><a href="api/parser.html">librdf_parser</a></td><td><a href="pydoc/RDF.html#Parser"><tt>RDF.Parser</tt></a></td>
+<td>Syntaxes parsers delivering <em>Stream</em> of <em>Statement</em>s or writing to a <em>Model</em></td>
+</tr>
+<tr>
+<td>Serializer</td><td><a href="api/serializer.html">librdf_serializer</a></td><td><a href="pydoc/RDF.html#Serializer"><tt>RDF.Serializer</tt></a></td>
+<td>Serializes a <em>Model</em> into a syntax such as RDF/XML</td>
+</tr>
+<tr>
+<td>Iterator</td><td><a href="api/iterator.html">librdf_iterator</a></td><td><a href="pydoc/RDF.html#Iterator"><tt>RDF.Iterator</tt></a></td>
+<td>Enumerating lists (of <em>Node</em>) from queries.</td>
+</tr>
+<tr>
+<td>URI</td><td><a href="api/uri.html">librdf_uri</a></td><td><a href="pydoc/RDF.html#Uri"><tt>RDF.Uri</tt></a></td>
+<td>Provides URIs for <em>Resource</em>s, <em>Parser</em>s, ...</td>
+</tr>
+<tr>
+<td>World</td><td>&nbsp;</td><td><a href="pydoc/RDF.html#World"><tt>RDF.World</tt></a></td>
+<td>RDF wrapper class handling Redland startup/shutdown</td>
+</tr>
+<tr>
+<td>Digest</td><td><a href="api/digest.html">librdf_digest</a></td><td>&nbsp;</td>
+<td>Internal content digest class</td>
+</tr>
+<tr>
+<td>Hash</td><td><a href="api/hash.html">librdf_hash</a></td><td>&nbsp;</td>
+<td>Internal key:value maps class</td>
+</tr>
+<tr>
+<td>List</td><td><a href="api/list.html">librdf_list</a></td><td>&nbsp;</td>
+<td>Internal list class</td>
+</tr>
+</table>
+</center>
+
+<h2>Other RDF Python APIs and applications</h2>
+
+<ul>
+<li><a href="http://sourceforge.net/projects/redfoot/">Redfoot</a> -  parser, store, viewer, editor, query system framework for RDF with web interface for building peer-to-peer web applications.</li>
+<li><a href="http://rdflib.net/">RDFLib.net</a> -  a Python library with RDF parser, store and serializer  Related to <a href="http://sourceforge.net/projects/redfoot/">Redfoot</a> which uses it.</li>
+<li><a href="http://4suite.org/4SuiteIndex.html">4Suite</a> - collection of python tools including <em>4RDF</em> that includes RDF metadata support by <a href="http://www.fourthought.com/">Fourthought, Inc.</a></li>
+<li><a href="http://www.w3.org/2000/10/swap/">W3C Semantic Web Area for Play</a> - lots of tools for RDF and beyond research including the <a href="http://www.w3.org/2000/10/swap/cwm.py">Closed World Machine (CWM)</a> data manipulator, rules processor and query system mostly using the Notation 3 textual RDF syntax</li>
+</ul>
+
+<hr />
+
+<p>Copyright 2000-2003 <a href="http://purl.org/net/dajobe/">Dave Beckett</a>, <a href="http://www.ilrt.bristol.ac.uk/">Institute for Learning and Research Technology</a>, <a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
+
+</body>
+</html>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Redland RDF Application Framework - Perl RDF::Redland::Statement Class</title>
+</head>
+<body bgcolor="#ffffff" text="#000085">
+
+<h1 align="center">Redland RDF Application Framework - Perl RDF::Redland::Statement Class</h1>
+
+
+
+
+<!-- INDEX BEGIN --><!--
+
+<ul>
+
+    <li><a href="#name">NAME</a></li>
+    <li><a href="#synopsis">SYNOPSIS</a></li>
+    <li><a href="#description">DESCRIPTION</a></li>
+    <li><a href="#constructors">CONSTRUCTORS</a></li>
+    <li><a href="#methods">METHODS</a></li>
+    <li><a href="#old_methods">OLD METHODS</a></li>
+    <li><a href="#see_also">SEE ALSO</a></li>
+    <li><a href="#author">AUTHOR</a></li>
+</ul>
+--><!-- INDEX END -->
+
+<h2><a id="name" name="name">NAME</a></h2>
+
+<p>RDF::Redland::Statement - Redland RDF Statement Class</p>
+
+
+<h2><a id="synopsis" name="synopsis">SYNOPSIS</a></h2>
+
+<pre>
+  use RDF::Redland;
+  my $statement1=new RDF::Redland::Statement($statement);
+  my $statement2=new RDF::Redland::Statement($subject,$predicate,$object);
+  ...
+</pre>
+
+<pre>
+  if($statement-&gt;subject-&gt;equals($node)) { 
+    ...
+  }
+</pre>
+
+
+<h2><a id="description" name="description">DESCRIPTION</a></h2>
+
+<p>Manipulate RDF statements which comprise three RDF::Redland::Node objects. Also used for <em>partial</em> statements which can have empty parts and are used for matching statements in statement queries of the model - see the <a href="Model.html">the RDF::Redland::Model manpage</a>.</p>
+
+
+<h2><a id="constructors" name="constructors">CONSTRUCTORS</a></h2>
+
+<dl>
+<dt><strong><a id="item_new_node_node_node_7cstatement" name="item_new_node_node_node_7cstatement">new NODE NODE NODE|STATEMENT</a></strong><br />
+</dt>
+
+<dd>Create a new statement from nodes or copy an existing statement.</dd>
+
+<dd>
+<p>If three <em>NODE</em>s are given, make a new statement from them. Each Node can be a Redland::RDF:Node, a Redland::RDF::URI, a perl URI or a string literal. Otherwise <em>STATEMENT</em> must be an existing statement to copy.</p>
+</dd>
+
+<dt><strong><a id="item_clone" name="item_clone">clone</a></strong><br />
+</dt>
+
+<dd>Copy a RDF::Redland::Statement.</dd>
+</dl>
+
+
+<h2><a id="methods" name="methods">METHODS</a></h2>
+
+<dl>
+<dt><strong><a id="item_subject__5bsubject_5d" name="item_subject__5bsubject_5d">subject [SUBJECT]</a></strong><br />
+</dt>
+
+<dd>Get/set the statement subject. When RDF::Redland::Node <em>SUBJECT</em> is given, sets the subject of the statement, otherwise returns a reference to the statement RDF::Redland::Node subject.</dd>
+
+<dt><strong><a id="item_predicate__5bpredicate_5d" name="item_predicate__5bpredicate_5d">predicate [PREDICATE]</a></strong><br />
+</dt>
+
+<dd>Get/set the statement predicate. When RDF::Redland::Node <em>PREDICATE</em> is given, sets the predicate of the statement, otherwise returns a reference to the statement RDF::Redland::Node predicate.</dd>
+
+<dt><strong><a id="item_object__5bobject_5d" name="item_object__5bobject_5d">object [OBJECT]</a></strong><br />
+</dt>
+
+<dd>Get/set the statement object. When RDF::Redland::Node <em>OBJECT</em> is given, sets the object of the statement, otherwise returns a reference to the statement RDF::Redland::Node object.</dd>
+
+<dt><strong><a id="item_as_string" name="item_as_string">as_string</a></strong><br />
+</dt>
+
+<dd>Return the statement formatted as a string (UTF-8 encoded).</dd>
+</dl>
+
+
+<h2><a id="old_methods" name="old_methods">OLD METHODS</a></h2>
+
+<dl>
+<dt><strong><a id="item_new_from_nodes_subject_predicate_object" name="item_new_from_nodes_subject_predicate_object">new_from_nodes SUBJECT PREDICATE OBJECT</a></strong><br />
+</dt>
+
+<dd>Create a new RDF::Redland::Statement with the given RDF::Redland::Node objects as parts (or undef when empty for a <em>partial</em> statement). Use $a=new RDF::Redland::Statement($subject, $predicate, $object);</dd>
+
+<dt><strong><a id="item_new_from_statement_statement" name="item_new_from_statement_statement">new_from_statement STATEMENT</a></strong><br />
+</dt>
+
+<dd>Create a new RDF::Redland::Statement object from RDF::Redland::Statement <em>STATEMENT</em> (copy constructor).</dd>
+
+<dd>
+<p>Use $s=$old_statement-&gt;clone;</p>
+</dd>
+</dl>
+
+
+<h2><a id="see_also" name="see_also">SEE ALSO</a></h2>
+
+<p><a href="Node.html">the RDF::Redland::Node manpage</a></p>
+
+
+<h2><a id="author" name="author">AUTHOR</a></h2>
+
+<p>Dave Beckett - <a href="http://purl.org/net/dajobe/">http://purl.org/net/dajobe/</a></p>
+<hr />
+
+<p>Copyright 2000-2003 <a href="http://purl.org/net/dajobe/">Dave Beckett</a>, <a href="http://www.ilrt.bristol.ac.uk/">Institute for Learning and Research Technology</a>, <a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
+
+</body>
+</html>
+

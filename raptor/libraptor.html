@@ -1,0 +1,1642 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- Creator     : groff version 1.18.1 --><!-- CreationDate: Tue Aug 26 01:39:38 2003 -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Raptor RDF Parser Toolkit - Raptor API</title>
+</head>
+<body bgcolor="#ffffff" text="#000085">
+<h1 align="center">Raptor RDF Parser Toolkit - Raptor API</h1>
+
+<hr />
+<a id="NAME" name="NAME"></a> 
+
+<h2>NAME</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>libraptor &minus; Raptor RDF parser toolkit library</p>
+</td>
+</tr>
+</table>
+
+<a id="SYNOPSIS" name="SYNOPSIS"></a> 
+
+<h2>SYNOPSIS</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<pre>
+<b>#include &lt;raptor.h&gt;
+
+raptor_init();
+raptor_parser *</b><i>p</i><b>=raptor_new_parser("rdfxml");
+raptor_set_statement_handler(</b><i>p</i><b>,</b><i>NULL</i><b>,</b><i>print_statements</i><b>);
+raptor_uri *</b><i>file_uri</i><b>=raptor_new_uri("http://example.org/");
+raptor_parse_file(</b><i>p</i><b>,</b><i>file_uri</i><b>,</b><i>base_uri</i><b>);
+raptor_parse_uri(</b><i>p</i><b>,</b><i>uri</i><b>,</b><i>NULL</i><b>);
+raptor_free_parser(</b><i>p</i><b>);
+raptor_free_uri(</b><i>file_uri</i><b>);
+raptor_finish();
+
+cc file.c -lraptor
+</b>
+</pre>
+</td>
+</tr>
+</table>
+
+<a id="DESCRIPTION" name="DESCRIPTION"></a> 
+
+<h2>DESCRIPTION</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>The <i>Raptor</i> library provides a high-level interface to a set of RDF format parsers, presently RDF/XML and N-Triples. The parsers turn the syntax into a sequence of RDF triples/statements. The RDF/XML parser uses either <i>expat</i> or <i>libxml</i> XML parser for providing the SAX event stream. The library functions are arranged in an object-oriented style with constructors, destructors and method calls. The statements and error messages are delivered via callback functions.</p>
+
+<!-- INDENTATION -->
+<p>Raptor contains a URI-reference parsing and resolving (not retrieval) class (raptor_uri) sufficient for dealing with URI-references inside RDF. This functionality is modular and can be transparently replaced with another existing and compatible URI implementation.</p>
+
+<!-- INDENTATION -->
+<p>It also provides a URI-retrieval class (raptor_www) for wrapping existing library such as libcurl or libxml2 that provides full or partial retrieval of data from URIs.</p>
+</td>
+</tr>
+</table>
+
+<a id="LIBRARY_INITIALISATION_AND_CLEANUP" name="LIBRARY_INITIALISATION_AND_CLEANUP"></a> 
+
+<h2>LIBRARY INITIALISATION AND CLEANUP</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>raptor_init()</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>raptor_finish()</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Initialise and cleanup the library. These must be called before any raptor_parser or raptor_uri is created or used.</p>
+</td>
+</tr>
+</table>
+
+<a id="PARSER_CONSTRUCTORS" name="PARSER_CONSTRUCTORS"></a> 
+
+<h2>PARSER CONSTRUCTORS</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>raptor_parser* raptor_new_parser(name)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Create a new raptor parser object for the parser with name <i>name</i> currently either "rdfxml", "ntriples" or "rss-tag-soup" for the RSS Tag Soup parser.</p>
+</td>
+</tr>
+</table>
+
+<a id="PARSER_DESTRUCTORS" name="PARSER_DESTRUCTORS"></a> 
+
+<h2>PARSER DESTRUCTORS</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_free_parser(raptor_parser *</b><i>parser</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Destroy a Raptor parser object.</p>
+</td>
+</tr>
+</table>
+
+<a id="PARSER_MESSAGE_CALLBACK_METHODS" name="PARSER_MESSAGE_CALLBACK_METHODS"></a> 
+
+<h2>PARSER MESSAGE CALLBACK METHODS</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>Several methods can be registered for the parser that return a variable-argument message in the style of printf(3). These also return a <i>raptor_locator</i> that can contain URI, file, line, column and byte counts of where the message is about. This structure can be used with the raptor_format_locator, raptor_print_locator functions below or the structures fields directly, which are defined in raptor.h</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_set_fatal_error_handler(raptor_parser*</b> <i>parser, void *user_data, raptor_message_handler handler)</i></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Set fatal error handler callback.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_set_error_handler(raptor_parser*</b> <i>parser</i><b>, void *</b><i>user_data</i><b>, raptor_message_handler</b> <i>handler</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Set non-fatal error handler callback.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_set_warning_handler(raptor_parser*</b> <i>parser</i><b>, void *</b><i>user_data</i><b>, raptor_message_handler</b> <i>handler</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Set warning message handler callback.</p>
+</td>
+</tr>
+</table>
+
+<a id="PARSER_STATEMENT_CALLBACK_METHOD" name="PARSER_STATEMENT_CALLBACK_METHOD"></a> 
+
+<h2>PARSER STATEMENT CALLBACK METHOD</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>The parser allows the registration of a callback function to return the statements to the application.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_set_statement_handler(raptor_parser*</b> <i>parser</i><b>, void *</b><i>user_data</i><b>, raptor_statement_handler</b> <i>handler</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Set the statement callback function for the parser. The <i>raptor_statement</i> structure is defined in raptor.h and includes fields for the subject, predicate, object of the statements along with their types and for literals, language and datatype.</p>
+</td>
+</tr>
+</table>
+
+<a id="PARSER_PARSING_METHODS" name="PARSER_PARSING_METHODS"></a> 
+
+<h2>PARSER PARSING METHODS</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>These methods perform the entire parsing in one method. Statements warnings, errors and fatal errors are delivered via the registered statement, error etc. handler functions.</p>
+
+<!-- INDENTATION -->
+<p>In both of these methods, the base URI is required for the RDF/XML parsers (name "rdfxml"). The N-Triples parser (name "ntriples") or RSS Tag Soup parser (name "rss-tag-soup") do not use this.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>int raptor_parse_file(raptor_parser*</b> <i>parser</i><b>, raptor_uri *</b><i>uri</i><b>, raptor_uri *</b><i>base_uri</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Parse the given filename (a URI like file:filename) according to the base URI <i>base_uri</i>, or NULL if not needed.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>int raptor_parse_uri(raptor_parser*</b> <i>parser</i><b>, raptor_uri*</b> <i>uri</i><b>, raptor_uri *</b><i>base_uri</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Parse the URI according to the base URI <i>base_uri</i>, or NULL if not needed. If no base URI is given, the <i>uri</i> is used. This method depends on the raptor_www subsystem (see <b>WWW Class</b> section below) and an existing underlying URI retrieval implementation such as libcurl or libxml to retrieve the content.</p>
+</td>
+</tr>
+</table>
+
+<a id="PARSER_CHUNKED_PARSING_METHODS" name="PARSER_CHUNKED_PARSING_METHODS"></a> 
+
+<h2>PARSER CHUNKED PARSING METHODS</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>These methods perform the parsing in parts by working on multiple chunks of memory passed by the application. Statements warnings, errors and fatal errors are delivered via the registered statement, error etc. handler functions.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>int raptor_start_parse(raptor_parser*</b> <i>parser</i><b>, const char *</b><i>uri</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Start a parse of chunked content with the base URI <i>uri</i> or NULL if not needed. The base URI is required for the RDF/XML parsers (name "rdfxml"). The N-Triples parser (name "ntriples") or RSS Tag Soup parser (name "rss-tag-soup") do not use this.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>int raptor_parse_chunk(raptor_parser*</b> <i>parser</i><b>, const unsigned char *buffer, size_t</b> <i>len</i><b>, int</b> <i>is_end</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Parse the memory at <i>buffer</i> of size <i>len</i> returning statements via the statement handler callback. If <i>is_end</i> is non-zero, it indicates the end of the parsing stream. This method can only be called after raptor_start_parse.</p>
+</td>
+</tr>
+</table>
+
+<a id="PARSER_UTILITY_METHODS" name="PARSER_UTILITY_METHODS"></a> 
+
+<h2>PARSER UTILITY METHODS</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_set_parser_strict(raptor_parser *</b><i>parser</i><b>, int</b> <i>is_strict</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Set the parser to strict (<i>is_strict</i> not zero) or lax (default) mode. The detail of the strictness can be controlled by raptor_set_feature.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_set_feature(raptor_parser *</b><i>parser</i><b>, raptor_feature</b> <i>feature</i><b>, int</b> <i>value</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Set a parser feature <i>feature</i> to a particular <i>value</i>. The current defined features are: <i>Feature Values</i> <b>RAPTOR_FEATURE_SCANNING</b> Boolean (non 0 true) <b>RAPTOR_FEATURE_ASSUME_IS_RDF</b> Boolean (non 0 true) <b>RAPTOR_FEATURE_ALLOW_NON_NS_ATTRIBUTES</b> Boolean (non 0 true) <b>RAPTOR_FEATURE_ALLOW_OTHER_PARSETYPES</b> Boolean (non 0 true) <b>RAPTOR_FEATURE_ALLOW_BAGID</b> Boolean (non 0 true) <b>RAPTOR_FEATURE_ALLOW_RDF_TYPE_RDF_LIST</b> Boolean (non 0 true) If the <i>scanning</i> feature is true, then the RDF/XML parser will look for embedded rdf:RDF elements inside the XML content, and not require that the XML start with an rdf:RDF root element.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>If the <i>assume_is_rdf</i> feature is true, then the RDF/XML parser will assume the content is RDF/XML, not require that rdf:RDF root element, and immediately interpret the content as RDF/XML.</p>
+
+<!-- INDENTATION -->
+<p>If the <i>allow_non_ns_attributes</i> feature is true, then the RDF/XML parser will allow non-XML namespaced attributes to be accepted as well as rdf: namespaced ones. For example, &rsquo;about&rsquo; and &rsquo;ID&rsquo; will be interpreted as if they were rdf:about and rdf:ID respectively.</p>
+
+<!-- INDENTATION -->
+<p>If the <i>allow_other_parsetypes</i> feature is true then the RDF/XML parser will allow unknown parsetypes to be present and will pass them on to the user. Unimplemented at present.</p>
+
+<!-- INDENTATION -->
+<p>If the <i>allow_bagid</i> feature is true then the RDF/XML parser will support the rdf:bagID attribute that was removed from the RDF/XML language when it was revised. This support may be removed in future.</p>
+
+<!-- INDENTATION -->
+<p>If the <i>allow_rdf_type_rdf_list</i> feature is true then the RDF/XML parser will generate the idList rdf:type rdf:List triple in the handling of rdf:parseType="Collection". This triple was removed during the revising of RDF/XML after collections were initially added.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>raptor_locator* raptor_get_locator(raptor_parser*</b> <i>rdf_parser</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Return the current raptor_locator object for the parser. This is a public structure defined in raptor.h that can be used directly, or formatted via raptor_print_locator.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_get_name(raptor_parser *</b><i>parser</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Return the string short name for the parser.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_get_label(raptor_parser *</b><i>parser</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Return a string label for the parser.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_set_default_generate_id_parameters(raptor_parser*</b> <i>rdf_parser</i><b>, char *</b><i>prefix</i><b>, int</b> <i>base</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Control the default method for generation of IDs for blank nodes and bags. The method uses a short string <i>prefix</i> and an integer <i>base</i> to generate the identifier which is not guaranteed to be a strict concatenation. If <i>prefix</i> is NULL, the default is used. If base is less than 1, it is initialised to 1.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_set_generate_id_handler(raptor_parser*</b> <i>parser</i><b>, void *</b><i>user_data</i><b>, raptor_generate_id_handler</b> <i>handler</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Allow full customisation of the generated IDs by setting a callback <i>handler</i> and associated <i>user_data</i> that is called whenever a blank node or bag identifier is required.</p>
+</td>
+</tr>
+</table>
+
+<a id="STATEMENT_UTILITY_FUNCTIONS" name="STATEMENT_UTILITY_FUNCTIONS"></a> 
+
+<h2>STATEMENT UTILITY FUNCTIONS</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_print_statement(const raptor_statement* const</b> <i>statement</i><b>, FILE *</b><i>stream</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Print a raptor statement object in a simple format for debugging only. The format of this output is not guaranteed to remain the same between releases.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_print_statement_as_ntriples(const raptor_statement*</b> <i>statement</i><b>, FILE *</b><i>stream</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Print a raptor statement object in N-Triples format, using all the escapes as defined in http://www.w3.org/TR/rdf-testcases/#ntriples</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>raptor_statement_part_as_counted_string(const void *</b><i>term</i><b>, raptor_identifier_type</b> <i>type</i><b>, raptor_uri*</b> <i>literal_datatype</i><b>, const unsigned char *</b><i>literal_language</i><b>, size_t*</b> <i>len_p</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>char* raptor_statement_part_as_string(const void *</b><i>term</i><b>, raptor_identifier_type</b> <i>type</i><b>, raptor_uri*</b> <i>literal_datatype</i><b>, const unsigned char *</b><i>literal_language</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Turns part of raptor statement into N-Triples format, using all the escapes as defined in http://www.w3.org/TR/rdf-testcases/#ntriples The part (subject, predicate, object) of the raptor_statement is passed in as <i>term</i>, the part type (subject_type, predicate_type, object_type) is passed in as <i>type</i>. When the part is a literal, the <i>literal_datatype</i> and <i>literal_language</i> fields are set, otherwise NULL (usually object_datatype, object_literal_language).</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="20%"></td>
+<td width="79%">
+<p>If <b>raptor_statement_part_as_counted_string</b> is used, the length of the returned string is stored in *<i>len_p</i> if not NULL.</p>
+</td>
+</tr>
+</table>
+
+<a id="LOCATOR_UTILITY_FUNCTIONS" name="LOCATOR_UTILITY_FUNCTIONS"></a> 
+
+<h2>LOCATOR UTILITY FUNCTIONS</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>int raptor_format_locator(char *</b><i>buffer</i><b>, size_t</b> <i>length</i><b>, raptor_locator*</b> <i>locator</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>This method takes a <i>raptor_locator</i> object as passed to an error, warning or other handler callback and formats it into the <i>buffer</i> of size <i>length</i> bytes. If <i>buffer</i> is NULL or <i>length</i> is insufficient for the size of the formatted locator, returns the number of additional bytes required in the buffer to write the locator.</p>
+
+<!-- INDENTATION -->
+<p>In particular, if this form is used: length=raptor_format_locator(NULL, 0, locator) it will return in <i>length</i> the size of a buffer that can be allocated for <i>locator</i> and a second call will perform the formatting: raptor_format_locator(buffer, length, locator)</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_print_locator(FILE *</b><i>stream</i><b>, raptor_locator*</b> <i>locator</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>This method takes a <i>raptor_locator</i> object as passed to an error, warning or other handler callback, formats and prints it to the given stdio <i>stream</i>.</p>
+</td>
+</tr>
+</table>
+
+<a id="N-TRIPLES_UTILITY_FUNCTIONS" name="N-TRIPLES_UTILITY_FUNCTIONS"></a> 
+
+<h2>N-TRIPLES UTILITY FUNCTIONS</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_print_ntriples_string(FILE*</b> <i>stream</i><b>, const char*</b> <i>string</i><b>, const char</b> <i>delim</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>This is a standalone function that prints the given string according to N-Triples escaping rules, expecting to be delimited by the character <i>delim</i> which is usually either " or &lt;</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>const char* raptor_ntriples_term_as_string (raptor_ntriples_term_type term)</b></p>
+</td>
+</tr>
+</table>
+
+<a id="XML_UTILITY_FUNCTIONS" name="XML_UTILITY_FUNCTIONS"></a> 
+
+<h2>XML UTILITY FUNCTIONS</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>size_t raptor_xml_escape_string(const unsigned char *</b><i>string</i><b>, size_t</b> <i>len</i><b>, unsigned char *</b><i>buffer</i><b>, size_t</b> <i>length</i><b>, char</b> <i>quote</i><b>, raptor_message_handler</b> <i>error_handler</i><b>, void *</b><i>error_data</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Apply the XML escaping rules to the string given in (string, len) into the buffer of size length. If quote is given, the escaped content is for an XML attribute and the appropriate quote character XML element content (CDATA). The <i>error_handler</i> method along with <i>error_data</i> allow error reporting to be given. If buffer is NULL, returns the size of the buffer required to escape. Otherwise the return value is the number of bytes used or 0 on failure.</p>
+</td>
+</tr>
+</table>
+
+<a id="URI_CLASS" name="URI_CLASS"></a> 
+
+<h2>URI CLASS</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>Raptor has a raptor_uri class must be used for manipulating and passing URI references. The default internal implementation uses char* strings for URIs, manipulating them and constructing them. This URI implementation can be replaced by any other that provides the equivalent functionality, using the raptor_uri_set_handler function.</p>
+</td>
+</tr>
+</table>
+
+<a id="URI_CONSTRUCTORS" name="URI_CONSTRUCTORS"></a> 
+
+<h2>URI CONSTRUCTORS</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>There a several constructors for raptor_uri to build them from char* strings and existing raptor_uri objects.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>raptor_uri* raptor_new_uri(const char*</b> <i>uri_string</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Create a raptor URI from a string URI-reference <i>uri_string</i>.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>raptor_uri* raptor_new_uri_from_uri_local_name(raptor_uri*</b> <i>uri</i><b>, const char*</b> <i>local_name</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Create a raptor URI from a string URI-reference <i>local_name</i> relative to an existing URI-reference. This performs concatenation of the <i>local_name</i> to the <i>uri</i> and not relative URI resolution, which is done by the raptor_new_uri_relative_to_base constructor.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>raptor_uri* raptor_new_uri_relative_to_base(raptor_uri*</b> <i>base_uri, const char* uri_string</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Create a raptor URI from a string URI-reference <i>uri_string</i> using relative URI resolution to the <i>base_uri</i>.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>raptor_uri* raptor_new_uri_from_id(raptor_uri*</b> <i>base_uri</i><b>, const unsigned char*</b> <i>id</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Create a raptor URI from a string RDF ID <i>id</i> concatenated to the <i>base_uri</i> base URI.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>raptor_uri* raptor_new_uri_for_rdf_concept(const char*</b> <i>name</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Create a raptor URI for the RDF namespace concept <i>name</i>.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>raptor_uri* raptor_new_uri_for_xmlbase(raptor_uri*</b> <i>old_uri</i><b>))</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Create a raptor URI suitable for use with xml:base (throw away fragment)</p>
+</td>
+</tr>
+</table>
+
+<a id="URI_DESTRUCTOR" name="URI_DESTRUCTOR"></a> 
+
+<h2>URI DESTRUCTOR</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_free_uri(raptor_uri*</b> <i>uri</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Destroy a raptor URI object.</p>
+</td>
+</tr>
+</table>
+
+<a id="URI_METHODS" name="URI_METHODS"></a> 
+
+<h2>URI METHODS</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>int raptor_uri_equals(raptor_uri*</b> <i>uri1</i><b>, raptor_uri*</b> <i>uri2</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Return non-zero if the given URIs are equal.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>raptor_uri* raptor_uri_copy(raptor_uri*</b> <i>uri</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Return a copy of the given raptor URI <i>uri</i>.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>char* raptor_uri_as_counted_string(raptor_uri *uri, size_t* len_p)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>char* raptor_uri_as_string(raptor_uri*</b> <i>uri</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Return a shared pointer to a string representation of the given raptor URI <i>uri</i>. This string is shared and must not be freed. If raptor_uri_as_counted_string is used, the length of the returned string is stored in *len_p if not NULL.</p>
+</td>
+</tr>
+</table>
+
+<a id="URI_UTILITY_FUNCTIONS" name="URI_UTILITY_FUNCTIONS"></a> 
+
+<h2>URI UTILITY FUNCTIONS</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_uri_resolve_uri_reference (const char*</b> <i>base_uri</i><b>, const char*</b> <i>reference_uri</i><b>, char*</b> <i>buffer</i><b>, size_t</b> <i>length</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>This is a standalone function that resolves the relative URI <i>reference_uri</i> against the base URI <i>base_uri</i> according to the URI resolution rules in RFC2396. The resulting URI is stored in <i>buffer</i> which is of <i>length</i> bytes. If this is too small, no work will be done.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>char *raptor_uri_filename_to_uri_string(const char*</b> <i>filename</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>This is a standalone function that turns a local filename (Windows or Unix style as appropriate for platform) into a URI string (file). The returned string must be freed by the caller.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>char *raptor_uri_uri_string_to_filename(const char*</b> <i>uri_string</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>This is a standalone function that turns a URI string that represents a local filename (file:) into a filename. The returned string must be freed by the caller.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>int raptor_uri_is_file_uri(const char*</b> <i>uri_string</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Returns non-zero if the given URI string represents a filename, is a file: URI.</p>
+</td>
+</tr>
+</table>
+
+<a id="URI_CLASS_IMPLEMENTATION" name="URI_CLASS_IMPLEMENTATION"></a> 
+
+<h2>URI CLASS IMPLEMENTATION</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_uri_set_handler(raptor_uri_handler *</b><i>handler</i><b>, void *</b><i>context</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Change the URI class implementation to the functions provided by the <i>handler</i> URI implementation. The <i>context</i> user data is passed in to the handler URI implementation calls.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_uri_get_handler(raptor_uri_handler **</b><i>handler</i><b>, void **</b><i>context</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Return the current raptor URI class implementation <i>handler</i> and <i>context</i></p>
+</td>
+</tr>
+</table>
+
+<a id="WWW_CLASS" name="WWW_CLASS"></a> 
+
+<h2>WWW CLASS</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>This is a small wrapper class around existing WWW libraries in order to provide HTTP GET or better URI retrieval for Raptor. It is not intended to be a general purpose WWW retrieval interface.</p>
+</td>
+</tr>
+</table>
+
+<a id="WWW_CLASS_INITIALISATION_AND_CLEANUP" name="WWW_CLASS_INITIALISATION_AND_CLEANUP"></a> 
+
+<h2>WWW CLASS INITIALISATION AND CLEANUP</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_www_init(void)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_www_finish(void)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Initialise or terminate the raptor_www infrastructure. raptor_www_init and raptor_finish are called by raptor_init and raptor_finish respecitively, otherwise must be called once each.</p>
+</td>
+</tr>
+</table>
+
+<!-- TABS -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="5%">
+<p>NOTE</p>
+</td>
+<td width="4%"></td>
+<td width="77%">
+<p>Several of the WWW library implementations require once-only initialisation and termination functions to be called, however raptor cannot determine whether this is already done before the library is initialised in <b>raptor_www_init</b> or terminated in <b>raptor_www_finish</b>, so always performs it. This can be changed by <b>raptor_www_no_www_library_init_finish</b>.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_www_no_www_library_init_finish(void)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>If this is called before <b>raptor_www_init</b>, it will not call the underlying WWW library global initialise or terminate functions. The application code must perform both operations.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="20%"></td>
+<td width="79%">
+<p>For example with curl, after this function is called, neither <b>curl_global_init</b> nor <b>curl_global_cleanup</b> will be called during <b>raptor_www_init</b> or <b>raptor_www_finish</b> respectively.</p>
+</td>
+</tr>
+</table>
+
+<a id="WWW_CONSTRUCTORS" name="WWW_CONSTRUCTORS"></a> 
+
+<h2>WWW CONSTRUCTORS</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>raptor_www *raptor_www_new(void)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>raptor_www *raptor_www_new_with_connection(void*</b> <i>connection</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Create a raptor WWW object capable of URI retrieval. If <i>connection</i> is given, it must match the connection object of the underlying WWW implementation. At present, this is only for libcurl, and allows you to re-use an existing curl handle, or use one which has been set up with some desired qualities.</p>
+</td>
+</tr>
+</table>
+
+<a id="WWW_DESTRUCTOR" name="WWW_DESTRUCTOR"></a> 
+
+<h2>WWW DESTRUCTOR</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_www_free(raptor_www *</b><i>www</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Destroy a raptor WWW object.</p>
+</td>
+</tr>
+</table>
+
+<a id="WWW_METHODS" name="WWW_METHODS"></a> 
+
+<h2>WWW METHODS</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_www_set_user_agent(raptor_www *</b><i>www</i><b>, const char *</b><i>user_agent</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Set the user agent, for HTTP requests typically.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_www_set_proxy(raptor_www *</b><i>www</i><b>, const char *</b><i>proxy</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Set the HTTP proxy - usually a string of the form http://server:port</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>raptor_www_set_write_bytes_handler(raptor_www *</b><i>www</i><b>, raptor_www_write_bytes_handler</b> <i>handler</i><b>, void *</b><i>user_data</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Set the handler to receive bytes written by the raptor_www implementation.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_www_set_content_type_handler(raptor_www *</b><i>www</i><b>, raptor_www_content_type_handler</b> <i>handler</i><b>, void *</b><i>user_data</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Set the handler to receive the HTTP Content-Type value, when/if discovered during retrieval by the raptor_www implementation.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_www_set_error_handler(raptor_www *www, raptor_message_handler</b> <i>error_handler</i><b>, void *</b><i>error_data</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Set the error handler routine for the raptor_www class. This takes the same arguments as the raptor_parser error, warning handler methods.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void* raptor_www_get_connection(raptor_www *</b><i>www</i><b>)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Return the underlying WWW library connection object. For example, for libcurl this is the curl_handle.</p>
+</td>
+</tr>
+</table>
+
+<a id="WWW_ACTION_METHODS" name="WWW_ACTION_METHODS"></a> 
+
+<h2>WWW ACTION METHODS</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>int raptor_www_fetch(raptor_www *www, raptor_uri *uri)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Retrieve the given URL, returning non zero on failure.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>void raptor_www_abort(raptor_www *www, const char *reason)</b></p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Abort an ongoing raptor WWW operation. Typically used within one of the raptor WWW handlers.</p>
+</td>
+</tr>
+</table>
+
+<a id="API_CHANGES" name="API_CHANGES"></a> 
+
+<h2>API CHANGES</h2>
+
+<!-- TABS -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="14%"></td>
+<td width="8%">
+<p>0.9.12</p>
+</td>
+<td width="16%"></td>
+<td width="60%">
+<p>Added <b>raptor_new_uri_for_retrieval</b> to turn URI</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>references into URIs suitable for retrieval (no fragments).</p>
+</td>
+</tr>
+</table>
+
+<!-- TABS -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="16%"></td>
+<td width="8%">
+<p>0.9.11</p>
+</td>
+<td width="19%"></td>
+<td width="55%">
+<p>Added <b>raptor_get_name</b>, <b>raptor_get_label</b>.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>raptor_xml_escape_string</b> now takes error message handler, data pointer, loses parser argument.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Added <b>raptor_set_default_generate_id_parameters</b> and <b>raptor_set_generate_id_handler</b> to control the default generation of IDs, allow full customisation.</p>
+</td>
+</tr>
+</table>
+
+<!-- TABS -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="23%"></td>
+<td width="8%">
+<p>0.9.10</p>
+</td>
+<td width="25%"></td>
+<td width="42%">
+<p>Added <b>raptor_set_parser_strict</b>,</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>raptor_www_no_www_library_init_finish</b>. <b>raptor_xml_escape_string</b> now takes an output string length pointer.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Added <b>raptor_statement_part_as_counted_string</b>, <b>raptor_statement_part_as_string, raptor_parse_abort</b>.<br />
+Deprecated <b>raptor_parser_abort</b>.</p>
+</td>
+</tr>
+</table>
+
+<!-- TABS -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="13%"></td>
+<td width="7%">
+<p>0.9.9</p>
+</td>
+<td width="1%"></td>
+<td width="77%">
+<p>Added raptor_www class and all its constructors, destructor, methods, calls.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Added <b>raptor_parse_uri</b>, <b>raptor_parser_abort</b>, <b>raptor_ntriples_term_as_string</b> and <b>raptor_xml_escape_string</b>.</p>
+</td>
+</tr>
+</table>
+
+<!-- TABS -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+<p>0.9.7</p>
+</td>
+<td width="2%"></td>
+<td width="77%">
+<p><b>raptor_parse_chunk, raptor_new_uri_from_id</b>, arguments are now unsigned char.</p>
+</td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="21%"></td>
+<td width="77%">
+<p>Added <b>raptor_new_uri_for_xmlbase</b>.</p>
+</td>
+</tr>
+</table>
+
+<!-- TABS -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+<p>0.9.6</p>
+</td>
+<td width="80%"></td>
+</tr>
+</table>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p>In this version, the raptor/ntriples parser calling APIs were modified. The following table lists the changes: <i>OLD API NEW API (0.9.6+)</i> <b>raptor_new() raptor_new_parser("rdfxml") ntriples_new() raptor_new_parser("ntriples") raptor_free raptor_free_parser ntriples_free raptor_ntriples_parser raptor_ntriples_parse_file raptor_parse_file raptor_ntriples_set_error_handler raptor_set_error_handler raptor_ntriples_set_fatal_error_handler raptor_set_fatal_error_handler raptor_ntriples_set_statement_handler raptor_set_statement_handler</b></p>
+</td>
+</tr>
+</table>
+
+<a id="CONFORMING_TO" name="CONFORMING_TO"></a> 
+
+<h2>CONFORMING TO</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><i>RDF/XML Syntax (Revised)</i>, W3C Working Draft (work in progress), http://www.w3.org/TR/rdf-syntax-grammar/</p>
+
+<!-- INDENTATION -->
+<p><i>N-Triples</i>, W3C Working Draft (work in progress), http://www.w3.org/TR/rdf-testcases/#ntriples</p>
+</td>
+</tr>
+</table>
+
+<a id="SEE_ALSO" name="SEE_ALSO"></a> 
+
+<h2>SEE ALSO</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><b>rapper</b>(1),<b>raptor-config</b>(1)</p>
+</td>
+</tr>
+</table>
+
+<a id="AUTHOR" name="AUTHOR"></a> 
+
+<h2>AUTHOR</h2>
+
+<!-- INDENTATION -->
+<table width="100%" border="0" rules="none" frame="void" cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="10%"></td>
+<td width="89%">
+<p><a href="http://purl.org/net/dajobe/">Dave Beckett</a><br />
+<a href="http://www.ilrt.bristol.ac.uk/">Institute for Learning and Research Technology (ILRT)</a><br />
+<a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
+</td>
+</tr>
+</table>
+
+<hr />
+
+<p>Copyright 2002-2003 <a href="http://purl.org/net/dajobe/">Dave Beckett</a>, <a href="http://www.ilrt.bristol.ac.uk/">Institute for Learning and Research Technology</a>, <a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
+
+</body>
+</html>
+

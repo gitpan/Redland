@@ -1,0 +1,170 @@
+/* raptor_config.h.in.  Generated from configure.ac by autoheader.  */
+
+/* does expat crash when it sees an initial UTF8 BOM? */
+#undef EXPAT_UTF8_BOM_CRASH
+
+/* vsnprint has C99 compatible return value */
+#undef HAVE_C99_VSNPRINTF
+
+/* Define to 1 if you have the <curl/curl.h> header file. */
+#undef HAVE_CURL_CURL_H
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
+/* Define to 1 if you have the <dmalloc.h> header file. */
+#undef HAVE_DMALLOC_H
+
+/* Define to 1 if you have the <errno.h> header file. */
+#undef HAVE_ERRNO_H
+
+/* Define to 1 if you have the <expat.h> header file. */
+#undef HAVE_EXPAT_H
+
+/* Define to 1 if you have the `getopt' function. */
+#undef HAVE_GETOPT
+
+/* Define to 1 if you have the <getopt.h> header file. */
+#undef HAVE_GETOPT_H
+
+/* Define to 1 if you have the `getopt_long' function. */
+#undef HAVE_GETOPT_LONG
+
+/* Have glib 2.0 g_utf8_normalize */
+#undef HAVE_G_UTF8_NORMALIZE
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the <libxml/hash.h> header file. */
+#undef HAVE_LIBXML_HASH_H
+
+/* Define to 1 if you have the <libxml/nanohttp.h> header file. */
+#undef HAVE_LIBXML_NANOHTTP_H
+
+/* Define to 1 if you have the <libxml/parser.h> header file. */
+#undef HAVE_LIBXML_PARSER_H
+
+/* Define to 1 if you have the <libxml/xmlreader.h> header file. */
+#undef HAVE_LIBXML_XMLREADER_H
+
+/* Define to 1 if you have the <limits.h> header file. */
+#undef HAVE_LIMITS_H
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the `strcasecmp' function. */
+#undef HAVE_STRCASECMP
+
+/* Define to 1 if you have the `stricmp' function. */
+#undef HAVE_STRICMP
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to 1 if you have the `vsnprintf' function. */
+#undef HAVE_VSNPRINTF
+
+/* Define to 1 if you have the <xmlparse.h> header file. */
+#undef HAVE_XMLPARSE_H
+
+/* need 'extern int optind' declaration? */
+#undef NEED_OPTIND_DECLARATION
+
+/* Name of package */
+#undef PACKAGE
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* is this being built inside redland? */
+#undef RAPTOR_IN_REDLAND
+
+/* does libxml struct xmlEntity have a field etype */
+#undef RAPTOR_LIBXML_ENTITY_ETYPE
+
+/* does libxml struct xmlEntity have a field name_length */
+#undef RAPTOR_LIBXML_ENTITY_NAME_LENGTH
+
+/* does libxml xmlSAXHandler have externalSubset field */
+#undef RAPTOR_LIBXML_XMLSAXHANDLER_EXTERNALSUBSET
+
+/* does libxml xmlSAXHandler have initialized field */
+#undef RAPTOR_LIBXML_XMLSAXHANDLER_INITIALIZED
+
+/* does libxml have xmlUseNewParser */
+#undef RAPTOR_LIBXML_XMLUSENEWPARSER
+
+/* Building RSS Tag Soup parser */
+#undef RAPTOR_PARSER_RSS
+
+/* Major version number */
+#undef RAPTOR_VERSION_MAJOR
+
+/* Minor version number */
+#undef RAPTOR_VERSION_MINOR
+
+/* Release version number */
+#undef RAPTOR_VERSION_RELEASE
+
+/* Have libcurl WWW library */
+#undef RAPTOR_WWW_LIBCURL
+
+/* Have W3C libwww WWW library */
+#undef RAPTOR_WWW_LIBWWW
+
+/* Have libxml available as a WWW library */
+#undef RAPTOR_WWW_LIBXML
+
+/* No WWW library */
+#undef RAPTOR_WWW_NONE
+
+/* Use expat XML parser */
+#undef RAPTOR_XML_EXPAT
+
+/* Use libxml XML parser */
+#undef RAPTOR_XML_LIBXML
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* Version number of package */
+#undef VERSION
+
+/* Define to 1 if your processor stores words with the most significant byte
+   first (like Motorola and SPARC, unlike Intel and VAX). */
+#undef WORDS_BIGENDIAN
+
+/* Define to empty if `const' does not conform to ANSI C. */
+#undef const
