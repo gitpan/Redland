@@ -2,11 +2,10 @@
 #
 # Redland.pm - Redland top level Perl module
 #
-# $Id: Redland.pm,v 1.16 2002/12/12 18:09:10 cmdjb Exp $
+# $Id: Redland.pm.in 10592 2006-03-05 08:28:27Z cmdjb $
 #
-# Copyright (C) 2000-2001 David Beckett - http://purl.org/net/dajobe/
-# Institute for Learning and Research Technology - http://www.ilrt.org/
-# University of Bristol - http://www.bristol.ac.uk/
+# Copyright (C) 2000-2005 David Beckett - http://purl.org/net/dajobe/
+# Copyright (C) 2000-2005 University of Bristol - http://www.bristol.ac.uk/
 # 
 # This package is Free Software or Open Source available under the
 # following licenses (these are alternatives):
@@ -23,7 +22,13 @@
 use RDF::Redland::Iterator;
 use RDF::Redland::Model;
 use RDF::Redland::Node;
+use RDF::Redland::BlankNode;
+use RDF::Redland::URINode;
+use RDF::Redland::LiteralNode;
+use RDF::Redland::XMLLiteralNode;
 use RDF::Redland::Parser;
+use RDF::Redland::Query;
+use RDF::Redland::QueryResults;
 use RDF::Redland::Serializer;
 use RDF::Redland::Statement;
 use RDF::Redland::Storage;
@@ -54,26 +59,33 @@ sub DESTROY ($) {
   &RDF::Redland::CORE::librdf_perl_world_finish();
 }
 
-sub message ($$) {
-  my($type,$message)=@_;
-  if($type == 0) {
+sub message ($$$$$$$$$) {
+  if(ref $RDF::Redland::Log_Sub) {
+    return $RDF::Redland::Log_Sub->(@_);
+  }
+
+  my($code, $level, $facility, $message, $line, $column, $byte, $file, $uri)=@_;
+  if($level > 3) {
     if(ref $RDF::Redland::Error_Sub) {
-      $RDF::Redland::Error_Sub->($message);
+      return $RDF::Redland::Error_Sub->($message);
     } else {
       die "Redland error: $message\n";
     }
   } else {
     if(ref $RDF::Redland::Warning_Sub) {
-      $RDF::Redland::Warning_Sub->($message);
+      return $RDF::Redland::Warning_Sub->($message);
     } else {
       warn "Redland warning: $message\n";
     }
   }
+  1;
 }
 
 package RDF::Redland;
 
-use vars qw($Debug $World $Error_Sub $Warning_Sub);
+use vars qw($VERSION $Debug $World $Error_Sub $Warning_Sub);
+
+$VERSION= eval sprintf("%s.%02d_%02d_%02d", split(/\./, "1.0.5.2"));
 
 $Debug=0;
 
@@ -83,14 +95,7 @@ $Error_Sub=undef;
 
 $Warning_Sub=undef;
 
-sub set_error_handler ($) {
-  $Error_Sub=shift;
-}
-
-sub set_warning_handler ($) {
-  $Warning_Sub=shift;
-}
-
+$Log_Sub=undef;
 
 =pod
 
@@ -110,11 +115,67 @@ RDF::Redland - Redland RDF Class
 
 This class initialises the Redland RDF classes.
 
+See the main classes for full detail:
+L<RDF::Redland::Node>, 
+L<RDF::Redland::BlankNode>, L<RDF::Redland::URINode>,
+L<RDF::Redland::LiteralNode>, L<RDF::Redland::XMLLiteralNode>,
+L<RDF::Redland::URI>,
+L<RDF::Redland::Statement>, L<RDF::Redland::Model>,
+L<RDF::Redland::Storage>, L<RDF::Redland::Parser>,
+L<RDF::Redland::Query>, L<RDF::Redland::QueryResults>,
+L<RDF::Redland::Iterator>, L<RDF::Redland::Stream>
+and L<RDF::Redland::RSS>.
+
 =head1 STATIC METHODS
 
 =over
 
+=item set_log_handler SUB
+
+Set I<SUB> as the subroutine to be called on any Redland error, warning
+or log message.  The subroutine must have the followign signature:
+
+
+  sub handler ($$$$$$$$$) {
+    my($code, $level, $facility, $message, $line, $column, $byte, $file, $uri)=@_;
+    # int error code
+    # int log level
+    # int facility causing the error (parsing, serializing, ...)
+    # string error message
+    # int line number (<0 if not relevant)
+    # int column number (<0 if not relevant)
+    # int byte number (<0 if not relevant)
+    # string file name or undef
+    # string URI or undef
+    
+    # ...do something with the information ...
+  };
+
+  RDF::Redland::set_log_handler(\&handler);
+
+=cut
+
+sub set_log_handler ($) {
+  $Log_Sub=shift;
+}
+
+
+=item reset_log_handler
+
+Reset redland to use the default logging handler, typically printing
+the message to stdout or stderr and exiting on a fatal error.
+
+=cut
+
+sub reset_log_handler () {
+  $Log_Sub=undef;
+}
+
+
 =item set_error_handler SUB
+
+The method set_log_handler is much more flexible than this and includes
+this functionality.
 
 Set I<SUB> as the subroutine to be called on a Redland error with
 the error message as the single argument.  For example:
@@ -126,7 +187,17 @@ the error message as the single argument.  For example:
 
 The default if this is not set, is to run die $msg
 
+=cut
+
+sub set_error_handler ($) {
+  $Error_Sub=shift;
+}
+
+
 =item set_warning_handler SUB
+
+The method set_log_handler is much more flexible than this and includes
+this functionality.
 
 Set I<SUB> as the subroutine to be called on a Redland warning with
 the warning message as the single argument.  For example:
@@ -138,13 +209,27 @@ the warning message as the single argument.  For example:
 
 The default if this is not set, is to run warn $msg
 
+=cut
+
+sub set_warning_handler ($) {
+  $Warning_Sub=shift;
+}
+
+=pod
+
 =back
 
 =head1 SEE ALSO
 
-L<RDF::Redland::Node>, L<RDF::Redland::Statement>, L<RDF::Redland::Model>,
-L<RDF::Redland::Storage>, L<RDF::Redland::Parser>, L<RDF::Redland::Iterator>,
-L<RDF::Redland::Stream>, L<RDF::Redland::URI> and L<RDF::Redland::RSS>.
+L<RDF::Redland::Node>, 
+L<RDF::Redland::BlankNode>, L<RDF::Redland::URINode>,
+L<RDF::Redland::LiteralNode>, L<RDF::Redland::XMLLiteralNode>,
+L<RDF::Redland::URI>,
+L<RDF::Redland::Statement>, L<RDF::Redland::Model>,
+L<RDF::Redland::Storage>, L<RDF::Redland::Parser>,
+L<RDF::Redland::Query>, L<RDF::Redland::QueryResults>,
+L<RDF::Redland::Iterator>, L<RDF::Redland::Stream>
+and L<RDF::Redland::RSS>.
 
 =head1 AUTHOR
 

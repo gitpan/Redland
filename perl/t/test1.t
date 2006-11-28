@@ -2,11 +2,10 @@
 #
 # test1.t - Redland perl test 1 - RDF::Redland::CORE low level APIs
 #
-# $Id: test1.t,v 1.2 2002/12/11 17:49:22 cmdjb Exp $
+# $Id: test1.t 10593 2006-03-05 08:30:38Z dajobe $
 #
-# Copyright (C) 2000-2002 David Beckett - http://purl.org/net/dajobe/
-# Institute for Learning and Research Technology - http://www.ilrt.org/
-# University of Bristol - http://www.bristol.ac.uk/
+# Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
+# Copyright (C) 2000-2003 University of Bristol - http://www.bristol.ac.uk/
 # 
 # This package is Free Software or Open Source available under the
 # following licenses (these are alternatives):
@@ -46,7 +45,7 @@ my $storage=&RDF::Redland::CORE::librdf_new_storage($world, "hashes", "test", "n
 if(!$storage) {
   warn "Redland::librdf_new_storage failed\n";
   print "not ok $test\n";
-  last;
+  exit 1;
 }
 print "ok $test\n";
 $test++;
@@ -55,7 +54,7 @@ my $model=&RDF::Redland::CORE::librdf_new_model($world, $storage, "");
 if(!$model) {
   warn "Redland::librdf_new_model failed\n";
   print "not ok $test\n";
-  last;
+  exit 1;
 }
 print "ok $test\n";
 $test++;
@@ -68,7 +67,7 @@ my $statement=&RDF::Redland::CORE::librdf_new_statement_from_nodes($world,
 if(!$statement) {
   warn "Redland::librdf_new_statement_from_nodes failed\n";
   print "not ok $test\n";
-  last;
+  exit 1;
 }
 print "ok $test\n";
 $test++;

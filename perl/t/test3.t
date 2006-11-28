@@ -2,11 +2,10 @@
 #
 # test3.t - Redland perl test 3 - error and warnings
 #
-# $Id: test3.t,v 1.1 2002/12/11 17:29:03 cmdjb Exp $
+# $Id: test3.t 10593 2006-03-05 08:30:38Z dajobe $
 #
-# Copyright (C) 2000-2002 David Beckett - http://purl.org/net/dajobe/
-# Institute for Learning and Research Technology - http://www.ilrt.org/
-# University of Bristol - http://www.bristol.ac.uk/
+# Copyright (C) 2000-2005 David Beckett - http://purl.org/net/dajobe/
+# Copyright (C) 2000-2005 University of Bristol - http://www.bristol.ac.uk/
 # 
 # This package is Free Software or Open Source available under the
 # following licenses (these are alternatives):
@@ -45,20 +44,21 @@ my $world=&RDF::Redland::CORE::librdf_new_world();
 package RDF::Redland::World;
 
 sub message ($$) {
-  my($type,$message)=@_;
-  if($type == 0) {
+  my($code, $level, $facility, $message, $line, $column, $byte, $file, $uri)=@_;
+  if($level > 3) {
     if(ref $RDF::Redland::Error_Sub) {
-      $RDF::Redland::Error_Sub->($message);
+      return $RDF::Redland::Error_Sub->($message);
     } else {
       die "Redland error: $message\n";
     }
   } else {
     if(ref $RDF::Redland::Warning_Sub) {
-      $RDF::Redland::Warning_Sub->($message);
+      return $RDF::Redland::Warning_Sub->($message);
     } else {
       warn "Redland warning: $message\n";
     }
   }
+  1;
 }
 
 package main;

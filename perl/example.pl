@@ -2,11 +2,10 @@
 #
 # example.pl - Redland eaxmple Perl program
 #
-# $Id: example.pl,v 1.18 2003/08/28 15:30:33 cmdjb Exp $
+# $Id: example.pl 10931 2006-05-02 22:37:44Z dajobe $
 #
-# Copyright (C) 2000-2001 David Beckett - http://purl.org/net/dajobe/
-# Institute for Learning and Research Technology - http://www.ilrt.org/
-# University of Bristol - http://www.bristol.ac.uk/
+# Copyright (C) 2000-2005 David Beckett - http://purl.org/net/dajobe/
+# Copyright (C) 2000-2005 University of Bristol - http://www.bristol.ac.uk/
 # 
 # This package is Free Software or Open Source available under the
 # following licenses (these are alternatives):
@@ -22,7 +21,7 @@
 
 use RDF::Redland;
 
-$test_file="dc.rdf";
+$test_file="../data/dc.rdf";
 
 warn "Creating storage\n";
 my $storage=new RDF::Redland::Storage("hashes", "test", 
@@ -57,11 +56,14 @@ warn "\nAdding statement (n,n,n) to model\n";
 $model->add_statement($n, $n, $n);
 $statement=undef;
 
+die "Data file $test_file not found - cannot parse it.\n  Try editing \$test_file variable to point to a file.\n"
+  unless -r $test_file;
+
 warn "\nParsing URI (file) $test_file\n";
 my $uri=new RDF::Redland::URI("file:$test_file");
 
 # Use any rdf/xml parser that is available
-my $parser=new RDF::Redland::Parser("raptor", "application/rdf+xml");
+my $parser=new RDF::Redland::Parser("rdfxml", "application/rdf+xml");
 die "Failed to find parser\n" if !$parser;
 
 $stream=$parser->parse_as_stream($uri,$uri);
@@ -109,15 +111,60 @@ for my $node (@nodes) {
 }
 $iterator=undef;
 
+
+my $q = new RDF::Redland::Query("PREFIX dc: <http://purl.org/dc/elements/1.1/>\nSELECT ?a ?c WHERE { ?a dc:title ?c }", undef, undef, "sparql");
+print "Querying for dc:titles:\n";
+my $results=$model->query_execute($q);
+my $count=1;
+while(!$results->finished) {
+  print "result $count: {\n";
+  for(my $i=0; $i < $results->bindings_count; $i++) {
+    my $val=$results->binding_value($i);
+    next unless defined $val; # optionals
+    print "  ",$results->binding_name($i),"=",$val->as_string,"\n";
+  }
+  print "}\n";
+  $results->next_result;
+  $count++;
+}
+$results=undef;
+warn "Returned $count results\n";
+
+
+print "\nExecuting query again\n";
+my $results=$model->query_execute($q);
+my $str=$results->to_string;
+print "Query results serialized to an XML string size ".length($str)." bytes\n";
+
+print "\nExecuting SPARQL construct query\n";
+my $q2 = new RDF::Redland::Query("CONSTRUCT * WHERE { ?a ?b ?c }", undef, undef, "sparql");
+my $results=$model->query_execute($q2);
+$stream=$results->as_stream;
+$count=0;
+while(!$stream->end) {
+  print "Statement: ",$stream->current->as_string,"\n";
+  $stream->next;
+  $count++;
+}
+$stream=undef;
+warn "Returned $count triples\n";
+
 warn "\nWriting model to test-out.rdf as rdf/xml\n";
 
 # Use any rdf/xml parser that is available
 my $serializer=new RDF::Redland::Serializer("rdfxml");
 die "Failed to find serializer\n" if !$serializer;
 
+$serializer->set_namespace("dc", new RDF::Redland::URI("http://purl.org/dc/elements/1.1/"));
 $serializer->serialize_model_to_file("test-out.rdf", $uri, $model);
+
+my $str1=$serializer->serialize_model_to_string($uri, $model);
+warn "\nSerialized to RDF/XML as a string size ",length($str1)," bytes\n";
+
 $serializer=undef;
 
+my $str=$model->to_string(new RDF::Redland::URI("http://example.org/base#"), "ntriples");
+warn "\nSerialized to ntriples as a string size ",length($str)," bytes\n";
 
 warn "\nDone\n";
 

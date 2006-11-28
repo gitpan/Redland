@@ -1,136 +1,86 @@
-RDF::Redland 0.9.14.1 - Redland RDF Application Framework
 
-DESCRIPTION
+                  Redland RDF Application Framework Bindings
 
-This is the first version of the CPAN-buildable package for the
-Redland C RDF library version 0.9.14 along with the Perl interface
-(RDF::Redland) which comes with full POD documentation.  It allows
-you to manipulate, store and query the Resource Description Framework
-(RDF) graphs from Perl.
-
-This should(*) build with a standard CPAN install:
-
-  perl Makefile.PL
-    (creates Makefile)
-  make
-    (wait some time as it runs configure and builds the C libraries)
-  make test
-    (runs lots of C checks and the perl interface ones)
-  make install
-
-This isn't likely to work outside a POSIX system since building
-the C library assumes that.  An XML parser such as expat or libxml2
-is required and Sleepycat/Berkeley DB is needed if you want a
-persistent store.
-
-The main description of Redland is given below and also in README.html
-
-CHANGES
-
-0.9.14.1  2003-09-08
-New major version of Redland
-
-0.9.13.3  2003-09-08 (not released)  
-
-Added patch to make the ancient Sleepycat/BDB 3.0.early (from 1999)
-work - as used on one of the testers.cpan.org machines.
-
-0.9.13.2  2003-09-07
-
-Fixes the execution bits on files before starting the perl
-Makefile.PL, gives some output and has more correct installation
-instructions.  The tarball has the other language interfaces removed
-and documentation for the C and non-perl APIs so the tarball size is
-about 30% smaller.
-
-0.9.13  2003-09-04 (deleted)
-
-
-LICENSE: LGPL/MPL
-
-Dave
-http://purl.org/net/dajobe/
-
-
-(*) If the above doesn't work, you can try the Redland native way:
-  ./configure --with-perl
-    (which writes a different Makefile :)
-  make
-  make check    # optional
-  make install
-
----
-
-                     Redland RDF Application Framework
-
-                                Dave Beckett
-               Institute for Learning and Research Technology
-                           University of Bristol
+[1]Dave Beckett
 
 Overview
 
-   Redland  is  a  library  that  provides a high-level interface for RDF
-   allowing  the  RDF  graph  to  be parsed from XML, stored, queried and
-   manipulated.  Redland  implements  each of the RDF concepts in its own
-   class  via an object based API, reflected into the other language APIs
-   - Java, Perl, PHP, Python, Ruby and Tcl. Some of the classes providing
-   the  parsers,  storage  mechanisms  and  other  elements  are built as
-   modules that can be added or removed as required.
+   [2]Redland is a library that provides a high-level interface for the
+   Resource Description Framework (RDF) allowing the RDF graph to be
+   parsed from XML, stored, queried and manipulated. Redland implements
+   each of the RDF concepts in its own class via an object based API,
+   reflected into the language APIs, currently C#, Java, Perl, PHP,
+   Obj-C, Python, Ruby and Tcl. Several classes providing functionality
+   such as for parsers, storage are built as modules that can be loaded
+   at compile or run-time as required.
 
-   This  library  is  mature  and has been used in large systems. See the
-   todo  list or the website version for an up-to-date copy, and the FAQS
-   for  more  information.  Changes can be found in the NEWS file or more
-   detailed changes in the ChangeLog.
+   The redland-bindings package provides the higher level language APIs
+   to Redland in the following languages.
+     * [3]C#
+     * [4]Java
+     * [5]Obj-C
+     * [6]Perl
+     * [7]PHP
+     * [8]Python
+     * [9]Ruby
+     * [10]Tcl
 
-   Redland provides:
-     * A modular, object based library written in C
-     * Java,  Perl, PHP, Python, Ruby and Tcl interfaces for manipulating
-       the RDF graph and parts - Statements, Resources and Literals
-     * Parsers and Serializers for reading and writing RDF as syntax.
-     * Storage  for  graphs in memory and on disk via Sleepcat / Berkeley
-       DB.
-     * Query  APIs  for  the graph by Statement (triples) or by Nodes and
-       Arcs
-     * Statement  Streams  for construction, parsing, de/serialisation of
-       graphs
-     * Start of query language support.
-     * No memory leaks so far.
-
-Sources
+Sources and Binaries
 
    The packaged sources are available from
-   http://www.redland.opensource.ac.uk/dist/source/   (master  site)  and
-   also  from  the  SourceForge  site. There are nightly snapshots of the
-   development version which is can also be browsed via CVSweb.
+   [11]http://download.librdf.org/source/ (master site) and also from the
+   [12]SourceForge site. The development Subversion sources can also be
+   [13]browsed with ViewCV. Binary packages of redland bindings and
+   related libraries are available from the [14]download site.
 
 License
 
-   This  library  is  free software / open source software released under
-   the LGPL or MPL licenses. See LICENSE.html for full details.
+   This library is free software / open source software released under
+   the LGPL (GPL) or Apache 2.0 licenses. See [15]LICENSE.html for full
+   details.
 
-Installation
+Installation and Documentation
 
-   See   INSTALL.html   for   general   installation   and  configuration
-   information  and  the  language  specific documents for installing the
-   interfaces in Java, Perl, PHP, Python, Ruby or Tcl.
-
-   Further documentation is available in the documents area including the
-   API document.
+   See [16]INSTALL.html for general installation and configuration
+   information and the language specific documents for installing the
+   interfaces in the current available APIs: [17]C#, [18]Java, [19]Perl,
+   [20]PHP, [21]Python, [22]Ruby or [23]Tcl.
 
 Mailing Lists
 
-   The  Redland  mailing lists discuss the development and use of Redland
-   and Raptor as well as future plans and announcement of releases.
-
-See Also
-
-   If you want to know more about RDF and related work, try some of these
-   sites:
-     * W3C  Resource  Description Framework (RDF) activity page (official
-       home page)
-     * Dave Beckett's Resource Description Framework (RDF) Resource Guide
-       (yes that's me)
+   The [24]Redland mailing lists discuss the development and use of
+   Redland and Raptor as well as future plans and announcement of
+   releases.
      _________________________________________________________________
 
-   Copyright  2000-2003 Dave Beckett, Institute for Learning and Research
-   Technology, University of Bristol
+   Copyright (C) 2004-2006 [25]Dave Beckett
+   Copyright (C) 2004-2005 [26]University of Bristol
+
+References
+
+   1. http://purl.org/net/dajobe/
+   2. http://librdf.org/
+   3. file://localhost/home/dajobe/dev/redland/perl/docs/csharp.html
+   4. file://localhost/home/dajobe/dev/redland/perl/docs/java.html
+   5. file://localhost/home/dajobe/dev/redland/perl/docs/objc.html
+   6. file://localhost/home/dajobe/dev/redland/perl/docs/perl.html
+   7. file://localhost/home/dajobe/dev/redland/perl/docs/php.html
+   8. file://localhost/home/dajobe/dev/redland/perl/docs/python.html
+   9. file://localhost/home/dajobe/dev/redland/perl/docs/ruby.html
+  10. file://localhost/home/dajobe/dev/redland/perl/docs/tcl.html
+  11. http://download.librdf.org/source/
+  12. http://sourceforge.net/projects/librdf/
+  13. http://svn.librdf.org/view/bindings/
+  14. http://download.librdf.org/
+  15. file://localhost/home/dajobe/dev/redland/perl/LICENSE.html
+  16. file://localhost/home/dajobe/dev/redland/perl/INSTALL.html
+  17. file://localhost/home/dajobe/dev/redland/perl/docs/csharp.html
+  18. file://localhost/home/dajobe/dev/redland/perl/docs/java.html
+  19. file://localhost/home/dajobe/dev/redland/perl/docs/perl.html
+  20. file://localhost/home/dajobe/dev/redland/perl/docs/php.html
+  21. file://localhost/home/dajobe/dev/redland/perl/docs/python.html
+  22. file://localhost/home/dajobe/dev/redland/perl/docs/ruby.html
+  23. file://localhost/home/dajobe/dev/redland/perl/docs/tcl.html
+  24. http://librdf.org/lists/
+  25. http://purl.org/net/dajobe/
+  26. http://www.bristol.ac.uk/

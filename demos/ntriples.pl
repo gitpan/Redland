@@ -2,20 +2,24 @@
 #
 # ntriples.pl - Redland N-Triples validator demo
 #
-# $Id: ntriples.pl,v 1.6 2003/03/25 22:12:10 cmdjb Exp $
+# $Id: ntriples.pl 10586 2006-03-05 07:49:32Z cmdjb $
 #
-# Copyright (C) 2002-2003 David Beckett - http://purl.org/net/dajobe/
-# Institute for Learning and Research Technology - http://www.ilrt.org/
-# University of Bristol - http://www.bristol.ac.uk/
+# Copyright (C) 2002-2006, David Beckett http://purl.org/net/dajobe/
+# Copyright (C) 2002-2004, University of Bristol, UK http://www.bristol.ac.uk/
 # 
-# This package is Free Software or Open Source available under the
-# following licenses (these are alternatives):
-#   1. GNU Lesser General Public License (LGPL)
-#   2. GNU General Public License (GPL)
-#   3. Mozilla Public License (MPL)
+# This package is Free Software and part of Redland http://librdf.org/
+# 
+# It is licensed under the following three licenses as alternatives:
+#   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
+#   2. GNU General Public License (GPL) V2 or any newer version
+#   3. Apache License, V2.0 or any newer version
+# 
+# You may not use this file except in compliance with at least one of
+# the above three licenses.
 # 
 # See LICENSE.html or LICENSE.txt at the top of this package for the
-# full license terms.
+# complete terms and further detail along with the license texts for
+# the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
 # 
 # 
 #
@@ -77,16 +81,16 @@ print <<"EOT";
 <h2>About the validator</h2>
 
 <p>This was written using
-<a href="http://www.redland.opensource.ac.uk/">Redland</a>
+<a href="http://librdf.org/">Redland</a>
 and the
-<a href="http://www.redland.opensource.ac.uk/docs/pod/RDF/Redland/Parser.html">RDF::Redland::Parser</a> 
-<a href="http://www.redland.opensource.ac.uk/docs/perl.html">Perl</a> interface
-to the <a href="http://www.redland.opensource.ac.uk/raptor/">Raptor</a>
+<a href="http://librdf.org/docs/pod/RDF/Redland/Parser.html">RDF::Redland::Parser</a> 
+<a href="http://librdf.org/docs/perl.html">Perl</a> interface
+to the <a href="http://librdf.org/raptor/">Raptor</a>
 N-Triples parser.</p>
 
 <p>The source code of this demonstration is available in the Redland
 distribution as <tt>demos/ntriples.pl</tt> or from the
-<a href="http://www.redland.opensource.ac.uk/">Redland</a> website</p>
+<a href="http://librdf.org/">Redland</a> website</p>
 
 EOT
 
@@ -94,10 +98,25 @@ EOT
   print qq{<hr />\n\n<p class="copyright"><a href="http://purl.org/net/dajobe/">Dave Beckett</a></p>\n\n</body></html>};
 }
 
+
+sub format_body($) {
+  my $string=shift;
+  # No need for HTML::Entities here for three things
+  $string =~ s/\&/\&amp;/g;
+  $string =~ s/</\&lt;/g;
+  $string =~ s/>/\&gt;/g;
+  $string;
+}
+
+sub format_attr($) {
+  my $string=format_body(shift);
+  $string =~ s/"/\&quot;/g; #"
+  $string;
+}
+
 sub format_literal ($) {
   my($string)=@_;
   return 'UNDEFINED' if !defined $string;
-  # No need for HTML::Entities here for four things
 
   my $new_string='';
   for my $c (split(//, $string)) {
@@ -107,13 +126,14 @@ sub format_literal ($) {
       $new_string.=$c;
     }
   }
-  $string=$new_string;
+  return format_body($new_string);
+}
 
-  $string =~ s/\&/\&amp;/g;
-  $string =~ s/</\&lt;/g;
-  $string =~ s/>/\&gt;/g;
-  $string =~ s/"/\&quot;/g; #"
-  $string;
+sub format_url($) {
+  my $url=shift;
+  my $a_url= format_attr($url);
+  my $q_url= format_body($url);
+  qq{<a href="$a_url">$q_url</a>};
 }
 
 sub format_node ($) {
@@ -306,8 +326,8 @@ if($stream && !$stream->end) {
 
   print <<"EOT";
 <center>
-<table align="center" border="1">
-<tr>
+<table style="text-align:center" border="1">
+<tr align="left">
 <th>Count</th>
 <th>Subject</th>
 <th>Predicate</th>
@@ -325,7 +345,7 @@ EOT
 
     my $id=$count+1;
     print << "EOT";
-<tr>
+<tr align="left">
 <td>$id</td>
 <td>$subject</td>
 <td>$predicate</td>
@@ -335,14 +355,15 @@ EOT
 
     $count++;
 
-    if ($count >= $max_stream_size) {
+    if ($count == $max_stream_size) {
       my $cur=$count+1;
-      while($stream && !$stream->end) {
-	$count++;
+      while(1) {
 	$stream->next;
+	last if $stream->end;
+	$count++;
       }
       print << "EOT";
-<tr>
+<tr align="left">
 <td>$cur...$count</td><td colspan="3">Truncated at $max_stream_size to limit table / page size</td>
 </tr>
 EOT
@@ -369,7 +390,7 @@ if(@errors) {
   for my $error (@errors) {
     $error =~ s/URI $uri_string:/line /;
     $error =~ s/- Raptor error//;
-    print $error,"<br/>\n";
+    print $error,"<br />\n";
     $error_count++;
     if ($error_count > $max_error_size) {
       print "</p>\n\n<p>Remaining errors $error_count..",scalar(@errors)," truncated to limit page size";
@@ -392,11 +413,6 @@ my $errorpl=($error_count != 1) ? 's' : '';
 print "\n\n<p>URI \"$uri\" parsed as N-Triples giving $count triple$pl and $error_count error$errorpl</p>\n";
 
 #unlink $temp_file if $temp_file;
-
-sub format_url($) {
-  my $url=shift;
-  qq{<a href="$url">$url</a>};
-}
 
 end_page($q);
 exit 0;

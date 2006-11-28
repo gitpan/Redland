@@ -2,11 +2,10 @@
 #
 # Model.pm - Redland Perl RDF Model module
 #
-# $Id: Model.pm,v 1.33 2003/08/28 15:42:30 cmdjb Exp $
+# $Id: Model.pm 10593 2006-03-05 08:30:38Z dajobe $
 #
-# Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
-# Institute for Learning and Research Technology - http://www.ilrt.org/
-# University of Bristol - http://www.bristol.ac.uk/
+# Copyright (C) 2000-2005 David Beckett - http://purl.org/net/dajobe/
+# Copyright (C) 2000-2005 University of Bristol - http://www.bristol.ac.uk/
 # 
 # This package is Free Software or Open Source available under the
 # following licenses (these are alternatives):
@@ -131,7 +130,7 @@ sub DESTROY ($) {
   my $self=shift;
   warn "RDF::Redland::Model DESTROY $self" if $RDF::Redland::Debug;
   if(!$self->{MODEL}) {
-    warn "RDF::Redland::Model DESTROY - librdf object gone - FIXME!\n" if $RDF::Redland::Debug;
+    warn "RDF::Redland::Model DESTROY - librdf model object gone\n" if $RDF::Redland::Debug;
   } else {
     &RDF::Redland::CORE::librdf_free_model($self->{MODEL});
   }
@@ -336,10 +335,11 @@ sub as_stream ($;$) {
 sub serialise ($) { shift->as_stream; }
 sub serialize ($) { shift->as_stream; }
 
-=item find_statements STATEMENT
+=item find_statements STATEMENT [CONTEXT]
 
 Find all matching statements in the model matching partial RDF::Redland::Statement
 I<STATEMENT> (any of the subject, predicate, object RDF::Redland::Node can be undef).
+If I<CONTEXT> is given, finds statements only in that context.
 
 In an array context, returns an array of the matching RDF::Redland::Statement
 objects.  In a scalar context, returns the RDF::Redland::Stream object
@@ -347,9 +347,19 @@ representing the results.
 
 =cut
 
-sub find_statements ($$) {
-  my($self,$statement)=@_;
-  my $stream=&RDF::Redland::CORE::librdf_model_find_statements($self->{MODEL},$statement->{STATEMENT});
+sub find_statements ($$;$) {
+  my($self,$statement,$node)=@_;
+  my $stream;
+  if($node) {
+    my $class=ref($node);
+    $node=&RDF::Redland::Node::_ensure($node);
+    die "Cannot make a Node from an object of class $class\n"
+      unless $node;
+    $stream=&RDF::Redland::CORE::librdf_model_find_statements_in_context($self->{MODEL},$statement->{STATEMENT}, $node);
+  } else {
+    $stream=&RDF::Redland::CORE::librdf_model_find_statements($self->{MODEL},$statement->{STATEMENT});
+  }
+
   my $user_stream=new RDF::Redland::Stream($stream,$self);
   return $user_stream if !wantarray;
   
@@ -515,6 +525,106 @@ sub target ($$$) {
   my $node=&RDF::Redland::CORE::librdf_model_get_target($self->{MODEL},$source->{NODE},$arc->{NODE});
   return $node ? RDF::Redland::Node->_new_from_object($node,1) : undef;
 }
+
+=item contexts
+
+Get all context RDF::Redland::Node objects in the model
+
+=cut
+
+sub contexts ($) {
+  my($self)=@_;
+  my $iterator=&RDF::Redland::CORE::librdf_model_get_contexts($self->{MODEL});
+  return () if !$iterator;
+  my $user_iterator=new RDF::Redland::Iterator($iterator,$self);
+  return () if !$user_iterator;
+  
+  my(@results)=();
+  while(!$user_iterator->end) {
+    push(@results, $user_iterator->current);
+    $user_iterator->next;
+  }
+  $user_iterator=undef;
+
+  @results;
+}
+
+=item feature URI [VALUE]
+
+Get/set a model feature.  The feature is named via RDF::Redland::URI
+I<URI> and the value is a RDF::Redland::Node.  If I<VALUE> is given,
+the feature is set to that value, otherwise the current value is
+returned.
+
+=cut
+
+sub feature ($$;$) {
+  my($self,$uri,$value)=@_;
+
+  warn "RDF::Redland::Model->feature('$uri', '$value')\n" if $RDF::Redland::Debug;
+  $uri=RDF::Redland::URI->new($uri)
+    unless ref $uri;
+
+  return &RDF::Redland::CORE::librdf_model_set_feature($self->{MODEL},$uri->{URI},$value->{NODE})
+      if $value;
+
+  $value=&RDF::Redland::CORE::librdf_model_get_feature($self->{MODEL},$uri->{URI});
+  return $value ? RDF::Redland::Node->_new_from_object($value,1) : undef;
+}
+
+
+=item query_execute QUERY
+
+Execute the I<QUERY> RDF::Redland::Query against the model returning
+a result set RDF::Redland::QueryResults or undef on failure.
+
+=cut
+
+sub query_execute ($$) {
+  my($self,$query)=@_;
+
+  my $results = &RDF::Redland::CORE::librdf_model_query_execute($self->{MODEL}, $query->{QUERY});
+  return $results ? RDF::Redland::QueryResults->new($results) : undef;
+}
+
+
+=item load URI [SYNTAX-NAME [ MIME-TYPE [SYNTAX-URI [HANDLER ]]]
+
+Load content from I<URI> into the model, guessing the parser.
+
+=cut
+
+sub load ($$;$$$$) {
+  my($self,$uri,$name,$type,$syntax_uri,$handler)=@_;
+  my $ruri=$uri ? $uri->{URI} : undef;
+  my $rsyntax_uri=$syntax_uri ? $syntax_uri->{URI} : undef;
+
+  if($handler) {
+    &RDF::Redland::set_log_handler($handler);
+  }
+  my $rc=&RDF::Redland::CORE::librdf_model_load($self->{MODEL},$ruri, $name, $type, $rsyntax_uri);
+  if($handler) {
+    &RDF::Redland::reset_log_handler();
+  }
+  return $rc;
+}
+
+
+=item to_string [BASE-URI [SYNTAX-NAME [ MIME-TYPE [SYNTAX-URI]]]
+
+Serialize the model to a syntax.  If no serializer name is given,
+the default serializer RDF/XML is used.
+
+=cut
+
+sub to_string($;$$$$) {
+  my($self,$uri,$name,$type,$syntax_uri)=@_;
+  my $ruri=$uri ? $uri->{URI} : undef;
+  my $rsyntax_uri=$syntax_uri ? $syntax_uri->{URI} : undef;
+
+  return &RDF::Redland::CORE::librdf_model_to_string($self->{MODEL}, $ruri, $name, $type, $rsyntax_uri);
+}
+
 
 =pod
 

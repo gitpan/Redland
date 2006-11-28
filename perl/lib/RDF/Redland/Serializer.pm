@@ -2,11 +2,10 @@
 #
 # Serializer.pm - Redland Perl RDF Serializer module
 #
-# $Id: Serializer.pm,v 1.3 2002/12/10 16:33:47 cmdjb Exp $
+# $Id: Serializer.pm 10593 2006-03-05 08:30:38Z dajobe $
 #
-# Copyright (C) 2002 David Beckett - http://purl.org/net/dajobe/
-# Institute for Learning and Research Technology - http://www.ilrt.org/
-# University of Bristol - http://www.bristol.ac.uk/
+# Copyright (C) 2002-2005 David Beckett - http://purl.org/net/dajobe/
+# Copyright (C) 2002-2005 University of Bristol - http://www.bristol.ac.uk/
 # 
 # This package is Free Software or Open Source available under the
 # following licenses (these are alternatives):
@@ -60,8 +59,8 @@ from an RDF::Redland::Model object.
 
 Create a new RDF::Redland::Serializer object for a syntax serializer
 named I<NAME>, with MIME Type I<MIME_TYPE> and/or URI I<URI>.  Any
-field can be undef or omitted; if all are omitted, a random serializer
-will be requested.
+field can be undef or omitted; if all are omitted, the default serializer
+is used, currently 'ntriples'.
 
 =cut
 
@@ -109,6 +108,38 @@ sub serialize_model_to_file ($$$$) {
   my($self,$name,$base_uri,$model)=@_;
   return &RDF::Redland::CORE::librdf_serializer_serialize_model_to_file($self->{SERIALIZER},$name, $base_uri->{URI},$model->{MODEL});
 }
+
+=item serialize_model_to_string BASE-URI MODEL
+
+Serialize the RDF Graph I<MODEL> to a syntax.  If no serializer name is given,
+the default serializer RDF/XML is used.
+
+=cut
+
+sub serialize_model_to_string($$$) {
+  my($self,$uri,$model)=@_;
+
+  return &RDF::Redland::CORE::librdf_serializer_serialize_model_to_string($self->{SERIALIZER}, $uri->{URI}, $model->{MODEL});
+}
+
+
+=item set_namespace PREFIX URI
+
+Define a namespace I<URI> with the supplied I<PREFIX> for use in serializing
+an RDF Graph.
+
+=cut
+
+sub set_namespace ($$$) {
+  my($self,$prefix, $uri)=@_;
+
+  warn "RDF::Redland::Serializer->namespace('$prefix', '$uri')\n" if $RDF::Redland::Debug;
+  $uri=RDF::Redland::URI->new($uri)
+    unless ref $uri;
+
+  return &RDF::Redland::CORE::librdf_serializer_set_namespace($self->{SERIALIZER},$uri->{URI}, $prefix);
+}
+
 
 =item feature URI [VALUE]
 

@@ -2,11 +2,10 @@
 #
 # URI.pm - Redland Perl RDF URI module
 #
-# $Id: URI.pm,v 1.18 2003/08/28 19:49:58 cmdjb Exp $
+# $Id: URI.pm 10593 2006-03-05 08:30:38Z dajobe $
 #
-# Copyright (C) 2000-2001 David Beckett - http://purl.org/net/dajobe/
-# Institute for Learning and Research Technology - http://www.ilrt.org/
-# University of Bristol - http://www.bristol.ac.uk/
+# Copyright (C) 2000-2005 David Beckett - http://purl.org/net/dajobe/
+# Copyright (C) 2000-2005 University of Bristol - http://www.bristol.ac.uk/
 # 
 # This package is Free Software or Open Source available under the
 # following licenses (these are alternatives):
@@ -44,7 +43,7 @@ RDF::Redland::URI - Redland RDF URI Class
 
 Represents a URI as a mostly-opaque object for identifying things
 in the RDF world.  The URIs are also used for identifying features
-for the RDF::Redland::Parser class. 
+for the RDF::Redland::Parser and RDF::Redland::Serializer classes.
 
 =cut
 
@@ -179,9 +178,9 @@ sub equals ($$) {
 =item new_from_uri URI
 
 Create a new RDF::Redland::URI object from RDF::Redland::URI I<URI>
-(copy constructor)
+(copy constructor).  Instead use:
 
-Use $u=$uri->clone
+  $u=$uri->clone
 
 =back
 

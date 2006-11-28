@@ -2,11 +2,10 @@
 #
 # Makefile.PL - Makefile for Perl 5 interface to Redland
 #
-# $Id: Makefile.PL,v 1.25 2003/08/27 18:28:47 cmdjb Exp $
+# $Id: Makefile.PL 11632 2006-11-27 18:18:48Z dajobe $
 #
-# Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
-# Institute for Learning and Research Technology - http://www.ilrt.org/
-# University of Bristol - http://www.bristol.ac.uk/
+# Copyright (C) 2000-2005 David Beckett - http://purl.org/net/dajobe/
+# Copyright (C) 2000-2005 University of Bristol - http://www.bristol.ac.uk/
 # 
 # This package is Free Software or Open Source available under the
 # following licenses (these are alternatives):
@@ -21,44 +20,35 @@
 
 use ExtUtils::MakeMaker;
 
-$TOP_SRCDIR=$ENV{TOP_SRCDIR} || '..';
-$PACKAGE=$ENV{PACKAGE} || "RDF::Redland";
+$REDLAND_CONFIG=$ENV{REDLAND_CONFIG} || 'redland-config';
 $CFLAGS=$ENV{CFLAGS} || "";
 $MEM_LIBS=$ENV{MEM_LIBS} || "";
-$CORE_PACKAGE=$ENV{CORE_PACKAGE} || "CORE";
+
+$CORE_PACKAGE="CORE";
 
 my $objects="${CORE_PACKAGE}_wrap.o ";
 
-if(-r '../redland-src-config') {
-  my $redland_libs=`../redland-src-config --libs`;
+my $redland_libs=`$REDLAND_CONFIG --libs 2>/dev/null`;
+if ($redland_libs ne "") {
   chomp $redland_libs;
   $objects .= $redland_libs;
 }
 
-my $includes="-I$TOP_SRCDIR/librdf";
-
 my $version=$ENV{VERSION};
 
 if(!$version) {
-  $version=`../redland-src-config --version`;
+  $version=`$REDLAND_CONFIG --version`;
   chomp $version;
-  die "Cannot find Redland version via ../redland-src-config\n"
+  die "Cannot find Redland version via $REDLAND_CONFIG\n"
     unless $version;
 }
 
 sub MY::postamble {
+  my $swig_path=`$REDLAND_CONFIG --swig`;
   return <<"EOT";
-${CORE_PACKAGE}_wrap.c: $TOP_SRCDIR/Redland.i
+${CORE_PACKAGE}_wrap.c: $swig_path
 	\$(MAKE) ${CORE_PACKAGE}_wrap.c
 EOT
-}
-
-# Ensure only .pm files are installed (since lib tree has CVS and
-# automake Makefile.am files too)
-sub MY::libscan {
-  my($self,$name)=@_;
-  return $name if $name =~ /\.pm$/;
-  undef;
 }
 
 # I'm forced to do this since BASEEXT is defined in a non-overridable method.
@@ -69,22 +59,58 @@ sub MY::init_main {
   my($self)=@_;
   package MY; # so that "SUPER" works right
   $self->SUPER::init_main();
-  $self->{FULLEXT}.="/".$::CORE_PACKAGE;
+
+  # Perl 5.8 just made this harder
+  if ($] < 5.008) {
+    # OSX too
+    if ($^O eq 'darwin') {
+      $self->{FULLEXT}.="/".$::CORE_PACKAGE;
+    }
+  } else {
+    $self->{FULLEXT}.="/".$::CORE_PACKAGE;
+  }
   $self->{BASEEXT}=$::CORE_PACKAGE;
+
+  # Stop perl linking with anything in the destination dir, it might
+  # be entirely the wrong library such as a previous version.
+  $self->{LDFLAGS} =~ s/-L\S+//;
+  $self->{LDDLFLAGS} =~ s/-L\S+//;
 }
 
 
 WriteMakefile(
     'DISTNAME'	=> "Redland",
-    'NAME'	=> $PACKAGE,
-    'AUTHOR'    => 'Dave Beckett <Dave.Beckett@bristol.ac.uk>',
-    'ABSTRACT'  => "Redland RDF library",
+    'NAME'	=> "RDF::Redland",
+    'AUTHOR'    => 'Dave Beckett <dave@dajobe.org>',
+    'ABSTRACT'  => "Redland RDF Library Perl Binding",
     'VERSION'   => $version,
 
     'DEFINE'    => "-DHAVE_CONFIG_H $CFLAGS",
-    'INC'       => "$includes",
-    'OBJECT'    => "$objects $MEM_LIBS",
-    'dynamic_lib' => {'OTHERLDFLAGS' => "$MEM_LIBS"},
+    'OBJECT'    => "$objects",
+    'dynamic_lib' => {'OTHERLDFLAGS' => "$MEM_LIBS $CFLAGS"},
+
+    'PM' => { map { ("lib/RDF/$_", "\$(INST_LIBDIR)/$_") }
+ qw(Redland.pm
+Redland/Model.pm
+Redland/RSS.pm
+Redland/URI.pm
+Redland/Iterator.pm
+Redland/Storage.pm
+Redland/Statement.pm
+Redland/Stream.pm
+Redland/Parser.pm
+Redland/Query.pm
+Redland/QueryResults.pm
+Redland/Serializer.pm
+Redland/CORE.pm
+Redland/Node.pm
+Redland/BlankNode.pm
+Redland/URINode.pm
+Redland/LiteralNode.pm
+Redland/XMLLiteralNode.pm
+)
+      },
+
 
     'MAKEFILE'  => 'Makefile.perl',
     'clean'     => { FILES => "test*.db" },

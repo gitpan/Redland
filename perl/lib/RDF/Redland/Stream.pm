@@ -2,11 +2,10 @@
 #
 # Stream.pm - Redland Perl RDF Stream module
 #
-# $Id: Stream.pm,v 1.16 2003/08/20 13:25:20 cmdjb Exp $
+# $Id: Stream.pm 10593 2006-03-05 08:30:38Z dajobe $
 #
-# Copyright (C) 2000-2001 David Beckett - http://purl.org/net/dajobe/
-# Institute for Learning and Research Technology - http://www.ilrt.org/
-# University of Bristol - http://www.bristol.ac.uk/
+# Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
+# Copyright (C) 2000-2003 University of Bristol - http://www.bristol.ac.uk/
 # 
 # This package is Free Software or Open Source available under the
 # following licenses (these are alternatives):

@@ -1,60 +1,63 @@
 # -*- Mode: Makefile -*-
 #
-# Makefile.am - top level automake file for Redland
+# Makefile.am - top level automake file for Redland Bindings
 #
-# $Id: Makefile.am,v 1.121 2003/09/01 23:42:32 cmdjb Exp $
+# $Id: Makefile.am 11631 2006-11-27 18:08:11Z dajobe $
 #
-# Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
-# Institute for Learning and Research Technology - http://www.ilrt.org/
-# University of Bristol - http://www.bristol.ac.uk/
+# Copyright (C) 2000-2006, David Beckett http://purl.org/net/dajobe/
+# Copyright (C) 2000-2005  University of Bristol, UK http://www.bristol.ac.uk/
 # 
-# This package is Free Software or Open Source available under the
-# following licenses (these are alternatives):
-#   1. GNU Lesser General Public License (LGPL)
-#   2. GNU General Public License (GPL)
-#   3. Mozilla Public License (MPL)
+# This package is Free Software and part of Redland http://librdf.org/
+# 
+# It is licensed under the following three licenses as alternatives:
+#   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
+#   2. GNU General Public License (GPL) V2 or any newer version
+#   3. Apache License, V2.0 or any newer version
+# 
+# You may not use this file except in compliance with at least one of
+# the above three licenses.
 # 
 # See LICENSE.html or LICENSE.txt at the top of this package for the
-# full license terms.
+# complete terms and further detail along with the license texts for
+# the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
 # 
 # 
-
-bin_SCRIPTS = redland-config
-noinst_SCRIPTS = redland-src-config
-
-man_MANS = redland-config.1
 
 # Subdirectories to build/install etc.
-SUBDIRS=librdf @SD@
-CONFIG_SUBDIRS=raptor
+SUBDIRS=@SD@ demos data
 # Subdirectories to use for distribution
-DIST_SUBDIRS=librdf docs perl demos
+DIST_SUBDIRS=data docs perl demos
 
-EXTRA_DIST=ChangeLog \
+EXTRA_DIST=ChangeLog  ChangeLog.1 ChangeLog.2 \
+ChangeLog.3 ChangeLog.4 ChangeLog.5 ChangeLog.6 \
 README      NEWS      LICENSE.txt  \
 README.html NEWS.html LICENSE.html \
-TODO.html RELEASE.html INSTALL.html FAQS.html \
-MPL.html \
-Redland.i \
+RELEASE.html INSTALL.html \
+LICENSE-2.0.txt NOTICE \
+redland-perl.rdf.in \
 autogen.sh \
 Makefile.PL \
-redland-config.in \
-redland-src-config.in \
-$(man_MANS)
+redland-perl.spec redland-perl.spec.in \
+MANIFEST.SKIP
 
+
+if MAINTAINER_MODE
 # Create some text files from HTML sources
 LYNX=lynx
-HTML_TO_TEXT=TERM=vt100 $(LYNX) -dump -nolist
+
+HTML_TO_TEXT=TERM=vt100 $(LYNX) -dump $< | sed -e 's,file://localhost.*bindings/,,' > $@
 
 SUFFIXES = .html .txt
 
 .html.txt:
-	$(HTML_TO_TEXT) $< > $@
+	$(HTML_TO_TEXT)
 
 README: README.html
-	$(HTML_TO_TEXT) $< > $@
+	$(HTML_TO_TEXT)
 
 NEWS: NEWS.html
-	$(HTML_TO_TEXT) $< > $@
+	$(HTML_TO_TEXT)
+
+endif
 
 @SET_MAKE@

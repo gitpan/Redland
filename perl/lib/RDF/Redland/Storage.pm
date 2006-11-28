@@ -2,11 +2,10 @@
 #
 # Storage.pm - Redland Perl RDF Storage module
 #
-# $Id: Storage.pm,v 1.14 2003/04/15 22:23:18 cmdjb Exp $
+# $Id: Storage.pm 10593 2006-03-05 08:30:38Z dajobe $
 #
-# Copyright (C) 2000-2001 David Beckett - http://purl.org/net/dajobe/
-# Institute for Learning and Research Technology - http://www.ilrt.org/
-# University of Bristol - http://www.bristol.ac.uk/
+# Copyright (C) 2000-2005 David Beckett - http://purl.org/net/dajobe/
+# Copyright (C) 2000-2005 University of Bristol - http://www.bristol.ac.uk/
 # 
 # This package is Free Software or Open Source available under the
 # following licenses (these are alternatives):
@@ -51,14 +50,17 @@ or in memory.
 
 =over
 
-=item new STORAGE_NAME NAME OPTIONS_STRING
+=item new STORAGE_NAME [NAME [OPTIONS_STRING]]
 
 Create a new RDF::Redland::Storage object for the storage factory named
 I<STORAGE_NAME> with storage named I<NAME> and storage options
 I<OPTIONS_STRING> which are specific to the storage factory type.
 
-The storage options are formatted in the form
-key1='value1',key2='value2' and the single quotes are required.
+The storage options may be given either as a Perl hash or as a
+string. The string form are formatted in the form
+key1='value1',key2='value2' and the single quotes are required. The
+Perl hash form follows normal Perl conventions, and the boolean
+options use normal Perl concepts of truth.
 
 Currently defined storage options:
 
@@ -66,11 +68,11 @@ Currently defined storage options:
 
 =item new='yes'
 
-Create a new storage erasing any existing one (default).
+Create a new storage erasing any existing one (boolean, default).
 
 =item write='yes'
 
-Provide write access to store (default)
+Provide write access to store (boolean, default)
 otherwise is read only.
 
 =item dir='DIR'          
@@ -86,7 +88,7 @@ Takes decimal (123), hex (0x123) or octal (0123).
 
 Enable statement contexts.  Each statement can
 be stored with an optional context Node and
-the context retrieved after queries.
+the context retrieved after queries. Boolean.
 
 =item hash-type='TYPE' (I<hashes> storage only)
 
@@ -97,14 +99,28 @@ available.
 =item index-predicates='yes' (I<hashes> storage only)
 
 Enable indexing from predicates to (subject,object) which can in
-particular be useful for rdf:type relations.
+particular be useful for rdf:type relations. Boolean.
+
+=item bulk='no' (I<mysql> storage only)
+
+Whether model/storage method add_statements should be optimized, until
+a model/storage sync operation. Boolean.
+
+=item merge='no' (I<mysql> storage only)
+
+Whether to maintain a table with merged models. Boolean.
 
 =back
 
-Example:
+Example, string form:
 
   $storage=new RDF::Redland::Storage("hashes", "test", 
                             "new='yes',hash-type='bdb',dir='.'");
+
+Example, Perl hash form:
+
+  $storage=new RDF::Redland::Storage("hashes", "test", 
+                            {new=>1,hash-type=>'bdb',dir=>'.'});
 
 Creates a new storage of the I<hashes> type (indexed hashes) named
 I<test> (these will be file names or URIs if the storage is persistent)
@@ -112,12 +128,38 @@ and with options I<new='yes',hash-type='bdb',dir='.'> so a new storage
 is created with BerkeleyDB (BDB) key:value hashes i.e. persistent and
 in the current directory.
 
+Example, Perl hash form:
+
+  $storage=new RDF::Redland::Storage("mysql", "test", {host=>'localhost',database=>'testdb',user=>'testuser',new=>0,password=>'',contexts=>1});
+
+Uses an existing storage of the I<mysql> type, named I<test> on
+localhost with database name I<testdb> using a user I<testuser> and no
+password. Contexts are enabled.
+
+
 =cut
 
-sub new ($$$$) {
-  my($proto,$storage_name,$name,$options_string)=@_;
+sub new ($$;$$) {
+  my($proto,$storage_name,$name,$options)=@_;
   my $class = ref($proto) || $proto;
   my $self  = {};
+  my $options_string = $options; # Default to use the string as is.
+  if (ref($options) eq 'HASH') { # Build the string from a key=>value hash
+    my %booleans = (new=>1,bulk=>1,merge=>1,write=>1,contexts=>1,'index-predicates'=>1);
+    $options_string = '';
+    while (my ($key, $value) = each(%{$options})) {
+      if (defined($value)) {
+        if (length($options_string) > 0) {
+          $options_string .= ',';
+        }
+        if ($booleans{$key}) {
+          $options_string .= "$key='". (($value) ? 'yes':'no') ."'";
+        } else {
+          $options_string .= "$key='$value'";
+        }
+      }
+    }
+  }
 
   warn qq{RDF::Redland::Storage->new("$storage_name", "$name", "$options_string")\n} if $RDF::Redland::Debug;
 
@@ -157,7 +199,7 @@ sub DESTROY ($) {
   my $self=shift;
   warn "RDF::Redland::Storage DESTROY $self" if $RDF::Redland::Debug;
   if(!$self->{STORAGE}) {
-    warn "RDF::Redland::Storage DESTROY - librdf object gone - FIXME!\n" if $RDF::Redland::Debug;
+    warn "RDF::Redland::Storage DESTROY - librdf storage object gone\n" if $RDF::Redland::Debug;
   } else {
     &RDF::Redland::CORE::librdf_free_storage($self->{STORAGE});
   }

@@ -2,11 +2,10 @@
 #
 # test2.t - Redland perl test 2 - general RDF::Redland coverage
 #
-# $Id: test2.t,v 1.2 2003/03/04 11:48:35 cmdjb Exp $
+# $Id: test2.t 10593 2006-03-05 08:30:38Z dajobe $
 #
-# Copyright (C) 2000-2002 David Beckett - http://purl.org/net/dajobe/
-# Institute for Learning and Research Technology - http://www.ilrt.org/
-# University of Bristol - http://www.bristol.ac.uk/
+# Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
+# Copyright (C) 2000-2003 University of Bristol - http://www.bristol.ac.uk/
 # 
 # This package is Free Software or Open Source available under the
 # following licenses (these are alternatives):

@@ -2,11 +2,10 @@
 #
 # Parser.pm - Redland Perl RDF Parser module
 #
-# $Id: Parser.pm,v 1.19 2003/08/29 11:27:20 cmdjb Exp $
+# $Id: Parser.pm 11575 2006-11-04 04:53:28Z dajobe $
 #
-# Copyright (C) 2000-2001 David Beckett - http://purl.org/net/dajobe/
-# Institute for Learning and Research Technology - http://www.ilrt.org/
-# University of Bristol - http://www.bristol.ac.uk/
+# Copyright (C) 2000-2005 David Beckett - http://purl.org/net/dajobe/
+# Copyright (C) 2000-2005 University of Bristol - http://www.bristol.ac.uk/
 # 
 # This package is Free Software or Open Source available under the
 # following licenses (these are alternatives):
@@ -37,7 +36,7 @@ RDF::Redland::Parser - Redland RDF Syntax Parsers Class
   use RDF::Redland;
 
   ...
-  my $parser=new RDF::Redland::Parser("raptor");
+  my $parser=new RDF::Redland::Parser("rdfxml");
   my $parser2=new RDF::Redland::Parser(undef, "application/rdf+xml);
 
   # Return as an RDF::Redland::Stream
@@ -77,12 +76,13 @@ sub new ($;$$$) {
   my($proto,$name,$mime_type,$uri)=@_;
   my $class = ref($proto) || $proto;
   my $self  = {};
+  my $reduri = undef;
 
   if(defined $uri) {
-    $uri=$uri->{URI};
+    $reduri=$uri->{URI};
   }
 
-  $self->{PARSER}=&RDF::Redland::CORE::librdf_new_parser($RDF::Redland::World->{WORLD},$name,$mime_type,$uri);
+  $self->{PARSER}=&RDF::Redland::CORE::librdf_new_parser($RDF::Redland::World->{WORLD},$name,$mime_type,$reduri);
   return undef if !$self->{PARSER};
 
   bless ($self, $class);
@@ -117,23 +117,39 @@ undef on failure.
 
 sub parse_as_stream ($$$) {
   my($self,$uri,$base_uri)=@_;
-  my $stream=&RDF::Redland::CORE::librdf_parser_parse_as_stream($self->{PARSER},$uri->{URI}, $base_uri->{URI});
+  my $rbase_uri=$base_uri ? $base_uri->{URI} : undef;
+  my $stream=&RDF::Redland::CORE::librdf_parser_parse_as_stream($self->{PARSER},$uri->{URI}, $rbase_uri);
   return undef if !$stream;
   return new RDF::Redland::Stream($stream,$self);
 }
 
-=item parse_into_model SOURCE_URI BASE_URI MODEL
+=item parse_into_model SOURCE_URI BASE_URI MODEL [HANDLER]
 
 Parse the syntax at the RDF::Redland::URI I<SOURCE_URI> with optional base
 RDF::Redland::URI I<BASE_URI> into RDF::Redland::Model I<MODEL>.  If the base URI is
 given then the content is parsed as if it was at the base URI rather
 than the source URI.
 
+If the optional I<HANDLER> is given, it is a reference to a sub with the signature
+  sub handler($$$$$$$$$) {
+    my($code, $level, $facility, $message, $line, $column, $byte, $file, $uri)=@_;
+    ...
+  }
+that receives errors in parsing.
+
 =cut
 
-sub parse_into_model ($$$$) {
-  my($self,$uri,$base_uri,$model)=@_;
-  return &RDF::Redland::CORE::librdf_parser_parse_into_model($self->{PARSER},$uri->{URI},$base_uri->{URI},$model->{MODEL});
+sub parse_into_model ($$$$;$) {
+  my($self,$uri,$base_uri,$model,$handler)=@_;
+  if($handler) {
+    &RDF::Redland::set_log_handler($handler);
+  }
+  my $rbase_uri=$base_uri ? $base_uri->{URI} : undef;
+  my $rc=&RDF::Redland::CORE::librdf_parser_parse_into_model($self->{PARSER},$uri->{URI},$rbase_uri,$model->{MODEL});
+  if($handler) {
+    &RDF::Redland::reset_log_handler();
+  }
+  return $rc;
 }
 
 =item parse_string_as_stream STRING BASE_URI
@@ -148,28 +164,45 @@ undef on failure.
 
 sub parse_string_as_stream ($$$) {
   my($self,$string,$base_uri)=@_;
-  my $stream=&RDF::Redland::CORE::librdf_parser_parse_string_as_stream($self->{PARSER},$string, $base_uri->{URI});
+  my $rbase_uri=$base_uri ? $base_uri->{URI} : undef;
+  my $stream=&RDF::Redland::CORE::librdf_parser_parse_string_as_stream($self->{PARSER},$string, $rbase_uri);
   return undef if !$stream;
   return new RDF::Redland::Stream($stream,$self);
 }
 
-=item parse_string_into_model STRING BASE_URI MODEL
+=item parse_string_into_model STRING BASE_URI MODEL [HANDLER]
 
 Parse the syntax in I<STRING> with required base
 RDF::Redland::URI I<BASE_URI> into RDF::Redfland::Model I<MODEL>.
 
+If the optional I<HANDLER> is given, it is a reference to a sub with the signature
+  sub handler($$$$$$$$$) {
+    my($code, $level, $facility, $message, $line, $column, $byte, $file, $uri)=@_;
+    ...
+  }
+that receives errors in parsing.
+
 =cut
 
-sub parse_string_into_model ($$$$) {
-  my($self,$string,$base_uri,$model)=@_;
-  return &RDF::Redland::CORE::librdf_parser_parse_into_model($self->{PARSER},$string,$base_uri->{URI},$model->{MODEL});
+sub parse_string_into_model ($$$$;$) {
+  my($self,$string,$base_uri,$model,$handler)=@_;
+  if($handler) {
+    &RDF::Redland::set_log_handler($handler);
+  }
+  my $rbase_uri=$base_uri ? $base_uri->{URI} : undef;
+  my $rc=&RDF::Redland::CORE::librdf_parser_parse_string_into_model($self->{PARSER},$string,$rbase_uri,$model->{MODEL});
+  if($handler) {
+    &RDF::Redland::reset_log_handler();
+  }
+  return $rc;
 }
 
 =item feature URI [VALUE]
 
-Get/set a parser feature.  The feature is named via RDF::Redland::URI I<URI>
-and the value is a string.  If I<VALUE> is given, the feature is set
-to that value, otherwise the current value is returned.
+Get/set a parser feature.  The feature is named via RDF::Redland::URI
+I<URI> and the value is a RDF::Redland::Node.  If I<VALUE> is given,
+the feature is set to that value, otherwise the current value is
+returned.
 
 =cut
 
@@ -180,10 +213,11 @@ sub feature ($$;$) {
   $uri=RDF::Redland::URI->new($uri)
     unless ref $uri;
 
-  return &RDF::Redland::CORE::librdf_parser_get_feature($self->{PARSER},$uri->{URI})
-    unless $value;
+  return &RDF::Redland::CORE::librdf_parser_set_feature($self->{PARSER},$uri->{URI},$value->{NODE})
+      if $value;
 
-  return &RDF::Redland::CORE::librdf_parser_set_feature($self->{PARSER},$uri->{URI},$value);
+  $value=&RDF::Redland::CORE::librdf_parser_get_feature($self->{PARSER},$uri->{URI});
+  return $value ? RDF::Redland::Node->_new_from_object($value,1) : undef;
 }
 
 

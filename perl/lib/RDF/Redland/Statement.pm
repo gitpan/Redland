@@ -2,11 +2,10 @@
 #
 # Statement.pm - Redland Perl RDF Statement module
 #
-# $Id: Statement.pm,v 1.22 2003/08/23 20:10:06 cmdjb Exp $
+# $Id: Statement.pm 10593 2006-03-05 08:30:38Z dajobe $
 #
-# Copyright (C) 2000-2001 David Beckett - http://purl.org/net/dajobe/
-# Institute for Learning and Research Technology - http://www.ilrt.org/
-# University of Bristol - http://www.bristol.ac.uk/
+# Copyright (C) 2000-2005 David Beckett - http://purl.org/net/dajobe/
+# Copyright (C) 2000-2005 University of Bristol - http://www.bristol.ac.uk/
 # 
 # This package is Free Software or Open Source available under the
 # following licenses (these are alternatives):
@@ -173,9 +172,9 @@ sub DESTROY ($) {
 
 =item subject [SUBJECT]
 
-Get/set the statement subject.  When RDF::Redland::Node I<SUBJECT> is given, sets
-the subject of the statement, otherwise returns a reference to the
-statement RDF::Redland::Node subject.
+Get/set the statement subject.  When a RDF::Redland::Node I<SUBJECT>
+is given, sets the subject of the statement, otherwise returns a
+reference to the statement RDF::Redland::Node subject.
 
 =cut
 
@@ -235,6 +234,17 @@ sub as_string ($) {
   &RDF::Redland::CORE::librdf_statement_to_string(shift->{STATEMENT});
 }
 
+=item equals STATEMENT
+
+Return non zero if this statement is equal to STATEMENT
+
+=cut
+
+sub equals ($$) {
+  my($self,$statement)=@_;
+  &RDF::Redland::CORE::librdf_statement_equals($self->{STATEMENT}, $statement->{STATEMENT});
+}
+
 =pod
 
 =back
@@ -248,15 +258,17 @@ sub as_string ($) {
 
 Create a new RDF::Redland::Statement with the given
 RDF::Redland::Node objects as parts (or undef when empty for a
-I<partial> statement).
-Use $a=new RDF::Redland::Statement($subject, $predicate, $object);
+I<partial> statement).  Use instead:
+
+  $a=new RDF::Redland::Statement($subject, $predicate, $object);
 
 =item new_from_statement STATEMENT
 
 Create a new RDF::Redland::Statement object from
 RDF::Redland::Statement I<STATEMENT> (copy constructor).
+Use instead:
 
-Use $s=$old_statement->clone;
+  $s=$old_statement->clone;
 
 =cut
 

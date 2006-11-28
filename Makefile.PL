@@ -1,20 +1,24 @@
 #
 # Fake MakeMaker Makefile.PL - top level Makefile.PL for Redland
 #
-# $Id: Makefile.PL,v 1.2 2003/09/07 22:13:33 cmdjb Exp $
+# $Id: Makefile.PL 11633 2006-11-27 18:19:45Z dajobe $
 #
-# Copyright (C) 2001-2003 David Beckett - http://purl.org/net/dajobe/
-# Institute for Learning and Research Technology - http://www.ilrt.org/
-# University of Bristol - http://www.bristol.ac.uk/
+# Copyright (C) 2001-2006 David Beckett http://purl.org/net/dajobe/
+# Copyright (C) 2001-2005 University of Bristol, UK http://www.bristol.ac.uk/
 # 
-# This package is Free Software or Open Source available under the
-# following licenses (these are alternatives):
-#   1. GNU Lesser General Public License (LGPL)
-#   2. GNU General Public License (GPL)
-#   3. Mozilla Public License (MPL)
+# This package is Free Software and part of Redland http://librdf.org/
+# 
+# It is licensed under the following three licenses as alternatives:
+#   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
+#   2. GNU General Public License (GPL) V2 or any newer version
+#   3. Apache License, V2.0 or any newer version
+# 
+# You may not use this file except in compliance with at least one of
+# the above three licenses.
 # 
 # See LICENSE.html or LICENSE.txt at the top of this package for the
-# full license terms.
+# complete terms and further detail along with the license texts for
+# the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
 # 
 # 
 
@@ -50,53 +54,23 @@ my $program=basename $0;
 # All clear now?
 #
 
-my $TOP_SRCDIR='.';
-my $PACKAGE="Redland";
+$TOP_SRCDIR=$ENV{TOP_SRCDIR} || '.';
+$PACKAGE=$ENV{PACKAGE} || "Redland";
 
-my $P=1;
+my $version=$ENV{VERSION};
 
-my $conf_in_file="$TOP_SRCDIR/configure.ac";
-open(CONF, $conf_in_file) or die "Cannot open $conf_in_file for version - $!\n";
-my $VERSION=undef;
-while(<CONF>) {
-  if(/^AC_INIT\([^,]+,\s*(\d+\.\d+\.\d+)/) {
-    $VERSION=$1;
+if(!$version) {
+  my $conf_in_file="$TOP_SRCDIR/configure.ac";
+  open(CONF, $conf_in_file) or die "Cannot open $conf_in_file for version - $!\n";
+  while(<CONF>) {
+    if(/^AC_INIT\(\[[^]]+\],\s*([^,]+)/) {
+      $version=$1;
+    }
   }
+  close(CONF);
+  die "Cannot find AC_INIT in $conf_in_file for version\n"
+    unless $version;
 }
-close(CONF);
-die "Cannot find AM_INIT_AUTOMAKE in $conf_in_file for version\n"
-  unless $VERSION;
-
-
-$VERSION.=".".$P if $P;
-
-
-my(@scripts)=qw(
-compile
-config.guess
-config.sub
-configure
-depcomp
-install-sh
-missing
-mkinstalldirs
-autogen.sh
-perl/example.pl
-perl/update-perl-api.pl
-raptor/compile
-raptor/config.guess
-raptor/config.sub
-raptor/configure
-raptor/depcomp
-raptor/install-sh
-raptor/missing
-raptor/mkinstalldirs
-raptor/autogen.sh
-raptor/fix-groff-xhtml
-);
-
-# Archive::Tar looses the executable mode.
-chmod 0755, @scripts;
 
 
 my $perl_makefile="Makefile";
@@ -116,7 +90,6 @@ if ($args =~ m|CC=(\S+)|) {
   $ccarg = "CC=$1 ";
 }
 
-print "Writing $perl_makefile for RDF::Redland version $VERSION\n";
 open(MK, ">$TOP_SRCDIR/$perl_makefile") 
   or die "Cannot create $TOP_SRCDIR/$perl_makefile - $!";
 
@@ -128,7 +101,7 @@ print MK <<"EOM";
 #
 
 DISTNAME = $PACKAGE
-VERSION = $VERSION
+VERSION = $version
 
 SHELL = /bin/sh
 NOOP = \$(SHELL) -c true
@@ -154,12 +127,11 @@ DIST_DEFAULT = tardist
 all: config
 
 # MakeMaker target
-config: perl-config-stamp
-perl-config-stamp:
+config:
 	\@if [ ! -f ${standalone_makefile} ]; then \\
 	  cp ${perl_makefile} Makefile.perl; \\
-	  echo "${ccarg}PERL=$perl ./configure --prefix=$prefix --with-perl"; \\
-	  ${ccarg}PERL=$perl ./configure --prefix=$prefix --with-perl; \\
+	  echo "${ccarg}PERL=$perl ./configure --prefix=$prefix"; \\
+	  ${ccarg}PERL=$perl ./configure --prefix=$prefix; \\
 	  cp Makefile ${standalone_makefile}; \\
 	  cp Makefile.perl ${perl_makefile}; \\
 	  rm Makefile.perl; \\
@@ -174,25 +146,12 @@ perl-config-stamp:
 	  echo "\$(MAKE) \$(MFLAGS) -f Makefile.perl all"; \\
 	  \$(MAKE) \$(MFLAGS) -f Makefile.perl all; \\
 	fi
-	touch config-stamp
 
 # MakeMaker targets
-# DYLD_LIBRARY_PATH - OSX
-# LD_LIBRARY_PATH - rest of world  
 test: config
-	here=`pwd`; \\
-	LD_LIBRARY_PATH=\$\$here/librdf/.libs:\$\$here/raptor/.libs; \\
-	export LD_LIBRARY_PATH; \\
-	DYLD_LIBRARY_PATH=\$\$here/librdf/.libs:\$\$here/raptor/.libs; \\
-	export DYLD_LIBRARY_PATH; \\
-	\$(MAKE) \$(MFLAGS) -f ${standalone_makefile} check
-#	cd perl && \$(MAKE) \$(MFLAGS) -f Makefile.perl \$@
+	cd perl && \$(MAKE) \$(MFLAGS) -f Makefile.perl \$@
 
 install: config
-	\@if [ -f ${standalone_makefile} ]; then \\
-	  cd raptor && \$(MAKE) \$(MFLAGS) install-libLTLIBRARIES; cd ..; \\
-	  cd librdf && \$(MAKE) \$(MFLAGS) install-libLTLIBRARIES; cd ..; \\
-	fi
 	cd perl && \$(MAKE) \$(MFLAGS) -f Makefile.perl \$@
 
 # MakeMaker target
@@ -207,7 +166,6 @@ clean:
 	  echo "\$(MAKE) \$(MFLAGS) \$@\-perl"; \\
 	  \$(MAKE) \$(MFLAGS) \$\@-perl; \\
 	fi
-	rm -f perl-config-stamp
 
 # MakeMaker/GNU target
 distclean:
@@ -222,8 +180,8 @@ Makefile: Makefile.PL
 
 # MakeMaker[dist]/GNU targets
 # Pass on some targets to GNU autoconfigured makefile in order
-# so that 'make [all]', 'make check' and 'make dist' work
-all-recursive all-am check-am clean-am distclean-am dvi-am info-am install-am install-data-am install-exec-am installcheck-am installdirs-am uninstall-am uninstall-info-am dist dist-hook: config
+# so that 'make [all]' and 'make dist' work
+all-recursive all-am dist dist-hook: config
 	\$(MAKE) \$(MFLAGS) -f ${standalone_makefile} \$@
 
 
@@ -234,7 +192,12 @@ distcheck:
 skipcheck:
 	${perl} -MExtUtils::Manifest=skipcheck -e skipcheck
 
+.PHONY: MANIFEST
+
 manifest: MANIFEST
+
+MANIFEST:
+	$perl -MExtUtils::Manifest=mkmanifest -e mkmanifest
 
 # MakeMaker dist_dir section:
 perl-distdir: MANIFEST

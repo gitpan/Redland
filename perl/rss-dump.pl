@@ -2,11 +2,10 @@
 #
 # rss-view.pl - Redland RSS 1.0 test program
 #
-# $Id: rss-dump.pl,v 1.10 2003/08/20 12:24:04 cmdjb Exp $
+# $Id: rss-dump.pl 10592 2006-03-05 08:28:27Z cmdjb $
 #
 # Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
-# Institute for Learning and Research Technology - http://www.ilrt.org/
-# University of Bristol - http://www.bristol.ac.uk/
+# Copyright (C) 2000-2003 University of Bristol - http://www.bristol.ac.uk/
 # 
 # This package is Free Software or Open Source available under the
 # following licenses (these are alternatives):

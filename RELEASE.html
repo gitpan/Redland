@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title>Redland RDF Application Framework - Release Notes</title>
+  <title>Redland RDF Application Framework Bindings</title>
   <style type="text/css">
 <!--
 pre
@@ -17,794 +17,706 @@ pre
 -->
   </style>
 </head>
-<body bgcolor="#ffffff" text="#000085">
+<body>
 
-  <h1>Redland RDF Application Framework - Release Notes</h1>
+<h1>Redland RDF Application Framework Bindings</h1>
 
-<h2 id="rel0_9_14"><a name="rel0_9_14">Redland 0.9.14 Changes</a></h2>
+<h2 id="rel1_0_5_1"><a name="rel1_0_5_1">Redland Bindings 1.0.5.1 Changes</a></h2>
 
-<p>This version of Redland is an update mostly to synchronise
-with the 
-<a href="http://www.redland.opensource.ac.uk/raptor/">Raptor</a> version 1.0.0 (RDF/XML and N-Triples parser) - see
-<a href="http://www.redland.opensource.ac.uk/raptor/NEWS.html">Raptor NEWS</a>
-for the changes since 0.9.12.</p>
+<p>The main change in this release is to synchronise with 
+<a href="http://librdf.org/">Redland</a> 1.0.5
+(<a href="http://librdf.org/RELEASE.html#rel1_0_5">Redland 1.0.5 release Notes</a>)
+and provide several other fixes and improvements.
+</p>
 
-<p>New in this version is the <code>rdfproc</code> utility
-which allows command line creation of redland stores, parsing
-of syntaxes and manipulation of the model.</p>
+<h3>Packaging and Configuration Changes</h3>
 
+<p>Patched <code>configure</code> to remove un-necessary tests for
+C++ or F77++ compilers that <code>libtool</code> stupidly insists
+on.</p>
 
-<h3>Configuration changes</h3>
+<p>Added <code>--with-python-ldflags</code> for working around
+installing python in odd places.
+</p>
 
-<p>Added <code>--with-raptor</code> to either choose the system
-or internal raptor library.  If omittted, redland will guess
-and choose either the system one, if new enough or the internal
-one (always present).</p>
+<p>Create directories before make install.
+Fixes <a href="http://bugs.librdf.org/mantis/view.php?id=126">Issue #0000126</a>
+</p>
 
+<h3>C# bindings changes</h3>
 
-<h3>Hash Class changes</h3>
+<p>Model class methods getSource, getArc and getTarget now return
+null rather than try to create a Node with null value.
+</p>
 
-<p>Added a librdf_hash_put_strings helper method to put a pair of
-string values into a hash.  Useful for making model or storage
-options.</p>
+<p>Parser class constructors now working again, defaulting to RDF/XML
+parser.</p>
 
-<h3>Node Class changes</h3>
+<h3>Java bindings changes</h3>
 
-<p>Resource (URI) / literal / blank nodes are now interned on
-construction so there is only one object for each distinct
-librdf_node object. This reduces memory and makes copying cheaper at
-the cost of an increase in construction cost.  Copying nodes is very
-common, since not only is it done for nodes but any time a statement
-is used or returned.  This interning was already done for the URI
-class but the change required librdf_node to be made immutable, which
-was done in 0.9.13.</p>
+<p>Add Java Query and QueryResults classes and example of using them.
+Added Serializer method setNamespace.
+</p>
 
-<h3>Storage Class changes</h3>
+<h3>Perl bindings changes</h3>
 
-<p>Added librdf_storage_context_as_stream deprecating
-librdf_storage_context_serialise to be consistent with the
-*as_stream method name changes to model.</p>
+<p>Parser class now allows undef arguments for base URIs.</p>
 
-<p>Added librdf_new_storage_with_options taking an librdf_hash
-of options rather than the string of librdf_new_storage.</p>
+<h3>PHP bindings changes</h3>
 
-<p>Added new optional storage factory methods context_add_statements
-and context_remove_statements.  If omitted, the storage class
-implements them with context_add_statement and context_remove_statement.</p>
+<p>None.</p>
 
+<h3>Python bindings changes</h3>
 
-<h3>Stream and Iterator Classes changes</h3>
+<p>Subclass python class <code>Warning</code> defined in C for making
+a <code>RedlandWarning</code>.
+Fixes <a href="http://bugs.librdf.org/mantis/view.php?id=109">Issue #0000109</a>
+</p>
 
-<p>Optimised the stream and iterator internals to do less factory
-method calls when looking for new items or the end of
-stream/iterator.  This should make them slightly faster.</p>
+<p>Storage class gained some update docs.</p>
 
+<h3>Ruby bindings changes</h3>
 
-<h3>Miscellaneous changes</h3>
+<p>Model class added method to_string.  Removed several puts in methods.
+Method save now works when using default serializer and not filename.
+</p>
 
-<p>Renamed Redland statics to be <code>librdf_*</code> rather than
-<code>redland_*</code>.  Added a one-line
-librdf_short_copyright_string.</p>
+<p>Node class method from_node now calls Uri constructor properly.</p>
 
+<p>Node class now defines bnode and anon to match docs
+Fixes <a href="http://bugs.librdf.org/mantis/view.php?id=122">Issue #0000122</a>
+</p>
 
-<h3>Perl API Changes</h3>
+<p>Parser class now has constructor for a turtle parser.</p>
 
-<p>Fixed the broken use of <tt>UNIVERSAL::isa</tt></p>
+<p>QueryResults class added method bindings_count.</p>
 
+<p>QueryResults class methods binding_value, binding_value_by_name
+now handle nil values.</p>
 
+<p>Serializer class modified method set_namespace to use prefix, uri_ordering.
+Constructor now defaults to rdfxml syntax.
+</p>
 
-<h2 id="rel0_9_13"><a name="rel0_9_13">Redland 0.9.13 Changes</a></h2>
+<p>Storage class no longer echos storage options to stdout.
+</p>
 
-<p>This version of Redland is a major update to 0.9.12 changing the
-node class.  librdf_node objects are now immutable once created,
-higher-level language APIs no longer have deal with sharing or
-copying internals, some additional API support for parsing content
-from strings.</p>
+<p>Added OWL_NS to owl.rb.
+Fixes <a href="http://bugs.librdf.org/mantis/view.php?id=121">Issue#0000121</a>
+</p>
 
-<p>This includes the stable and complete version 0.9.12 of the 
-<a href="http://www.redland.opensource.ac.uk/raptor/">Raptor parser</a>
-which supports all of the revised RDF/XML syntax.</p>
+<p>Example gains query and serializer test code.
+</p>
 
-<p>Initial work was added on an ECMA CLI interface using
-the C# ("C sharp") language.</p>
-
-<p>Blank nodes generated by parsing the syntaxes are now
-generated more unique (not guaranteed) based on the Redland
-startup time and a serial number.</p>
-
-<p>The Perl, Python and Java APIs now always return new nodes
-and statements removing the need to consider sharing at this
-level.  This means that the following operation is legal in
-Perl, Python and Java:</p>
-<pre>
-# perl
-$n=RDF::Redland::Node->from_uri("http://example.org/foo");
-$s=new RDF::Redland::Statement($n, $n, $n);
-$model->add($s);
-
-# python
-n=RDF.Uri("http://example.org/foo")
-s=RDF.Statement(n, n, n) # n is used as a resource RDF.Node here
-model.add_statement(s)
-</pre>
-
-<h3>Configuration</h3>
-
-<p>Several improvements were made to the building and configuring
-including a better attempt to find matching Sleepycat/Berkeley DB
-header and library files (and support BDB up to 4.1), searching for
-installed Java JDKs and Tcl headers.  Each of the language interfaces
-can be individually enabled to be build, tested and installed with
-the main C library.</p>
+<p>Removed some recursive includes of <code>Redland</code>.</p>
 
 
-<h3>Node Class changes</h3>
+<h3>Tcl bindings changes</h3>
 
-<p>The librdf_node class was modifed to make objects immutable once
-constructed, they cannot be modified.  The following set methods were
-consequently removed.</p>
+None
+
+
+
+<h2 id="rel1_0_4_1"><a name="rel1_0_4_1">Redland Bindings 1.0.4.1 Changes</a></h2>
+
+<p>The main change in this release is to synchronise with 
+<a href="http://librdf.org/">Redland</a> 1.0.4
+(<a href="http://librdf.org/RELEASE.html#rel1_0_4">Redland 1.0.4 release Notes</a>)
+and provide some other minor fixes.
+</p>
+
+
+<h3>Packaging and Configuration Changes</h3>
+
+<p>Now using <a href="http://subversion.tigris.org/">Subversion</a>
+for version control and the <a href="INSTALL.html">Redland bindings installation instructions</a> explain how to get Redland from Subversion.</p>
+
+
+<h3>C# bindings changes</h3>
+
+<p>Return <code>null</code> in more cases when a redland function
+returns 0/NULL for a function result..</p>
+
+
+<h3>Java bindings changes</h3>
+
+<p>Rename the SWIG accessor java functions for the constants which
+changed in some previous SWIG verison.</p>
+
+
+<h3>Perl bindings changes</h3>
+
+<p>No changes.</p>
+
+
+<h3>PHP bindings changes</h3>
+
+<p>No changes.</p>
+
+
+<h3>Python bindings changes</h3>
+
+<p>Fix module cleanup to ensure Redland.librdf_free_world lives till the end.</p>
+
+<p><code>NS</code> Class: Rename method <code>node</code> and local
+variables to <code>__</code>-prefixed names less likely to be used in a namespace.
+</p>
+
+<p>Edit to allow omitting a literal language and make the default work with
+the updated typed literal fix in Redland 1.0.3</p>
+
+
+<h3>Ruby bindings changes</h3>
+
+<p>Build fixes for newer SWIG.</p>
+
+
+<h3>Tcl bindings changes</h3>
+
+<p>Update build configuration to record redland name/version correctly.</p>
+
+
+
+<h2 id="rel1_0_3_1"><a name="rel1_0_3_1">Redland Bindings 1.0.3.1 Changes</a></h2>
+
+<p>The main changes in this release are:</p>
+
+<p>Synchronises with 
+<a href="http://librdf.org/">Redland</a> 1.0.3
+(<a href="http://librdf.org/RELEASE.html#rel1_0_3">Redland 1.0.3 release Notes</a>)
+</p>
+
+<p>Many fixes across multiple binding languages.</p>
+
+<p>Version Control change: Redland Bindings will be switching to use
+<a href="http://subversion.tigris.org/">Subversion</a>
+for version control after the 1.0.2.1 release.  Please check the
+<a href="http://svn.librdf.org/">Redland Subversion site</a>
+for the latest status or the online
+<a href="http://librdf.org/bindings/INSTALL.html">Redland Bindings installation notes</a>
+for the Redland Bindings specific subversion installation information.
+</p>
+
+
+<h3>Packaging and Configuration Changes</h3>
+
+<p>The build now generates a bindings.rdf DOAP file.</p>
+
+<p>The autogen.sh script for building from a soruce code checkout was
+revamped to be more modular.</p>
+
+<p>RPM spec file was updated. It now defines perl_sitearch,
+python_libdir, ruby_dir and ruby_libdir at RPM build time.  The build
+requirements were split out and now declare minimum versions.  Uses
+newer %configure and %{__make} macros and License header field.</p>
+
+
+<h3>C# bindings changes</h3>
+
+<p>Namespace fixes patch from John Barstow.</p>
+<p>Update nunit console to newer.</p>
+<p>Update C# syntax for Mono 1.8.x+.</p>
+
+
+<h3>Java bindings changes</h3>
+
+<p>No changes.</p>
+
+
+<h3>Perl bindings changes</h3>
+
+
+<p><code>QueryResults.to_string</code>: return boolean format results.</p>
+
+<p><code>Storage</code> constructor: Improve storage options handling
+by allowing a perl hash options in addition to the current form of a
+string of redland options.  Patch from Kjetil Kjernsmo.</p>
+
+
+<h3>PHP bindings changes</h3>
+
+<p>Insert phpinfo and module shutdown using SWIG alone which might
+work better.</p>
+
+
+<h3>Python bindings changes</h3>
 
 <ul>
-<li>librdf_node_set_blank_identifier</li>
-<li>librdf_node_set_li_ordinal</li>
-<li>librdf_node_set_literal_value</li>
-<li>librdf_node_set_type</li>
-<li>librdf_node_set_typed_literal_value</li>
-<li>librdf_node_set_uri</li>
+<li>win32 fixes</li>
+<li><code>Model.load</code> returns a boolean</li>
+<li><code>Parser.parse_into_model</code> and
+<code>Parser.parse_string_into_model</code> now return boolean
+success/failure</li>
+<li>Improve default arguments for <code>Parser</code> and
+<code>Serializer</code> convienence classes, keeping the same
+defaults</li>
+<li>Added test <code>testSPARQLQueryTwiceOverwriteVar</code> which fails due to current Rasqal implementation.</li>
+<li>Remove use of <code>SWIGEXPORT</code> macro which breaks on newer <a href="http://www.swig.org/">SWIGs</a></li>
+<li><code>World.__del__</code>: Added hack to prevent death if python
+destroys the Redland module before the RDF module. Fixes
+<a href="http://bugs.librdf.org/mantis/view.php?id=44">Issue #0000044</a></li>
+<li><code>URI.__hash__</code>: Use hash of str(self) to make a working URI hash allowing
+Redland URIs to be stored in Python dicts.
+Fixes <a href="http://bugs.librdf.org/mantis/view.php?id=47">Issue #0000047</a></li>
+<li><code>QueryResults.make_results_hash</code>,
+<code>QueryResults.get_binding_value</code> and
+<code>QueryResults.get_binding_value_by_name</code>: Check for a None
+value and set it in the results correctly.
+Fixes <a href="http://bugs.librdf.org/mantis/view.php?id=59">Issue #0000059</a></li>
+<li><code>Parser.parse_string_as_stream</code> and
+<code>Parser.parse_string_into_model</code>: Convert a Python unicode
+string to the UTF-8 bytes Redland expects.
+Fixes <a href="http://bugs.librdf.org/mantis/view.php?id=61">Issue #0000061</a>
+</li>
+<li>Make Python exceptions <code>RedlandError</code> and
+<code>RedlandWarning</code> properly returned from the RDF module by
+importing them correctly from C.
+Fixes <a href="http://bugs.librdf.org/mantis/view.php?id=68">Issue #0000068</a>
+</li>
+<li><code>QueryResults.to_file</code> and
+<code>QueryResults.to_string</code> now use the default format when
+given None.</li>
 </ul>
 
-<p>The following utility methods were added (covering
-all the librdf_node_get_type values):</p>
+
+<h3>Ruby bindings changes</h3>
 
 <ul>
-<li>librdf_node_is_blank - return non-0 if the node is a blank node</li>
-<li>librdf_node_is_literal - return non-0 if the node is a literal</li>
-<li>librdf_node_is_resource - return non-0 if the node is a URI</li>
-</ul>
-
-<p>(These are reflected into the same methods on
-the Perl, Python and Java node classes)</p>
-
-<p><code>LIBRDF_NODE_TYPE_LI</code> as returned by librdf_node_get_type
-was deleted, it was never used.</p>
-
-<p>To support datatyped literals, the following method was added:</p>
-
-<ul>
-<li>librdf_node_get_literal_value_datatype_uri - get the typed literal datatype URI of the literal node</li>
+<li>Remove mention of <code>log4r</code> not really ever used</li>
+<li><code>Serializer</code> class method <code>model_to_string</code> added.</li>
+<li><code>Query</code> class method initialize - add missing base_uri arg</li>
+<li><code>QueryResults</code> class: added, separate from query class.</li>
+<li><code>Statement</code> class method ==(other) added</li>
+<li><code>Model</code> class method <code>query_execute</code> added</li>
+<li><code>Parser</code> class: Use rdfxml as parser name</li>
+<li><code>Resource</code> class method initialize: Make it work with a <code>Uri</code> argument.
+Fixes <a href="http://bugs.librdf.org/mantis/view.php?id=48">Issue #0000048</a>.</li>
+<li><code>Model</code> class method get_resource): Handle find returning nil for no result.
+Fixes <a href="http://bugs.librdf.org/mantis/view.php?id=49">Issue #0000049</a>
+</li>
 </ul>
 
 
-<h3>Model Class changes</h3>
+<h3>Tcl bindings changes</h3>
 
-<p>Added librdf_model_sync to sync the model to the backing store.</p>
+<p>No changes.</p>
 
-<p>Added librdf_model_as_stream and librdf_model_context_as_stream to
-replace librdf_model_context_serialise and
-librdf_model_context_serialize respectively.  This was done both to
-reduce the confusion with the librdf_serializer class and the mixture
-of US/UK spelling of that word.  The old functions will remain for now.
+
+
+<h2 id="rel1_0_2_1"><a name="rel1_0_2_1">Redland Bindings 1.0.2.1 Changes</a></h2>
+
+<p>This release is mainly to synchronise with Redland 1.0.2</p>
+
+<h3>Perl bindings changes</h3>
+
+<p>Query results are now serialized to the latest SPARQL XML format.</p>
+
+<p>A <code>$VERSION</code> variable is exported by the perl binding
+so that you can do <code>use RDF::Redland 1.00_02</code> to ensure you
+get a certain version or newer.
+</p>
+
+<p>Node class method <code>new_literal</code> modified to accept
+several classes of perl URI and fixed to promote them correctly to a
+redland URI.
+</p>
+
+
+<h3>Python bindings changes</h3>
+
+<p>Query results are now serialized to the latest SPARQL XML format.</p>
+
+
+<h3>Ruby bindings changes</h3>
+
+<p>Update the bindings for newer SWIG and re-order requires to make
+<code>irb -r rdf/redland</code> work (aredridel)
 </p>
 
 
 
-<h3>Parser Class changes</h3>
+<h2 id="rel1_0_1_1"><a name="rel1_0_1_1">Redland Bindings 1.0.1.1 Changes</a></h2>
 
-<p>Added librdf_parser_parse_string_as_stream and
-librdf_parser_parse_string_into_model to allow parsing content from
-strings.</p>
+<h3>General Changes</h3>
 
-
-<h3>Statement Class changes</h3>
-
-<p>Added librdf_statement_is_complete to test if a statement has
-all the subject, predicate and object fields assigned.  Partial
-statements cannot be added to a model but can be used in
-matching statement queries with librdf_model_find_statements.</p>
+<p>The query demonstrations written in Perl now use the revised
+SPARQL syntax.</p>
 
 
-<h3>Storage Class changes</h3>
+<h3>C# bindings changes</h3>
 
-<p>Added librdf_storage_sync to sync the backing store.  (This is
-slightly internal to Redland, you should not be calling this
-directly)</p>
+<p>No changes.</p>
 
 
-<h3>Perl Interface Changes</h3>
+<h3>Objective-C / Cocoa bindings changes</h3>
 
-<p>Updated to make the object constructors less verbose and to allow
-Redland URI objects and native perl URIs to be used in place of
-Redland Nodes where convienent (such as in making Statements).  All
-existing code should work but can be shortened.
-A new <code>--with-perl</code> configure argument to enable the perl
-interface.
+<p>No changes.</p>
+
+
+<h3>Perl bindings changes</h3>
+
+<p>Perl. Added <code>RDF::Redland</code> methods
+<code>set_log_handler</code> and <code>reset_log_handler</code>
+to get structured error messages.  Prefer this to the older handler.</p>
+
+<p>Perl.  Added  convienience Node subclasses
+<code>RDF::Redland::URINode</code>,
+<code>RDF::Redland::XMLLiteralNode</code>,
+<code>RDF::Redland::BlankNode</code> and
+<code>RDF::Redland::LiteralNode</code>
 </p>
+
+
+<h3>PHP bindings changes</h3>
+
+<p>When returning NULL librdf_node* objects, convert them also
+to a PHP null.</p>
+
+
+<h3>Python bindings changes</h3>
+
+<p>Serializer class gains set_namespace method.</p>
+
+<p>Adjust Node, Statement class comparisons to not assume the other
+parameter is of the right type.  Remove 'return' from
+constructors. (Daniel Larsson).</p>
+
+
+<h3>Ruby bindings changes</h3>
+
+<p>Generate html documentation using rdoc (Nikolas Coukouma).</p>
+
+
+<h3>Tcl bindings changes</h3>
+
+<p>No changes.</p>
+
+
+
+<h2 id="rel1_0_0_2"><a name="rel1_0_0_2">Redland Bindings 1.0.0.2 Changes</a></h2>
+
+<h3>General Changes</h3>
+
+<p>Removed bogus C include of the ../librdf dir from all bindings
+build; always just use whatever <code>redland-config --cflags</code>
+returns.</p>
+
+
+<h3>Perl bindings changes</h3>
+
+<p>Added methods for returning query results as RDF graphs,
+boolean results and as a syntax format such as RDF/XML for graphs,
+<a href="http://www.w3.org/TR/2004/WD-rdf-sparql-XMLres-20041221/">SPARQL Variable Binding Results XML Format</a> for bindings.
+.</p>
+
+<p>The error handling was altered for parsing methods
+class RDF::Redland::Model method <code>load</code>, class
+RDF::Redland::Parser methods <code>parse_into_model</code> and
+<code>parse_string_into_model</code> which now take an optional
+<em>handler</em> parameter that is a subroutine handler providing
+detailed log information.  This can be used to capture or store
+detailed info on possibly multiple problems in parsing.</p>
+
+
+<h3>PHP bindings changes</h3>
+
+<p>Fix for swig calling zend_rsrc_list_get_rsrc_type incorrectly.
+Added <code>PHP_MINFO_FUNCTION</code> to report that Redland was
+loaded, the version of redland and the PHP bindings.</p>
+
+
+<h3>Python bindings changes</h3>
+
+<p>Change the way that redland errors and warnings are reported.
+There are now two choices.  By default warnings are now generated
+immediately as a Python <code>PyRedland_Warning</code> warning.  The
+first error generated is saved and thrown as an
+<code>PyRedland_Error</code> exception after the redland function
+returns.  If multiple errors are generated, the remaining ones are
+left to the default redland error handler, which prints them to
+stderr.</p>
+
+<p>The alternative is in parsing methods <code>model.load</code>,
+<code>parser.parse_into_model</code> and
+<code>parser.parse_string_into_model</code> which now take an
+optional <em>handler</em> parameter that is a subroutine handler
+providing detailed log information.</p>
+
+<p>This change has a disadvantage in no longer allowing
+user-registration of callbacks but it does seem to work better with
+Python than the former mechanism of python calling C calling
+Python.</p>
+
+
+
+<h2 id="rel1_0_0_1"><a name="rel1_0_0_1">Redland Bindings 1.0.0.1 Changes</a></h2>
+
+<p>The main changes for this release are to provide additional
+query results formats, in Python only at present and
+to synchronise with Redland 1.0.0</p>
+
+
+<h3>C# bindings changes</h3>
+
+<p>Correct marshalling .NET strings to and from UTF-8 inside Redland
+correctly. (Edd Dumbill)</p>
+
+<p>Improve and correct the destruction of internal iterator objects
+(Edd Dumbill)</p>
+
+<p>Use HandleRef to improve the references to redland World to
+prevent premature destruction of redland objects. (Edd Dumbill)</p>
+
+<p>See the csharp/ChangeLog in the source tree for more details
+of these changes.</p>
+
+
+<h3>Objective-C / Cocoa bindings changes</h3>
+
+<p>This binding is for the Objective-C (Obj-C) language with the
+Cocoa Framework on the Apple OSX platform.  It was created and
+is developed by René Puls who provides it at the
+<a href="http://kianga.kcore.de/latest/redland-objc">Cocoa Bindings for Redland</a> site
+</p>
+
+
+<h3>Perl bindings changes</h3>
+
+<p>No changes.</p>
+
+
+<h3>PHP bindings changes</h3>
+
+<p>No changes.</p>
+
+
+<h3>Python bindings changes</h3>
+
+<p>Added convienience classes for making RDQL and SPARQL queries.
+Added methods for returning query results as RDF graphs and boolean
+results.  Added unittests for those.
+</p>
+
+
+<h3>Ruby bindings changes</h3>
+
+<p>Updated to <a href="http://rubyforge.org/projects/rdf-redland/">rdf-redland</a> 0.5.3.1 and made the installation work
+standalone from ruby gem. Fixed some test cases so the testsuite passes
+now.
+</p>
+
+
+<h3>Tcl bindings changes</h3>
+
+<p>No changes.</p>
+
+
+
+<h2 id="rel0_9_19_1"><a name="rel0_9_19_1">Redland Bindings 0.9.19.1 Changes</a></h2>
+
+<p>Redland binding's License was changed from LGPL 2.1/MPL 1.1 to
+LGPL 2.1/Apache 2 (except for the C# binding).</p>
+
+<p>Rebuild for Redland 0.9.19</p>
+
+
+<h3>General Changes</h3>
+
+<p>Fixes to lose Makefile use of <code>$&lt;</code> syntax for better
+<strong>make(1)</strong> portability.</p>
+
+<p>configure was updated to try harder to find Java JNI headers,
+looking in $JAVA_HOME, or using <code>--with-jdk</code> argument.</p>
+
+
+<h3>C# binding changes</h3>
+
+<p>Assign the logging delegate to a private member to
+stop it being prematurely garbage collected. (Edd Dumbill)</p>
+
+
+<h3>Perl binding changes</h3>
+
+<p>Rewrote <code>$uri=$uri->{URI}</code> style code to prevent
+premature object destruction.</p>
+
+<p>Class Model: Added to_string() method.</p>
+
+<p>Classes Query, QueryResults: Made
+documentation and examples to match the code.</p>
+
+
+
+<h3>PHP binding changes</h3>
+
+<p>Added a typemap to provide a proper PHP ZVAL_NULL
+value when returning a NULL <code>librdf_stream*</code> or
+<code>librdf_iterator*</code> object pointer, rather than a
+swig-typed NULL pointer.</p>
+
+
+<h3>Python binding changes</h3>
+
+<p>Rewrote <code>uri=uri._reduri</code> style code to prevent
+premature object destruction.</p>
+
+<p>Class Model: Added method to_string.</p>
+
+<p>Class Node: Documented literal language and other literal_language
+method dictionary keys.</p>
+
+
+
+
+<h2 id="rel0_9_18_1"><a name="rel0_9_18_1">Redland Bindings 0.9.18-1 Changes</a></h2>
+
+<p>Rebuild for Redland 0.9.18 - no API changes</p>
+
+
+<h2 id="rel0_9_17_1"><a name="rel0_9_17_1">Redland Bindings 0.9.17-1 Changes</a></h2>
+
+<p>This is the first release of Redland Bindings separate from
+Redland and includes the following changes compared to the language
+bindings in Redland 0.9.16</p>
+
+<h3>General Changes</h3>
+
+<p>The main change is to split the API that Redland exports in the
+redland package from the language specific parts in the
+redland-bindings package.</p>
+
+<p>For most of the language bindings, the interface between them is
+using the <a href="http://www.swig.org/">swig</a> interface generator tool.
+
+This is now defined by the Redland.i file provided by the redland
+package (in binary packages inside redland-devel rpm or librdf-dev
+debs).  This can also be found via <code>redland-config --swig</code>
+and then used to generate the C wrappers for the bindings.  There may
+be need for language-specific changes which can be used via #included
+.i files triggered by calling swig and the C compiler with defines
+like <code>-DREDLAND_PRE_I</code> to #include redland-pre.i from the
+Redland.i.</p>
+
+<p>The last paragraph does not apply to C# (Redland#) which uses
+the built in P/Invoke feature of the language and runtime to call
+the Redland functions directly.</p>
+
+
+<h3>Packaging changes</h3>
+
+<h3>C# API (Redland#) Changes</h3>
+
+<p>This is an entirely new API for 0.9.17 originally created by Cesar
+Lopez Nataren.  It was updated by Dave
+Beckett to work with the released Mono 1.0 and substantially improved
+by Edd Dumbill.  Changes since Cesar's version are given in detail in
+the csharp directory ChangeLog but include:</p>
+
+<ul>
+<li>Namespace changed from Rdf to Redland</li>
+<li>Added marshalling of strings between Redland and Redland#</li>
+<li>Freeing of native Redland objects by implementing the C# IDisposable interface, the Dispose method</li>
+<li>Query and QueryResults Classes: Added for new Redland 0.9.17 librdf_query
+and librdf_query_results classes.</li>
+<li>Added strong naming of Redland.dll</li>
+<li>Class Model. Added methods Execute, GetContexts, GetFeature, SetFeature, Load.</li>
+<li>Class World. Updated to use new Redland 0.9.17 logging API especially for parsing errors and warnings</li>
+<li>Class Parser: ParserError for parsing exceptions</li>
+<li>Classes Errors, Locator, LogMessage: Added for wrapping structured
+error messages returned from parsing.</li>
+<li>Classes Node, Statement, Uri: Added Equals, operator==, operator !=</li>
+<li>Classes Stream and Iterator: Fixes for the IEnumerable interface</li>
+<li>Class Node: Added methods for types - Type, IsResource, IsLiteral, IsBlank</li>
+<li>Class Node: Added method Uri.</li>
+<li>Fixed handling of null / IntPtr.Zero in several methods</li>
+</ul>
+
+
+
+<h3>Java API Changes</h3>
+
+<p>This API has not been updated for all Redland 0.9.17 changes.</p>
+
+<p>Class Statement. Added equals method.</p>
+
+
+<h3>Perl API changes</h3>
+
+<p>This API has been updated for all Redland 0.9.17 changes.</p>
+
+<ul>
+<li>Class Statement. Added equals method.</li>
+
+<li>Classes Query, QueryResults: Added for new Redland 0.9.17 librdf_query
+and librdf_query_results classes.</li>
+
+<li>Class Model: Added execute method.</li>
+</ul>
+
+
+<h3>PHP API Changes</h3>
+
+<p>No changes needed as this is a bare API directly using Redland
+functions.</p>
+
+<p>Added some PHP 4.3 compatible defines to the test program.</p>
+
 
 
 <h3>Python API changes</h3>
 
-<p>A major update to use Python 2.2+ idioms and features by Edd
-Dumbill with help from Matt Biddulph for unit tests.  A new
-<code>--with-python</code> configure argument to enable the python
-interface.  Edd wrote the following change log.</p>
-
-<p>General changes</p>
-<ul>
-  <li>Removed string exceptions and replaced with RedlandError ones</li>
-  <li>Where underlying Redland C objects were unexpectedly null, raise
-    exceptions rather than returning None, "" or [] as appropriate.</li>
-  <li>Raise exceptions if Redland C constructors fail in Python
-    constructors.</li>
-  <li>Did quite a lot of documentation updating, where possible
-    demonstrating preferred Pythonic usages.</li>
-  <li>Added more unit tests to test changed functionality.</li>
-</ul>
-
-<h4>RDF.Node class</h4>
-<ul>
-  <li>Constructor now accepts Uri to make a resource/property node, or
-    a string to make a string literal</li>
-  <li>Removed usage of node_type() in favour of is_resource(), is_blank()
-    etc methods.</li>
-  <li><strong>DEPRECATED</strong> get_blank_identifier() etc. methods in favour of
-    node.blank_identifier etc properties.  Raise exception if properties
-    inconsistent with the node type are requested.</li>
-</ul>
-
-<h4>RDF.Statement class</h4>
-<ul>
-  <li>No need to name subject, predicate, object in constructor any more.
-    Uris or string literals accepted in place of nodes in constructor
-    argument.</li>
-  <li>__getattr__ method deleted, using new-style property() for
-    subject, predicate, object</li>
-</ul>
-
-<h4>RDF.Model class</h4>
+<p>This API has been updated for all Redland 0.9.17 changes.
+The main changes are as follows:</p>
 
 <ul>
-  <li>Deleted get_*_iterator methods</li>
-  <li>Renamed sources() to get_sources(), targets() to get_targets(),
-    arcs() to get_predicates().  Retained old method names as aliases.</li>
-  <li>Added get_sources_context(), get_targets_context(),
-    get_predicates_context() which return (node, context) tuples.</li>
-  <li>Amended get_source(), get_sources() etc methods so that Uri and
-    string literals were acceptable as shortcut types for nodes.</li>
-  <li>Added find_statements_context() which returns (statement, context)
-    tuples.</li>
-  <li>Renamed context_remove_statements() to
-    remove_statements_with_context(). Retained old method name as an
-    alias.</li>
-  <li>Added __delitem__ method so del[statement] and del[statement,
-    context] work.</li>
-  <li>Added append() method so append(statement) and append(statement,
-    context) work.  Suggest that append() is used in preference to
-    add_statement() for Python idiomatic usage.</li>
-  <li><strong>DEPRECATED</strong> serialise() in favour of as_stream().</li>
-  <li>Added as_stream_context() to serialise (statement, context) tuples.</li>
-  <li>Exception raised if len() is attempted on model with a non-countable
-    storage.</li>
-  <li><strong>DEPRECATED</strong> Model.add(), Model.add_typed_literal_statement() usages:
-    now that constructing Statements is easier, it's incongruous to have
-    these in the model.  Additionally it saves reproducing various bits
-    of error checking that properly belong in the Node() constructor.</li>
-  <li>Implemented __contains__() so "if statement in model" and
-    "if (statement, context) in model" work as expected using the more
-    efficient Redland C methods where possible.</li>
-</ul>
+<li>Another attempt to return errors and warnings from parsing better.</li>
 
-<h4>RDF.Stream class</h4>
+<li>Class Model. Added new method load.<br />
+Added new method execute to invoke querying on a model.
+</li>
 
-<ul>
-  <li><strong>DEPRECATED</strong> Stream.context_iter().  Use in preference the _context
-    variants of the appropriate Model methods.  This leads to fewer
-    lines of code.</li>
-</ul>
+<li>Class NS: Copy librdf_node each time since sharing the C pointers
+is wrong.</li>
 
-<h4>RDF.Uri class</h4>
+<li>Class Parser. Method parse_string_as_stream example fixed to show
+the required base_uri parameter.</li>
 
-<ul>
-  <li>Amended constructor so strings or Uri instances can be passed as
-    the first argument, without named parameters being required, and
-    the right thing still happen.</li>
-</ul>
+<li>Clases Query, QueryResults: Added for new Redland 0.9.17 librdf_query,
+librdf_query_results including unit tests (Matt Biddulph)</li>
 
+<li>Class Statement. Added equality and inequality operators.<br />
+Added matches operator for comparing an incomplete
+statement with None values against a complete one
+</li>
 
-<h3>Java Interface Changes</h3>
-
-<p>Additions for the new API calls as outlined above (such
-as model/storage sync, parsing from strings etc.). New configure
-argument <code>--with-jdk</code> to pick the JDK in order to
-find the JNI headers.  See the <a href="docs/java">java API</a>
-page for details.</p>
-
-
-<h3>PHP, Ruby and Tcl Interfaces Changes</h3>
-
-<p>Updates in configuring and building these interfaces and new
-<code>--with-php</code>, <code>--with-ruby</code> and <code>--with-tcl</code>
-configure arguments.  See the corresponding API pages and
-installation documentation for details.  Tcl now tries to guess the
-includes directories.</p>
-
-
-<h3>Internal changes and fixes</h3>
-
-<ul>
-<li>Added Sleepycat/BDB 4.0 and 4.1 support - the open API changed again</li>
-
-<li>Split the librdf_model class into model interface (librdf_model)
-and implementation class (librdf_model_storage).</li>
-
-<li>Removed the old and outdated repat RDF parser.</li>
-
-<li>Removed the very old expat XML parser from the sources;
-much newer or expat or libxml2 are very widespread.</li>
-
-<li>Added simple thread support from patches by Seth Ladd with
-configuration option <code>--with-threads</code> that locks key shared
-classes to allow separate threads to work in the same memory
-space. The current locked classes are URI and World.</li>
-
-<li>Deleting statements in the in-memory store now works.</li>
-
-<li>Getting the context of iterators returned from in-memory
-sources, targets, arcs now works.</li>
+<li>Class TurtleParser, NTriplesParser: Added convenience classes to create
+parsers for the Turtle and N-Triples syntaxes.(Matt Biddulph)
+</li>
 
 </ul>
 
+<h3>Ruby API changes</h3>
 
-<h2 id="rel0_9_12"><a name="rel0_9_12">Redland 0.9.12 Changes</a></h2>
+<p>Replaced with a fuller API rdf-redland written by by Dominic Sisneros.
+See the
+<a href="http://rubyforge.org/projects/rdf-redland">rdf-redland project site</a>.</p>
 
-<p>This version of Redland is a major update to 0.9.11 incorporating
-a much more improved, complete and stable version 0.9.7 of the 
-<a href="http://www.redland.opensource.ac.uk/raptor/">Raptor parser</a>
-and a significant new feature, contexts.  The
-high-level language APIs received some updates and the start of two
-new languages APIs were added: <a href="docs/ruby.html">Ruby</a> and
-<a href="docs/php.html">PHP</a>.</p>
+<p>This API has not been updated for all Redland 0.9.17 changes but
+may have newer version at the URI above.</p>
 
-<p>Several incompatible API changes were made in this release that
-effect the C interface and all the higher level language APIs.  These
-were made to support contexts and to fix some inconsistencies in the
-interface about object ownership.</p>
 
-<p>The persistent storage format was changed to support RDF typed
-literals and this requires an upgrade of any existing
-Berkeley/Sleepycat DB stores created by Redland 0.9.11 or earlier.  A
-utility <em>redland-db-upgrade</em> is provided that will create an
-updated store from an existing one.</p>
+<p>Class statement. Added == operator.</p>
 
-<p>A Perl script <a href="utils/update-api-0912.pl">utils/update-api-0912.pl</a>
-can help automate the API changes as far as possible or warn about those
-that cannot be automatically updated.</p>
 
+<h3>Tcl API changes</h3>
 
-<h3>New Feature - Contexts</h3>
-
-<p>This feature allows a Node to be given whenever a statement is
-added to a model which can can be retrieved from any model query that
-returns answers as an Iterator of Nodes or a Stream of Statements.
-Both of these classes gained a new method <code>get_context</code>
-that returns the original Node that was given when the statement
-corresponding to the answer was added to the model.</p>
-
-<p>The context node can also be used to add and remove sets of
-statements to/from a model, and each statement with a given
-context node can be listed as a stream of statements.</p>
-
-<p>Adding this feature required substantial internal changes to these
-two classes and the internal storage apis and implementations along
-with moderate code changes at the application level, which are
-described below.</p>
-
-<p>This feature can be used for the following (not an exhaustive list):</p>
-
-<ul>
-<li>Enable true graph merging / updating / demerging - identify the
-subgraphs with context nodes.</li>
-<li>Statement Identity - add each statement with a different context node</li>
-<li>Statement Provenance - use the context node as the subject of
-other statements about the statement that is returned.</li>
-</ul>
-
-
-<h3>Iterator Class Changes</h3>
-
-<p>The <a href="docs/api/iterator.html">Iterator</a>
-<code>get_next</code> method was split into <code>get_object</code>
-always returning a pointer to a shared object and the
-<code>next</code> method to advance the iterator.
-The <code>get_object</code> method is generally called
-<code>current</code> in the higher level language APIs.</p>
-
-<p>(Iterator and Stream now have consistent method names; they
-may be merged in future.)</p>
-
-<p>The <code>get_object</code> method now always returns a pointer to
-a shared object.  If this object is needed outside the scope of an
-iteration, it must be copied, which for Nodes is the copy constructor
-<code>librdf_new_node_from_node</code>.</p>
-
-<p>C example for Redland 0.9.11 and earlier:</p>
-<pre>
-  while(!librdf_iterator_end(iterator)) {
-    node=(librdf_node*)librdf_iterator_get_next(iterator);
-    /* do something with the node */
-  }
-</pre>
-
-<p>Redland 0.9.12:</p>
-<pre>
-  while(!librdf_iterator_end(iterator)) {
-    node=(librdf_node*)librdf_iterator_get_object(iterator);
-    /* do something with the node */
-    librdf_iterator_next(iterator);
-  }
-</pre>
-
-<p>A new method <code>get_context</code> was added returning a Node
-for the context of the original Statement that generated the Iterator
-Node.</p>
-
-<p>C Iterator context example:</p>
-<pre>
-  while(!librdf_iterator_end(iterator)) {
-    node=(librdf_node*)librdf_iterator_get_object(iterator);
-    context_node=(librdf_node*)librdf_iterator_get_context(iterator);
-    /* do something with the node and its context */
-    librdf_iterator_next(iterator);
-  }
-</pre>
-
-
-
-<h3>Model Class Changes</h3>
-
-<p>The <a href="docs/api/model.html">Model</a>
-<code>add_statement</code> method no longer takes ownership of the
-passed in statement object.  The caller now retains ownership and can
-reuse the statement several times and has responsibility for freeing it
-if need be (when it isn't shared).</p>
-
-<p>C example for Redland 0.9.11 and earlier:</p>
-<pre>
-  librdf_model_add_statement(model, statement);
-</pre>
-
-<p>Redland 0.9.12:</p>
-<pre>
-  librdf_model_add_statement(model, statement);
-  librdf_free_statement(statement);
-</pre>
-
-
-<p>C streaming statement example for Redland 0.9.11 and earlier:</p>
-<pre>
-  while(!librdf_stream_end(stream)) {
-    librdf_statement *statement=librdf_stream_next(stream); 
-    /* This statement is new, so could be added directly */
-    librdf_model_add_statement(model, statement);
-  }
-</pre>
-
-<p>Redland 0.9.12:</p>
-<pre>
-  while(!librdf_stream_end(stream)) {
-    librdf_statement *statement=librdf_stream_get_object(stream); 
-    /* This statement is now shared so can still be just added */
-    librdf_model_add_statement(model, statement);
-  }
-</pre>
-
-
-<p><code>librdf_model_add_string_literal_statement</code> lost the
-xml_space argument.</p>
-
-<p>A new method was added to add a Statement with
-an RDF datatyped literals object:</p>
-<pre>
-  int librdf_model_add_typed_literal_statement(librdf_model* model,
-     librdf_node* subject, 
-     librdf_node* predicate, 
-     char* string, char *xml_language, librdf_uri *datatype_uri);
-</pre>
-
-<p>This should be used in preference to
-<code>librdf_model_add_string_literal_statement</code> which remains
-in the API as a wrapper around the above.</p>
-
-<p>New methods were added to add, remove and list Statements to contexts.</p>
-
-<pre>
-  /* Add a single statement to the model with context */
-  int librdf_model_context_add_statement(librdf_model* model,
-    librdf_node* context, librdf_statement* statement);
-
-  /* Add all statements on the stream to the model with context */
-  int librdf_model_context_add_statements(librdf_model* model, 
-    librdf_node* context, librdf_stream* stream);
-
-  /* Remove a single statement from the model with the given context */
-  int librdf_model_context_remove_statement(librdf_model* model, 
-    librdf_node* context, librdf_statement* statement);
-
-  /* Remove all statements from the model with given context */
-  int librdf_model_context_remove_statements(librdf_model* model, 
-    librdf_node* context);
-
-  /* List all statements in the model with the given context */
-  librdf_stream* librdf_model_context_serialize(librdf_model* model, 
-    librdf_node* context);
-</pre>
-
-
-<h3>Node Class Changes</h3>
-
-<p>The <a href="docs/api/node.html">Node</a> class gained a new constructor:</p>
-<pre>
-  librdf_node* librdf_new_node_from_typed_literal(
-    librdf_world *world,
-    const char *string,
-    const char *xml_language, 
-    librdf_uri* datatype_uri);
-</pre>
-
-<p>that should be used in preference to
-<code>librdf_new_node_from_literal</code> which remains in the API as
-a wrapper around the above.  </p>
-
-<p><code>librdf_node_new_nodefrom_literal</code> lost the
-xml_space argument.</p>
-
-
-<h3>Parser Class Changes</h3>
-
-<p>The <a href="docs/api/parser.html">Parser</a> class has an updated
-<a href="http://www.redland.opensource.ac.uk/raptor/">Raptor parser</a>
-version 0.9.7 - parsers named <code>raptor</code> for RDF/XML
-(MIME Type <code>application/rdf+xml</code>)
-and <code>ntriples</code> for N-Triples.  See the
-<a href="http://www.redland.opensource.ac.uk/raptor/NEWS.html">Raptor NEWS</a>
-for the detailed changes since 0.9.5 in the last release of Redland.</p>
-
-<p>The Java SiRPAC parsers <code>sirpac-stanford</code>,
-<code>sirpac-w3c</code> and the W3C LibWWW parser <code>libwww</code>
-have been removed.  Raptor replaces them.</p>
-
-
-<h3>Serializer Class Changes</h3>
-
-<p>The <a href="docs/api/serializer.html">Serializer</a> class
-gained a new method:</p>
-
-<pre>
-  int librdf_serializer_serialize_model_to_file(
-    librdf_serializer* serializer,
-    const char *name,
-    librdf_uri* base_uri, 
-    librdf_model* model);
-</pre>
-
-<p>This writes the serialized model to a filename
-(rather than a file handle as done by 
-<code>librdf_serializer_serialize_model</code>)
-which is easier to use from higher level language APIs until a
-cross-language I/O abstraction is available.</p>
-
-<p>The class gained an RDF/XML serializer that can be called
-either by the name <code>rdfxml</code> or the
-MIME Type <code>application/rdf+xml</code>.  The
-examples in each language have been updated to demonstrate
-using this.</p>
-
-
-<h3>Storage Class Changes</h3>
-
-<p>The built in storage factories (<code>memory</code>,
-<code>hashes</code>) now both support contexts.  These are enabled by
-adding the storage option <code>contexts='yes'</code> to the options
-string.  The hashes storage additionally supports indexing predicates
-as an extra hash which can be enabled with <code>index-predicates='yes'</code>.
-This makes triple queries of the form
-(subject unknown, predicate known, object unknown) fast.
-</p>
-
-<p>C Example of creating a 0.9.12 storage that does contexts using
-on-disk Berkeley/Sleepycat DB:</p>
-<pre>
-   storage=librdf_new_storage(world,
-     "hashes", 
-      name,
-     "hash-type='bdb',write='yes',new='yes',contexts='yes'");
-</pre>
-
-
-<h3>Stream Class Changes</h3>
-
-<p>The <a href="docs/api/stream.html">Stream</a>
-<code>next</code> method was split into <code>get_object</code>
-always returning a pointer to a shared Statement and the
-<code>next</code> method to advance the iterator.
-The <code>get_object</code> method is generally called
-<code>current</code> in the higher level language APIs.</p>
-
-<p>(Iterator and Stream now have consistent method names; they
-may be merged in future.)</p>
-
-
-<p>C example for Redland 0.9.11 and earlier:</p>
-<pre>
-  while(!librdf_stream_end(stream)) {
-    statement=(librdf_statement*)librdf_stream_next(stream);
-    /* do something with the statement */
-  }
-</pre>
-
-<p>Redland 0.9.12:</p>
-<pre>
-  while(!librdf_stream_end(stream)) {
-    statement=(librdf_statement*)librdf_stream_get_object(stream);
-    /* do something with the statement */
-    librdf_stream_next(stream);
-  }
-</pre>
-
-
-<p>A new method <code>get_context</code> was added returning a Node
-for the context of the Statement.</p>
-
-<p>C Stream context example:</p>
-<pre>
-  while(!librdf_stream_end(stream)) {
-    statement=(librdf_statement*)librdf_stream_get_object(stream);
-    context_node=(librdf_node*)librdf_stream_get_context(iterator);
-    /* do something with the statement and its context node */
-    librdf_stream_next(stream);
-  }
-</pre>
-
-
-
-<h3>Perl Interface Changes</h3>
-
-<p>The <a href="docs/perl.html">Perl</a> interface
-moved to the <code>RDF::Redland</code> package (the <code>RDF</code>
-namespace was deprecated in 0.9.11).</p>
-
-<p>The interface was updated to receive Redland error and warning
-messages callbacks.  These can be set using the
-<code>RDF::Redland::set_error_handler</code>
-and <code>RDF::Redland::set_warning_handler</code> subroutines
-taking a subroutine argument.  They are called with a single
-scalar argument which is the Redland message.</p>
-
-<p>The interface was updated to match the Interator and Stream
-changes described above.</p>
-
-<p>Perl iterator example for Redland 0.9.11 and earlier:</p>
-<pre>
-  while(!$iterator->end) {
-    my $node=$iterator->next;
-    # do something with the node
-  }
-</pre>
-
-<p>Redland 0.9.12:</p>
-<pre>
-  while(!$iterator->end) {
-    my $node=$iterator->current;
-    # do something with the node
-    $iterator->next;
-  }
-</pre>
-
-
-<p>Perl stream example for Redland 0.9.11 and earlier:</p>
-<pre>
-  while(!$stream->end) {
-    my $statement=$stream->next;
-    # do something with the statement
-  }
-</pre>
-
-<p>Redland 0.9.12:</p>
-<pre>
-  while(!$stream->end) {
-    my $statement=$stream->current;
-    # do something with the statement
-    $stream->next;
-  }
-</pre>
-
-
-<p>Perl example of using the Serializer class:</p>
-
-<pre>
-  # Use any rdf/xml parser that is available
-  my $serializer=new RDF::Redland::Serializer("rdfxml");
-  $serializer->serialize_model_to_file("output.rdf", $uri, $model);
-</pre>
-
-
-<h3>Python API Changes</h3>
-
-<p>The <a href="docs/python.html">Python</a> interface
-gained pydoc comments, along with an
-<a href="docs/pydoc/RDF.html">HTML derived version</a>.
-</p>
-
-<p>The interface was updated to receive Redland error and warning
-messages callbacks as python exceptions.  These can be caught
-using the standard python try {} catch {} blocks.</p>
-
-<p>The interface was updated to match the Interator and Stream
-changes described above.</p>
-
-<p>Python iterator example for Redland 0.9.11 and earlier:</p>
-<pre>
-  while not iterator.end():
-    node=iterator.next()
-    # do something with the node
-</pre>
-
-<p>Redland 0.9.12:</p>
-<pre>
-  while not iterator.end():
-    node=iterator.current()
-    # do something with the node
-    iterator.next()
-</pre>
-
-
-<p>Python stream example for Redland 0.9.11 and earlier:</p>
-<pre>
-  while not stream.end():
-    statement=stream.next()
-    # do something with the statement
-</pre>
-
-<p>Redland 0.9.12:</p>
-<pre>
-  while not stream.end():
-    statement=stream.current()
-    # do something with the statement
-    stream.next()
-</pre>
-
-
-<p>Python example of using the Serializer class:</p>
-
-<pre>
-  # Use any rdf/xml parser that is available
-  serializer=RDF.Serializer()
-  serializer.serialize_model_to_file("output.rdf", model)
-</pre>
-
-
-
-<h3>Java Interface Changes</h3>
-
-<p>The <a href="docs/java.html">Java</a> classes were updated to have
-a <code>finished()</code> method that the user can call to cleanup
-objects replacing the rather useless Java <code>finalize()</code>
-method that gives no guarantees to when it is called.</p>
-
-<p>The Java API is still experimental and may change further.</p>
-
-
-<h2 id="rel_older"><a name="rel_older">Redland 0.9.1 - Redland 0.9.11 Changes</a></h2>
-
-<p>Release notes for 0.9.11 and earlier are in the
-<a href="NEWS.html">NEWS page</a> or
-<a href="ChangeLog">ChangeLog</a>
-</p>
-
+<p>No changes needed as this is a bare API directly using Redland
+functions.</p>
 
 
 <hr />
 
-<p>Copyright 2003 <a href="http://purl.org/net/dajobe/">Dave Beckett</a>, <a href="http://www.ilrt.bristol.ac.uk/">Institute for Learning and Research Technology</a>, <a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
+<p>Copyright (C) 2004-2006 <a href="http://purl.org/net/dajobe/">Dave Beckett</a><br />Copyright (C) 2004-2005 <a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
 
 </body>
 </html>

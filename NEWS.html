@@ -1,209 +1,158 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title>Redland RDF Application Framework - News</title>
+  <title>Redland RDF Library Perl Binding - News</title>
 </head>
-<body bgcolor="#ffffff" text="#000085">
+<body>
 
-  <h1>Redland RDF Application Framework - News</h1>
+<h1>Redland RDF Library Perl Binding - News</h1>
 
-<h2>2003-09-08 Redland 0.9.14 Released</h2>
+<h2 id="D2006-XX-XX-V1.0.5.2">2006-XX-XX Redland Perl Version 1.0.5.2 Released</h2>
+
+<p>Not yet released.
+</p>
+
+<h2 id="D2006-11-19-V1.0.5.1">2006-11-19 Redland Bindings Version 1.0.5.1 Released</h2>
+
+<p>Synchronise with <a href="http://librdf.org/">Redland</a> 1.0.5
+(<a href="http://librdf.org/RELEASE.html#rel1_0_5">release notes</a>)
+<br />
+Many updates to the Ruby binding<br />
+Minor updates to the C#, Java and Python bindings<br />
+Several other fixes and improvements<br />
+Many other bug fixes addressing Issues
+<a href="http://bugs.librdf.org/mantis/view.php?id=109">#0000109</a>,
+<a href="http://bugs.librdf.org/mantis/view.php?id=120">#0000120</a>,
+<a href="http://bugs.librdf.org/mantis/view.php?id=121">#0000121</a>,
+<a href="http://bugs.librdf.org/mantis/view.php?id=122">#0000122</a> and
+<a href="http://bugs.librdf.org/mantis/view.php?id=126">#0000126</a>.
+</p>
+
+<p>See the <a href="RELEASE.html#rel1_0_5_1">1.0.5.1 Release Notes</a>
+for the full details of the changes.</p>
+
+
+<h2 id="D2006-05-05-V1.0.4.1">2006-05-05 Redland Bindings Version 1.0.4.1 Released</h2>
+
+<p>Synchronise with <a href="http://librdf.org/">Redland</a> 1.0.4<br />
+Some minor fixes in several bindings.
+</p>
+
+<p>See the <a href="RELEASE.html#rel1_0_4_1">1.0.4.1 Release Notes</a>
+for the full details of the changes.</p>
+
+
+<h2 id="D2006-03-14-V1.0.3.1">2006-03-14 Redland Bindings Version 1.0.3.1 Released</h2>
+
+<p>Synchronise with <a href="http://librdf.org/">Redland</a> 1.0.3<br />
+Several updates for handling optional query result values<br />
+Multiple fixes for Python and Ruby bindings issues<br />
+Several other fixes and changes for other binding languages.<br />
+</p>
+
+<p><strong>NOTE</strong>: Redland Bindings will be switching to use
+<a href="http://subversion.tigris.org/">Subversion</a>
+for version control after the 1.0.3.1 release.
+See the <a href="http://svn.librdf.org/">Redland Subversion site</a>
+or the online
+<a href="http://librdf.org/bindings/INSTALL.html">Redland Bindings installation notes</a>
+for the latest information.
+</p>
+
+<p>See the <a href="RELEASE.html#rel1_0_3_1">1.0.3.1 Release Notes</a>
+for the full details of the changes.</p>
+
+
+<h2 id="D2005-06-10-V1.0.2.1">2005-06-10 Redland Bindings Version 1.0.2.1 Released</h2>
+
+<p>Synchronise with Redland 1.0.2<br />
+Some minor fixes in the Perl, Python and Ruby bindings.
+</p>
+
+<p>See the <a href="RELEASE.html#rel1_0_2_1">1.0.2.1 Release Notes</a>
+for the full details of the changes.</p>
+
+
+<h2 id="D2005-05-29-V1.0.1.1">2005-05-29 Redland Bindings Version 1.0.1.1 Released</h2>
+
+<p>Synchronise with Redland 1.0.1
+(<a href="http://librdf.org/RELEASE.html#rel1_0_1">release notes</a>)<br />
+Updated examples and tests to use latest SPARQL syntax<br />
+Perl binding addeded several helper methods for nodes<br />
+PHP binding returns a PHP null instead of a NULL node pointer<br />
+Python binding gets various fixes (Daniel Larsson)<br />
+Ruby binding generates html documentation using rdoc (Nikolas Coukouma)<br />
+</p>
+
+<p>See the <a href="RELEASE.html#rel1_0_1_1">1.0.1.1 Release Notes</a>
+for the full details of the changes.</p>
+
+
+<h2 id="D2005-02-27-V1.0.0.2">2005-02-27 Redland Bindings Version 1.0.0.2 Released</h2>
+
+<p>Added Perl bindings to returning RDF graph and boolean query
+results (aka SPARQL <code>CONSTRUCT</code> and <code>ASK</code><br />
+Added Perl bindings to returning a query result as a syntax format<br />
+PHP binding compile fix and now registers module versions (Dave Viner)<br />
+Perl and Python bindings error handling changed to return the structured messages fields<br />
+Python error handling now by default throws exceptions on C function return<br />
+</p>
+
+<p>See the <a href="RELEASE.html#rel1_0_0_2">1.0.0.2 Release Notes</a>
+for the full details of the changes.</p>
+
+
+<h2 id="D2005-02-06-V1.0.0.1">2005-02-06 Redland Bindings Version 1.0.0.1 Released</h2>
+
 <p>
-Update to synchronise with
-<a href="http://www.redland.opensource.ac.uk/raptor/">Raptor</a> version 1.0.0 (RDF/XML and N-Triples parser) - see
-<a href="http://www.redland.opensource.ac.uk/raptor/NEWS.html">Raptor NEWS</a>
-for the changes since 0.9.12.<br />
-Added a new utility program <tt>rdfproc</tt> - a general RDF
-processor for Redland that allows command line use of the library.<br />
-Made the Node class intern every node.<br />
-Fixed the broken use of Perl <tt>UNIVERSAL::isa</tt><br />
-Other minor API changes</p>
+Synchronise with Redland 1.0.0<br />
+Python API gains returning RDF graph and boolean results<br />
+Updated the ruby API to <a href="http://rubyforge.org/projects/rdf-redland/">rdf-redland</a> 0.5.3.1, fixed installation and test cases<br />
+Other minor binding changes
+</p>
 
-<p>See the <a href="RELEASE.html#rel0_9_14">Detailed 0.9.14 Release Notes</a>
-for the full list of the changes.</p>
+<p>See the <a href="RELEASE.html#rel1_0_0_1">1.0.0.1 Release Notes</a>
+for the full details of the changes.</p>
 
 
-<h2>2003-08-28 Redland 0.9.13 Released</h2>
+<h2 id="D2004-11-02-V0.9.19.1">2004-11-02 Redland Bindings Version 0.9.19.1 Released</h2>
+
 <p>
-<strong>API CHANGE</strong> <a href="docs/api/node.html">Node</a>
-The class was modifed to make objects immutable, removing the set
-methods and to add new node type convienence methods.<br />
-<strong>API addition</strong> <a href="docs/api/model.html">Model</a>
-Added a method to sync the model to the backing store.<br />
-<strong>API addition</strong> <a href="docs/api/parser.html">Parser</a>
-Added methods to allow parsing from strings.<br />
-<strong>API addition</strong> <a href="docs/api/statement.html">Statement</a>
-Added method to check for partial statements.<br />
-<strong>API addition</strong> <a href="docs/api/storage.html">Storage</a>
-Added a method to sync the backing store.<br />
-Better error recovery - most errors return if possible.<br />
-Added initial simple threading support (patches by Seth Ladd)<br />
-Greatly improved Python API using 2.2 features (Edd Dumbill and Matt Biddulph)<br />
-Updated Perl, Python and Java APIs to always return new nodes and
-statements, removing the need to consider shared object issues.<br />
-Updated serializing to RDF/XML to handle datatype literals<br />
-Update to <a href="http://www.redland.opensource.ac.uk/raptor/">Raptor</a> version 0.9.12 (RDF/XML and N-Triples parser) - see
-<a href="http://www.redland.opensource.ac.uk/raptor/NEWS.html">Raptor NEWS</a>
-for changes since 0.9.8.<br />
-Extensive portability and other bug fixes.
+License changed to LGPL 2.1/Apache 2<br />
+Rebuild for Redland 0.9.19<br />
+Model to_string support added to perl and python bindings<br />
+Several other minor binding changes
 </p>
 
-<p>See the <a href="RELEASE.html#rel0_9_13">Detailed 0.9.13 Release Notes</a>
-for the full list of the changes.</p>
+<p>See the <a href="RELEASE.html#rel0_9_19_1">0.9.19.1 Release Notes</a>
+for the full details of the changes.</p>
 
 
-<h2>2003-02-13 Redland 0.9.12 Released</h2>
-<p>
-<strong>FORMAT CHANGE</strong> The persistent storage format was
-changed to support RDF typed literals and this will require an
-upgrade of any existing Berkeley/Sleepycat DB stores created by
-Redland 0.9.11 or earlier.  A utility <em>redland-db-upgrade</em> is
-provided that creates an updated store from an existing one.<br />
-<strong>API CHANGE</strong> <a href="docs/api/iterator.html">Iterator</a> and <a href="docs/api/stream.html">Stream</a> classes. The next/get_next method is split into get_object always returning a shared object and next methods.  get_context method added.  (get_object is called current in higher level language APIs)<br />
-<strong>API CHANGE</strong> <a href="docs/api/model.html">Model</a> class. Method add_statement no longer takes ownership of the passed in statement.  The caller now retains ownership.<br />
-<strong>API CHANGE</strong> <a href="docs/api/model.html">Model</a> class. Method add_statements no longer frees the passed in librdf_stream; the caller must free it now.<br />
-<strong>API CHANGE</strong> <a href="docs/api/node.html">Node</a> and <a href="docs/api/model.html">Model</a> classes.  Added RDF Datatyped Literals.  Other literal is_wf_xml constructors and methods deprecated.<br />
-<strong>API CHANGE</strong> All literals methods and constructors have no
-mention of the never-used or supported XML Space argument which is not part
-of an RDF literal.<br />
-Added a script <a href="utils/update-api-0912.pl">utils/update-api-0912.pl</a>
-to help automate the API changes as far as possible or warn about those
-that cannot be automatically updated.<br />
-Added contexts - Statements added to <a href="docs/api/model.html">Model</a> (when using a Storage that
-supports contexts) can take an optional  <a href="docs/api/node.html">Node</a>, returned by the new
-get_context method on <a href="docs/api/iterator.html">Iterator</a> and <a href="docs/api/stream.html">Stream</a> classes.<br />
-Many portability and compiling fixes (OSX, gcc 3.x, FreeBSD, non-gcc compiler)<br />
-<a href="docs/java.html">Java API</a> classes.  Add finished() method replacing useless finalize().<br />
-Use Raptor message callbacks to get parser warnings and errors<br />
-Build Java API working around the stupid things recent SWIG versions do.<br />
-Make Redland work with BDB/Sleepycat DB v4 (as well as v2 and v3)<br />
-<a href="docs/python.html">Python</a> API gains <a href="docs/pydoc/RDF.html">pydoc</a> comments and HTML derived version<br />
-<a href="docs/perl.html">Perl</a> and <a href="docs/python.html">Python</a> APIs now receive Redland message callbacks<br />
-Redland URI class now registers with Raptor rather than specially compile Raptor<br />
-Added RDF/XML <a href="docs/api/serializer.html">Serializer</a> class and made higher level language APIs to it<br />
-Update to <a href="http://www.redland.opensource.ac.uk/raptor/">Raptor</a> version 0.9.8 (RDF/XML and N-Triples parser) - see
-<a href="http://www.redland.opensource.ac.uk/raptor/NEWS.html">Raptor NEWS</a>
-for detailed changes since 0.9.5<br />
-Added skeleton <a href="docs/ruby.html">Ruby</a> and <a href="docs/php.html">PHP</a> APIs<br />
-Major source reorganisation.
+<h2 id="D2004-08-03-V0.9.18.1">2004-08-03 Redland Bindings Version 0.9.18.1 Released</h2>
+
+<p>(A rebuild for Redland 0.9.18 with no API changes)
 </p>
 
-<p>See also the <a href="RELEASE.html#rel0_9_12">Detailed 0.9.12 Release Notes</a></p>
-
-
-<h2>2002-06-08 Redland 0.9.11 Released</h2>
-<p>Update to <a href="http://www.redland.opensource.ac.uk/raptor/">Raptor</a> version 0.9.5 (RDF/XML and N-Triples parser)<br />
-Added <a href="docs/api/serializer.html">serialization to a syntax API</a>; with
-<a href="http://www.w3.org/TR/rdf-testcases/#ntriples">N-Triples</a>
-as the first syntax<br />
-Added start of <a href="docs/api/query.html">query language API</a><br />
-Updated <a href="docs/python.html">Python interface</a> to be more Pythonic, now requires python 2.1+<br />
-Added <a href="docs/ruby.html">Ruby API</a><br />
-Redland will now work as a perl <a href="http://www.cpan.org/">CPAN</a> module<br />
-Updated <a href="docs/perl.html">Perl interface</a> - modules have been renamed.  Fix programs with <a href="perl/update-perl-api.pl">update-perl-api.pl</a><br />
-Updated <a href="docs/java.html">Java API</a><br />
-Now uses libtool to build dynamic and static libraries<br />
-Multiple startup/shutdowns of entire library now works.
+<p>The first release of Redland Bindings separate from Redland.<br />
+New C# API by Cesar Lopez Nataren and Edd Dumbill<br />
+Perl and Python APIs updated to have Redland Query and QueryResults<br />
+Ruby API replaced with rdf-redland written by by Dominic Sisneros<br />
 </p>
 
-<h2>2001-08-28 Redland 0.9.10 Released</h2>
-<p>More work on debian packaging<br />
-Added <a href="http://www.redland.opensource.ac.uk/raptor/">Raptor</a> <a href="http://www.w3.org/TR/rdf-testcases/#ntriples">N-Triples</a> parser<br />
-Changes needed for _:name identifiers from N-Triples<br />
-Added <a href="docs/java.html">Java API</a>
+<p>See the <a href="RELEASE.html#rel0_9_18_1">0.9.18.1 Release Notes</a>
+for the full details of the changes.</p>
+
+
+<h2 id="D2004-07-19-V0.9.17.1">2004-07-19 Redland Bindings Version 0.9.17.1 Released</h2>
+
+<p>Initial packaging snapshot, never announced.
 </p>
 
-<h2>2001-06-07 Redland 0.9.9 Released</h2>
-<p>Added librdf_world class to manage Redland environment
-startup/shutdown - pervasive change throughout all other classes<br />
-configure improvements to try to get expat variants detected and
-working more automatically<br />
-Added Debian (.deb) package support<br />
-SiRPAC parser wrapper now handles multi-line literals<br />
-Changed stream and iterator interfaces and classes to be
-compatible, in preparation for unifying in one new filter class.
-NOTE: This requires changes to user-code -
-librdf_iterator_have_elements is now !librdf_iterator_is_end and
-librdf_iterator_set_map is now librdf_iterator_add_map<br />
-Added perl and python interface warnings for above changes<br />
-Preparation work for querying for arcs to/from a resource node,
-filtering<br />
-Additional examples and explanations added to perl interface documentation<br />
-Updated to <a href="../raptor/">Raptor</a> RDF/XML parser 0.9.1 - many bug fixes
-</p>
-
-<h2>2001-02-05 Redland 0.9.8 Released</h2>
-<p>Added <a href="docs/tcl.html">Tcl</a> interface<br />
-Added <a href="http://www.redland.opensource.ac.uk/raptor/">Raptor</a> RDF parser, written by me (alpha quality) and made some changes to support it.<br />
-More fixes to <a href="docs/perl.html">Perl</a> interface to fix crashes<br />
-Added <a href="docs/perl.html">Perl</a> <a href="docs/pod/RDF/RSS.html">RDF::RSS</a> method <tt>as_xhtml</tt> for simple RSS 1.0 to (X)HTML formatting.
-</p>
-
-<h2>2001-01-05 Redland 0.9.7 Released</h2>
-<p>Changed <a href="docs/pod/RDF/Model.html">Perl Model API</a> - renamed get_* method names, added deprecated warnings for old names.<br />
-Updated <a href="http://injektilo.org/rdf/repat.html">Repat</a> to 2000-12-24 version (plus some patches).<br />
-Added <a href="docs/pod/RDF.html">Perl Plain Old Documentation (POD)</a>.<br />
-Fixed subtle <a href="docs/perl.html">Perl interface</a> object reference bugs.<br />
-Changed <a href="docs/api/model.html">Model API</a> - add_statement now does not own the added statement<br />
-Added to <a href="docs/api/model.html">Model API</a> - get_source, get_arc, get_target return one matching <a href="docs/api/node.html">librdf_node</a>, not a list of them like get_sources etc. do via <a href="docs/api/iterator.html">librdf_iterator</a>.<br />
-Added <a href="docs/api/utf8.html">UTF-8 support</a> for converting between UTF-8 and ISO Latin-1.
-</p>
-
-<h2>2000-11-06 Redland 0.9.6 Released</h2>
-<p>Added python interface (2.0 and 1.5)<br />
-More perl interface fixes<br />
-Parser APIs updated to handle syntax specified by MIME type and/or URI and
-now have features allowing the setting/querying of parser options.
-</p>
-
-<h2>2000-10-20 Redland 0.9.5 Released</h2>
-<p>Added <a href="http://injektilo.org/rdf/repat.html">Repat</a> RDF parser by Jason Diamond - <em>jason at njektilo dot org</em><br />
-More perl API fixes and improvements<br />
-Internal changes preparing for proper reification support
-and use of rdf:, rdfs: concepts
-</p>
-
-<h2>2000-09-29 Redland 0.9.4 Released</h2>
-<p>Implemented perl interface<br />
-Created RPM construction support<br />
-Started work on internal RDF parser
-</p>
-
-<h2>2000-08-30 Redland 0.9.3 Released</h2>
-<p>Implemented fast get sources, targets, arcs for storage models using multiple hashes (Berkeley DB)<br />
-Made Berkeley DB support work for V3, two variants of V2<br />
-Implemented removing statements for stored models<br />
-Changed internal hash API arguments, which was nice.<br />
-Added general RDF utility example code <a href="example4.c">example4.c</a>
-that parses RDF/XML syntax, stores it and provides multiple query methods.<br />
-Added simple 10-line RDF example code <a href="example3.c">example3.c</a><br />
-SiRPAC Java parser call changed to not discard error output<br />
-Use streaming part of SiRPAC Java parser<br />
-Didn't do anything on <a href="TODO.html">list</a> <tt>:(</tt> but fixed several parts of code marked FIXME <tt>:-)</tt>.
-</p>
-
-<h2>2000-08-21 Redland 0.9.2 Released</h2>
-<p><a href="docs/api/index.html">API HTML</a> documentation added to release.<br />
-configure now splits and generates sub-version numbers.
-</p>
-
-<h2>2000-08-18 Redland 0.9.1 Released</h2>
-<p>configure warns user if no persistant storage (BDB) found<br />
-configure warns user if no RDF parser configured<br />
-Made BDB V1 fail if found by configure - does not work with Redland.<br />
-Some improvements to installation document.
-</p>
-
-<h2>2000-08-18 Redland 0.9.0 Released</h2>
-
-<h2>2000-08-17</h2>
-<p>Redland renamed from librdf, license changed to LGPL/MPL
-from LGPL/BSD.</p>
 
 <hr />
 
-<p>Copyright 2000-2003 <a href="http://purl.org/net/dajobe/">Dave Beckett</a>, <a href="http://www.ilrt.bristol.ac.uk/">Institute for Learning and Research Technology</a>, <a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
+<p>Copyright (C) 2004-2006 <a href="http://purl.org/net/dajobe/">Dave Beckett</a><br />Copyright (C) 2004-2005 <a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
 
 </body>
 </html>
