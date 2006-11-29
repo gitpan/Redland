@@ -18,7 +18,7 @@
 #
 # Makefile.am - docs automake file for Redland Bindings
 #
-# $Id: Makefile.am 11627 2006-11-27 17:28:38Z dajobe $
+# $Id: Makefile.am 11644 2006-11-29 05:28:09Z dajobe $
 #
 # Copyright (C) 2000-2005, David Beckett http://purl.org/net/dajobe/
 # Copyright (C) 2000-2005, University of Bristol, UK http://www.bristol.ac.uk/
@@ -61,7 +61,7 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 subdir = docs
-DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in
+DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
 	$(top_srcdir)/configure.ac
@@ -109,6 +109,7 @@ LIBRDF_LIBTOOLLIBS = @LIBRDF_LIBTOOLLIBS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
+LOCAL_SUBDIRS = @LOCAL_SUBDIRS@
 LTLIBOBJS = @LTLIBOBJS@
 MAINT = @MAINT@
 MAINTAINER_MODE_FALSE = @MAINTAINER_MODE_FALSE@
@@ -135,7 +136,6 @@ REDLAND_MIN_VERSION = @REDLAND_MIN_VERSION@
 REDLAND_RUN = @REDLAND_RUN@
 REDLAND_SWIG = @REDLAND_SWIG@
 REDLAND_VERSION = @REDLAND_VERSION@
-SD = @SD@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STANDARD_CFLAGS = @STANDARD_CFLAGS@
@@ -186,15 +186,15 @@ program_transform_name = @program_transform_name@
 psdir = @psdir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
+subdirs = @subdirs@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-EXTRA_DIST = README.html README \
+EXTRA_DIST = \
 perl.html \
 fix-pod-xhtml \
 pod
 
 POD_MODULES = RDF/Redland RDF/Redland/Iterator RDF/Redland/Model RDF/Redland/Node RDF/Redland/Parser RDF/Redland/Query RDF/Redland/QueryResults RDF/Redland/RSS RDF/Redland/Serializer RDF/Redland/Statement RDF/Redland/Storage RDF/Redland/Stream RDF/Redland/URI RDF/Redland/BlankNode RDF/Redland/URINode RDF/Redland/LiteralNode RDF/Redland/XMLLiteralNode
-DOC_C_FILES = $(DOC_CLASSES:%=$(srcdir)/../librdf/rdf_%.c)
 PERL_HTML_POD_FILES = $(POD_MODULES:%=pod/%.html)
 CLEANFILES = README
 MAINTAINERCLEANFILES = pod
@@ -202,11 +202,11 @@ MAINTAINERCLEANFILES = pod
 # Create some text files from HTML sources
 LYNX = lynx
 LYNXARGS = -dump -nolist
-SUFFIXES = .html .txt .sgml .ps .pdf .pm .pod .3
+SUFFIXES = .html .txt .sgml .ps .pdf .pm .pod
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .html .txt .sgml .ps .pdf .pm .pod .3
+.SUFFIXES: .html .txt .sgml .ps .pdf .pm .pod
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -377,29 +377,12 @@ pod: $(PERL_HTML_POD_FILES)
 @MAINT@	-pod2html --noindex --htmlroot /docs/pod --infile=$< | tidy -asxml -wrap 1000 2>/dev/null | perl $(srcdir)/fix-pod-xhtml $@
 @MAINT@	rm -f pod2htm*
 @MAINT@
-@MAINT@$(srcdir)/../python/RDF.html: $(srcdir)/../python/RDF.py
-@MAINT@	cd $(srcdir)/../python && make RDF.html
-@MAINT@$(PYTHON_HTML_PYDOC_FILES): pydoc/%.html: $(srcdir)/../python/RDF.html $(srcdir)/fix-python-xhtml
-@MAINT@	mkdir -p pydoc
-@MAINT@	-tidy -asxml -wrap 1000 $< 2>/dev/null | perl $(srcdir)/fix-python-xhtml $@
 @MAINT@.pod.html: $(srcdir)/fix-pod-xhtml
 @MAINT@	-pod2html --noindex --htmlroot /docs/pod --infile=$< | tidy -asxml -wrap 1000 2>/dev/null | perl $(srcdir)/fix-pod-xhtml $@
 @MAINT@	rm -f pod2htm*
-@MAINT@
-@MAINT@$(srcdir)/../ruby/rdoc-stamp:
-@MAINT@	cd $(srcdir)/../ruby && make docs
-@MAINT@rdoc-dirs-stamp:
-@MAINT@	mkdir -p rdoc rdoc/classes rdoc/classes/Redland rdoc/files rdoc/files/rdf rdoc/files/rdf/redland rdoc/files/rdf/redland/schemas && touch $@
-@MAINT@$(RUBY_HTML_RDOC_FILES): rdoc/%.html: $(srcdir)/../ruby/rdoc-stamp $(srcdir)/fix-rdoc-xhtml rdoc-dirs-stamp
-@MAINT@	-tidy -asxml -wrap 1000 $(srcdir)/../ruby/$@ 2>/dev/null | perl $(srcdir)/fix-rdoc-xhtml $@
-@MAINT@$(RUBY_EXTRA_RDOC_FILES): $(srcdir)/../ruby/rdoc-stamp rdoc-dirs-stamp
-@MAINT@	$(INSTALL_DATA) $(srcdir)/../ruby/$@ $@
 
 clean-local:
 	rm -rf pod2htm*
-
-README: README.html
-	$(LYNX) $(LYNXARGS) $< > $@
 
 @SET_MAKE@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

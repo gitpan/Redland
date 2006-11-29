@@ -85,7 +85,7 @@ package RDF::Redland;
 
 use vars qw($VERSION $Debug $World $Error_Sub $Warning_Sub);
 
-$VERSION= eval sprintf("%s.%02d_%02d_%02d", split(/\./, "1.0.5.2"));
+$VERSION= eval sprintf("%s.%02d_%02d_%02d", split(/\./, "1.0.5.3"));
 
 $Debug=0;
 

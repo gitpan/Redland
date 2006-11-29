@@ -2,53 +2,50 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title>Redland RDF Application Framework - Perl Interface</title>
+  <title>Redland RDF Library Perl Binding</title>
 </head>
 <body>
 
-<h1 style="text-align:center">Redland RDF Application Framework - Perl Interface</h1>
+<h1 style="text-align:center">Redland RDF Library Perl Binding</h1>
 
-<h2>Installing the Redland Perl interface</h2>
+<h2>Configuring the Redland Perl Binding</h2>
 
-<p>This is built if <tt>--with-perl</tt> is given to the configure
-line, or <tt>--with-perl=perl5.8</tt> to use a particular perl
-version/program.  The standard 'make' at the top level will build it.</p>
+<p>This can be built two ways - using the <tt>configure</tt>
+program or using Perl's CPAN style <tt>perl Makefile.PL</tt>
+</p>
 
-<p>You can also compile the perl interface by hand as follows:</p>
+<h3>Configuring the Perl binding with <tt>configure</tt></h3>
+
+<p>Run <tt>./configure</tt> optionally with
+<tt>--with-perl=<em>/path/to/perl</em></tt> to use a particular perl
+version/program.  The standard 'make' at the top level will then
+compile the binding against Redland.  If Redland is not already
+installed, an internal copy will be configured and built.</p>
+
+<h3>Configuring the Perl building with CPAN <tt>perl Makefile.PL</tt></h3>
+
+<p>Run <tt>perl Makefile.PL</tt> and a top-level Makefile will be
+created that is suitable for using in a CPAN or perl MakeMaker
+style.  It will invoke <tt>configure</tt> and the makefile
+it generates internally.
+</p>
+
+<h2>Building the Perl binding</h2>
 
 <pre>
-  cd perl
-  make
-
-  # optional
-  make check
+  $ make
 </pre>
 
-<p>To install it system wide do this as <em>root</em> (or maybe via
-sudo make install):</p>
-
+and optionally
 <pre>
-  root# make install
+  $ make check
 </pre>
 
-<p>The Redland Perl interface is mature has been tested with the
-following versions (5.6.0 is the likely minimum; 5.005 is too
-old).</p>
 
-<blockquote>
-5.8.3 on Solaris/Sparc<br />
-5.8.3 on Linux/x86<br />
-5.8.2 on Linux/x86<br />
-5.8.1-RC3 on OSX/PPC<br />
-5.8.0 on Linux/x86<br />
-5.8.0 on Linux/IA64
-</blockquote>
+<h2>Testing the Redland Perl binding</h2>
 
-
-<h2>Testing the Redland Perl interface</h2>
-
-<p>If you did the optional install above, run the perl example
-program with:</p>
+<p>If you did the install below, run the perl example program
+with:</p>
 <pre>
   perl ./example.pl
 </pre>
@@ -106,6 +103,30 @@ program with:</p>
 
 Done
 </pre>
+
+
+<h2>Installing the Perl Binding</h2>
+
+<p>To install the binding system wide do this as <em>root</em> (or
+maybe via sudo make install):</p>
+
+<pre>
+  root# make install
+</pre>
+
+<p>The Redland Perl interface is mature has been tested with the
+following versions (5.6.0 is the likely minimum; 5.005 is too
+old).</p>
+
+<blockquote>
+5.8.3 on Solaris/Sparc<br />
+5.8.3 on Linux/x86<br />
+5.8.2 on Linux/x86<br />
+5.8.1-RC3 on OSX/PPC<br />
+5.8.0 on Linux/x86<br />
+5.8.0 on Linux/IA64
+</blockquote>
+
 
 
 <h2>Using the Redland Perl API</h2>
@@ -196,7 +217,7 @@ and follow the references from there.</p>
 
 <hr />
 
-<p>Copyright (C) 2000-2005 <a href="http://purl.org/net/dajobe/">Dave Beckett</a>, Copyright (C) 2000-2005 <a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
+<p>Copyright (C) 2000-2006 <a href="http://purl.org/net/dajobe/">Dave Beckett</a>, Copyright (C) 2000-2005 <a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
 
 </body>
 </html>

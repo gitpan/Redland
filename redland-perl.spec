@@ -1,7 +1,7 @@
 # -*- RPM-SPEC -*-
 # Note that this is NOT a relocatable package
 %define name    redland-perl
-%define version 1.0.5.2
+%define version 1.0.5.3
 %define release SNAP
 %define prefix  /usr
 

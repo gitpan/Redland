@@ -1,3 +1,26 @@
+2006-11-27  Dave Beckett  <dave@dajobe.org>
+
+	* Makefile.am: Remove TODO.html
+
+	* configure.ac: redland-perl 1.0.5.2
+
+	* ChangeLog.6, Makefile.am, bindings.rdf.in, configure.ac,
+	docs/Makefile.am, docs/README.html, docs/csharp.html,
+	docs/fix-python-xhtml, docs/fix-rdoc-xhtml, docs/java.html,
+	docs/objc.html, docs/php.html, docs/python.html, docs/ruby.html,
+	docs/tcl.html, redland-bindings.spec.in, redland-perl.rdf.in (from
+	/perl/trunk/bindings.rdf.in:11625), redland-perl.spec.in (from
+	/perl/trunk/redland-bindings.spec.in:11625): redland-perl initial
+	stab
+
+	* csharp, java, php, python, ruby, tcl: Remove non perl dirs
+
+	* /perl/trunk (from /bindings/trunk:11623): Copy bindings
+
+	* New package redland-perl 1.0.5.1 made from bindings 1.0.5.1
+
+   -------------------------------------------------------------------------
+
 2006-11-19  Dave Beckett  <dave@dajobe.org>
 
 	* Snapshotted redland-bindings_1_0_5_1 for 1.0.5.1 release

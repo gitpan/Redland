@@ -2,7 +2,7 @@
 #
 # Makefile.am - top level automake file for Redland Bindings
 #
-# $Id: Makefile.am 11631 2006-11-27 18:08:11Z dajobe $
+# $Id: Makefile.am 11646 2006-11-29 05:52:50Z dajobe $
 #
 # Copyright (C) 2000-2006, David Beckett http://purl.org/net/dajobe/
 # Copyright (C) 2000-2005  University of Bristol, UK http://www.bristol.ac.uk/
@@ -24,9 +24,9 @@
 # 
 
 # Subdirectories to build/install etc.
-SUBDIRS=@SD@ demos data
+SUBDIRS=@LOCAL_SUBDIRS@ perl data docs demos
 # Subdirectories to use for distribution
-DIST_SUBDIRS=data docs perl demos
+DIST_SUBDIRS=@LOCAL_SUBDIRS@ perl data docs demos
 
 EXTRA_DIST=ChangeLog  ChangeLog.1 ChangeLog.2 \
 ChangeLog.3 ChangeLog.4 ChangeLog.5 ChangeLog.6 \

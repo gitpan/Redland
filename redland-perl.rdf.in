@@ -10,7 +10,7 @@
     <created>2006-11-27</created>
 
     <shortdesc xml:lang="en">
-      Language bindings in Perl to the
+      Perl Language bindings to the
       Redland Resource Description (RDF) library.
     </shortdesc>
 
@@ -19,11 +19,11 @@
       the Resource Description Framework (RDF) allowing the RDF graph
       to be parsed from XML, stored, queried and manipulated. Redland
       implements each of the RDF concepts in its own class via an
-      object based API, reflected into the language APIs, currently
-      C#, Java, Objective-C, Perl, PHP, Python, Ruby and Tcl. Several
-      classes providing functionality such as for parsers, storage,
+      object based API, reflected into the language APIs.  Several
+      classes are providing functionality such as for parsers, storage,
       serializers and query languages are built as modules that can
       be loaded at compile or run-time as required.
+      This package provides the Perl bindings.
     </description>
 
     <maintainer>
@@ -70,13 +70,11 @@
 
     <!-- source repository -->
     <repository>
-      <CVSRepository>
-	  <anon-root>:pserver:anonymous@cvs.librdf.org/cvs/redland bindings</anon-root>
-	  <module>redland</module>
-	  <browse rdf:resource="http://cvs.librdf.org/cvsweb/redland/bindings/" />
-      </CVSRepository>
+      <SVNRepository>
+        <location rdf:resource="http://svn.librdf.org/repository/perl/" />
+        <browse rdf:resource="http://svn.librdf.org/view/perl/" />
+      </SVNRepository>
     </repository>
-
   </Project>
 
 

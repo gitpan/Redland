@@ -3,7 +3,7 @@ dnl
 dnl configure.in - top level autoconf file for Redland Perl binding
 dnl (Process this file with autoconf to produce a configure script.)
 dnl
-dnl $Id: configure.ac 11629 2006-11-27 17:44:21Z dajobe $
+dnl $Id: configure.ac 11644 2006-11-29 05:28:09Z dajobe $
 dnl
 dnl Copyright (C) 2000-2006, David Beckett http://purl.org/net/dajobe/
 dnl Copyright (C) 2000-2005 Copyright (C) 2000-2005, University of Bristol, UK http://www.bristol.ac.uk/
@@ -25,13 +25,12 @@ dnl
 dnl 
 
 
-AC_INIT([Redland Perl binding], 1.0.5.2, http://bugs.librdf.org/, redland-perl)
+AC_INIT([Redland Perl binding], 1.0.5.3, http://bugs.librdf.org/, redland-perl)
 AC_PREREQ(2.53)
 AC_CONFIG_SRCDIR(perl/example.pl)
-AC_REVISION($Revision: 11629 $)dnl
+AC_REVISION($Revision: 11644 $)dnl
 
-#AM_INIT_AUTOMAKE([1.7 check-news std-options -Wobsolete -Wportability -Wsyntax -Wunsupported])
-AM_INIT_AUTOMAKE([1.7 check-news])
+AM_INIT_AUTOMAKE([1.7 check-news tar-ustar])
 AM_MAINTAINER_MODE
 
 dnl Checks for programs.
@@ -101,22 +100,17 @@ languages_available=
 
 
 AC_ARG_WITH(perl, [  --with-perl(=PERL)      Set the Perl interpreter], with_perl="$withval", with_perl="auto")
-AC_MSG_CHECKING(Enable Perl API)
 if test "X$with_perl" != Xauto ; then
   if test "X$with_perl" != Xyes; then
     PERL=$with_perl
   fi
 fi
-with_perl=yes
 
 PERL_VERSION=`$PERL -MConfig -e 'print $Config{version}' 2>/dev/null`
-if test "X$PERL_VERSION" != X; then
-  languages_available="$languages_available perl($PERL_VERSION)"
-  if test $with_perl = yes; then
-    languages="$languages perl"
-  fi
+if test "X$PERL_VERSION" = X; then
+  AC_MSG_ERROR(No perl available - please install perl first.)
 fi
-AC_MSG_RESULT($with_perl)
+
 AC_SUBST(PERL_VERSION)
 
 
@@ -196,14 +190,15 @@ else
 fi
 
 AC_MSG_CHECKING(redland library source)
+redland_dir=
 if test $with_redland = system; then
   REDLAND_VERSION_VERBOSE="system $REDLAND_VERSION"
   REDLAND_RUN=
 else
   dir=
-  redland_source_dirs="../redland ../librdf .."
+  redland_source_dirs="redland"
   for testdir in $redland_source_dirs; do 
-    if test -x $testdir/redland-src-config; then
+    if test -r $testdir/redland-src-config.in; then
       dir=`cd $testdir; pwd`
       break
     fi
@@ -211,10 +206,13 @@ else
   if test "X$dir" = X; then
     AC_MSG_ERROR(Installed redland and sources not found - please install Redland first.)
   fi
-  REDLAND_CONFIG=$dir/redland-src-config
+  redland_dir=$dir
+
+  REDLAND_CONFIG=$redland_dir/redland-src-config
   REDLAND_VERSION=`$REDLAND_CONFIG --version 2>/dev/null`
-  REDLAND_VERSION_VERBOSE="internal $REDLAND_VERSION in $dir"
+  REDLAND_VERSION_VERBOSE="internal $REDLAND_VERSION in $redland_dir"
   REDLAND_RUN="$REDLAND_CONFIG --run "
+  with_redland=internal
 fi
 AC_MSG_RESULT($REDLAND_VERSION_VERBOSE)
 
@@ -230,10 +228,17 @@ LIBRDF_CPPFLAGS="$LIBRDF_CPPFLAGS `$REDLAND_CONFIG --cflags`"
 LIBRDF_LIBS="$LIBRDF_LIBS `$REDLAND_CONFIG --libs`"
 
 
-dnl Checks for building sub-packages in sub directories
-SD="$languages"
+if test "X$with_redland" = Xinternal -o "$USE_MAINTAINER_MODE" = yes; then 
+  AC_CONFIG_SUBDIRS(redland)
+fi
 
-AC_SUBST(SD)
+if test "$USE_MAINTAINER_MODE" = yes; then 
+  LOCAL_SUBDIRS="redland"
+else
+  LOCAL_SUBDIRS="$redland_dir"
+fi
+
+AC_SUBST(LOCAL_SUBDIRS)
 
 
 # Make final changes to cflags
@@ -281,7 +286,7 @@ AC_CONFIG_FILES([perl/lib/RDF/Redland.pm])
 AC_OUTPUT
 
 AC_MSG_RESULT([
-Redland build summary:
-  Redland:              $REDLAND_VERSION_VERBOSE
-  Language APIs built:   $languages
+Redland Perl build summary:
+  Redland: $REDLAND_VERSION_VERBOSE
+  Perl:    $PERL_VERSION in $PERL
 ])
