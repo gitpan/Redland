@@ -2,7 +2,7 @@
 #
 # Makefile.am - automake file for Perl 5 interface to Redland
 #
-# $Id: Makefile.am 11636 2006-11-27 18:27:15Z dajobe $
+# $Id: Makefile.am 11655 2006-11-30 06:24:06Z dajobe $
 #
 # Copyright (C) 2000-2005 David Beckett - http://purl.org/net/dajobe/
 # Copyright (C) 2000-2005 University of Bristol - http://www.bristol.ac.uk/
@@ -18,9 +18,11 @@
 # 
 # 
 
-AM_CPPFLAGS=@CPPFLAGS@ @LIBRDF_CPPFLAGS@
-AM_CFLAGS=@CFLAGS@ @LIBRDF_CPPFLAGS@ $(MEM)
-AM_STANDARD_CFLAGS=@STANDARD_CFLAGS@ @LIBRDF_CPPFLAGS@ $(MEM)
+REDLAND_CONFIG=@REDLAND_CONFIG@
+
+REDLAND_SWIG=$(shell $(REDLAND_CONFIG) --swig)
+LIBRDF_CPPFLAGS=$(shell $(REDLAND_CONFIG) --cflags)
+#LIBRDF_LIBS=$(shell $(REDLAND_CONFIG) --libs)
 
 PERL=@PERL@
 
@@ -50,9 +52,6 @@ SUBDIRS=lib t
 CLEANFILES=dmalloc.log *.db test-out.rdf core* $(PERL_CRUFT)
 MAINTAINERCLEANFILES=$(SWIG_OUTPUTS)
 
-MEM_LIBS=@MEM_LIBS@
-#MEM_LIBS=-ldmalloc
-
 $(perlshareRDFdir)/Redland.pm: build-perl
 
 
@@ -60,11 +59,11 @@ RUN=@REDLAND_RUN@
 
 SWIG_OPTS=-I$(srcdir) -DREDLAND_PRE_I -DREDLAND_POST_I -DREDLAND_DECL_I
 
-$(PERL_CORE_PACKAGE)_wrap.c lib/RDF/Redland/$(PERL_CORE_PACKAGE).pm : @REDLAND_SWIG@ redland-pre.i redland-post.i redland-decl.i
-	swig -v -perl5 $(SWIG_OPTS) -module $(PERL_FULL_CORE_PACKAGE) -o $(PERL_CORE_PACKAGE)_wrap.c @REDLAND_SWIG@ && mv $(PERL_CORE_PACKAGE).pm lib/RDF/Redland/$(PERL_CORE_PACKAGE).pm
+$(PERL_CORE_PACKAGE)_wrap.c lib/RDF/Redland/$(PERL_CORE_PACKAGE).pm : $(REDLAND_SWIG) redland-pre.i redland-post.i redland-decl.i
+	swig -v -perl5 $(SWIG_OPTS) -module $(PERL_FULL_CORE_PACKAGE) -o $(PERL_CORE_PACKAGE)_wrap.c $(REDLAND_SWIG) && mv $(PERL_CORE_PACKAGE).pm lib/RDF/Redland/$(PERL_CORE_PACKAGE).pm
 
 $(PERL_MAKEFILE): $(srcdir)/Makefile.PL lib/RDF/Redland/$(PERL_CORE_PACKAGE).pm
-	VERSION=$(VERSION) REDLAND_CONFIG=@REDLAND_CONFIG@ CFLAGS="$(AM_CPPFLAGS) $(SWIG_OPTS) $(CPPFLAGS) $(AM_STANDARD_CFLAGS)" $(PERL) $(srcdir)/Makefile.PL $(MAKE_PL_OPTS)
+	VERSION=$(VERSION) REDLAND_CONFIG=@REDLAND_CONFIG@ CFLAGS="$(AM_CPPFLAGS) $(LIBRDF_CPPFLAGS) $(SWIG_OPTS) $(CPPFLAGS) $(AM_STANDARD_CFLAGS)" $(PERL) $(srcdir)/Makefile.PL $(MAKE_PL_OPTS)
 
 -perl install-perl: $(PERL_MAKEFILE)
 	@target=`echo $@ | sed -e 's/-perl//'`; \
@@ -83,8 +82,10 @@ clean-perl realclean-perl:
 
 build-perl: -perl
 
-build-perl-stamp: @REDLAND_SWIG@
+build-perl-stamp: $(REDLAND_SWIG)
 	$(MAKE) build-perl && touch build-perl-stamp
+
+test: check
 
 check-local: build-perl-stamp test-perl
 

@@ -1,151 +1,41 @@
 
                     Redland RDF Library Perl Binding - News
 
+2006-11-30 Redland Perl Version 1.0.5.4 Released
+
+   Try harder to make the internal Redland build first when needed.
+
+   See the [1]1.0.5.4 Release Notes for the full details of the changes.
+
+   Added Redland 1.0.5 source into the distribution which is
+
 2006-11-28 Redland Perl Version 1.0.5.3 Released
 
    Added Redland 1.0.5 source into the distribution which is built if it
    is not installed system-wide.
 
-   See the [1]1.0.5.3 Release Notes for the full details of the changes.
+   See the [2]1.0.5.3 Release Notes for the full details of the changes.
 
 2006-11-27 Redland Perl Version 1.0.5.2 Released
 
-   Pulled out from [2]Redland Bindings and restored to a CPAN
+   Pulled out from [3]Redland Bindings and restored to a CPAN
    configuration.
 
-   See the [3]1.0.5.2 Release Notes for the full details of the changes.
-
-2006-11-19 Redland Bindings Version 1.0.5.1 Released
-
-   Synchronise with [4]Redland 1.0.5 ([5]release notes)
-   Many updates to the Ruby binding
-   Minor updates to the C#, Java and Python bindings
-   Several other fixes and improvements
-   Many other bug fixes addressing Issues [6]#0000109, [7]#0000120,
-   [8]#0000121, [9]#0000122 and [10]#0000126.
-
-   See the [11]1.0.5.1 Release Notes for the full details of the changes.
-
-2006-05-05 Redland Bindings Version 1.0.4.1 Released
-
-   Synchronise with [12]Redland 1.0.4
-   Some minor fixes in several bindings.
-
-   See the [13]1.0.4.1 Release Notes for the full details of the changes.
-
-2006-03-14 Redland Bindings Version 1.0.3.1 Released
-
-   Synchronise with [14]Redland 1.0.3
-   Several updates for handling optional query result values
-   Multiple fixes for Python and Ruby bindings issues
-   Several other fixes and changes for other binding languages.
-
-   NOTE: Redland Bindings will be switching to use [15]Subversion for
-   version control after the 1.0.3.1 release. See the [16]Redland
-   Subversion site or the online [17]Redland Bindings installation notes
-   for the latest information.
-
-   See the [18]1.0.3.1 Release Notes for the full details of the changes.
-
-2005-06-10 Redland Bindings Version 1.0.2.1 Released
-
-   Synchronise with Redland 1.0.2
-   Some minor fixes in the Perl, Python and Ruby bindings.
-
-   See the [19]1.0.2.1 Release Notes for the full details of the changes.
-
-2005-05-29 Redland Bindings Version 1.0.1.1 Released
-
-   Synchronise with Redland 1.0.1 ([20]release notes)
-   Updated examples and tests to use latest SPARQL syntax
-   Perl binding addeded several helper methods for nodes
-   PHP binding returns a PHP null instead of a NULL node pointer
-   Python binding gets various fixes (Daniel Larsson)
-   Ruby binding generates html documentation using rdoc (Nikolas
-   Coukouma)
-
-   See the [21]1.0.1.1 Release Notes for the full details of the changes.
-
-2005-02-27 Redland Bindings Version 1.0.0.2 Released
-
-   Added Perl bindings to returning RDF graph and boolean query results
-   (aka SPARQL CONSTRUCT and ASK
-   Added Perl bindings to returning a query result as a syntax format
-   PHP binding compile fix and now registers module versions (Dave Viner)
-   Perl and Python bindings error handling changed to return the
-   structured messages fields
-   Python error handling now by default throws exceptions on C function
-   return
-
-   See the [22]1.0.0.2 Release Notes for the full details of the changes.
-
-2005-02-06 Redland Bindings Version 1.0.0.1 Released
-
-   Synchronise with Redland 1.0.0
-   Python API gains returning RDF graph and boolean results
-   Updated the ruby API to [23]rdf-redland 0.5.3.1, fixed installation
-   and test cases
-   Other minor binding changes
-
-   See the [24]1.0.0.1 Release Notes for the full details of the changes.
-
-2004-11-02 Redland Bindings Version 0.9.19.1 Released
-
-   License changed to LGPL 2.1/Apache 2
-   Rebuild for Redland 0.9.19
-   Model to_string support added to perl and python bindings
-   Several other minor binding changes
-
-   See the [25]0.9.19.1 Release Notes for the full details of the
-   changes.
-
-2004-08-03 Redland Bindings Version 0.9.18.1 Released
-
-   (A rebuild for Redland 0.9.18 with no API changes)
-
-   The first release of Redland Bindings separate from Redland.
-   New C# API by Cesar Lopez Nataren and Edd Dumbill
-   Perl and Python APIs updated to have Redland Query and QueryResults
-   Ruby API replaced with rdf-redland written by by Dominic Sisneros
-
-   See the [26]0.9.18.1 Release Notes for the full details of the
-   changes.
-
-2004-07-19 Redland Bindings Version 0.9.17.1 Released
-
-   Initial packaging snapshot, never announced.
+   See the [4]1.0.5.2 Release Notes for the full details of the changes.
      _________________________________________________________________
 
-   Copyright (C) 2004-2006 [27]Dave Beckett
-   Copyright (C) 2004-2005 [28]University of Bristol
+   For older changes see the [5]Redland Bindings News
+     _________________________________________________________________
+
+   Copyright (C) 2004-2006 [6]Dave Beckett
+   Copyright (C) 2004-2005 [7]University of Bristol
 
 References
 
-   1. file://localhost/home/dajobe/dev/redland/perl/RELEASE.html#rel1_0_5_3
-   2. http://librdf.org/
-   3. file://localhost/home/dajobe/dev/redland/perl/RELEASE.html#rel1_0_5_2
-   4. http://librdf.org/
-   5. http://librdf.org/RELEASE.html#rel1_0_5
-   6. http://bugs.librdf.org/mantis/view.php?id=109
-   7. http://bugs.librdf.org/mantis/view.php?id=120
-   8. http://bugs.librdf.org/mantis/view.php?id=121
-   9. http://bugs.librdf.org/mantis/view.php?id=122
-  10. http://bugs.librdf.org/mantis/view.php?id=126
-  11. file://localhost/home/dajobe/dev/redland/perl/RELEASE.html#rel1_0_5_1
-  12. http://librdf.org/
-  13. file://localhost/home/dajobe/dev/redland/perl/RELEASE.html#rel1_0_4_1
-  14. http://librdf.org/
-  15. http://subversion.tigris.org/
-  16. http://svn.librdf.org/
-  17. http://librdf.org/bindings/INSTALL.html
-  18. file://localhost/home/dajobe/dev/redland/perl/RELEASE.html#rel1_0_3_1
-  19. file://localhost/home/dajobe/dev/redland/perl/RELEASE.html#rel1_0_2_1
-  20. http://librdf.org/RELEASE.html#rel1_0_1
-  21. file://localhost/home/dajobe/dev/redland/perl/RELEASE.html#rel1_0_1_1
-  22. file://localhost/home/dajobe/dev/redland/perl/RELEASE.html#rel1_0_0_2
-  23. http://rubyforge.org/projects/rdf-redland/
-  24. file://localhost/home/dajobe/dev/redland/perl/RELEASE.html#rel1_0_0_1
-  25. file://localhost/home/dajobe/dev/redland/perl/RELEASE.html#rel0_9_19_1
-  26. file://localhost/home/dajobe/dev/redland/perl/RELEASE.html#rel0_9_18_1
-  27. http://purl.org/net/dajobe/
-  28. http://www.bristol.ac.uk/
+   1. file://localhost/home/dajobe/dev/redland/perl/RELEASE.html#rel1_0_5_4
+   2. file://localhost/home/dajobe/dev/redland/perl/RELEASE.html#rel1_0_5_3
+   3. http://librdf.org/
+   4. file://localhost/home/dajobe/dev/redland/perl/RELEASE.html#rel1_0_5_2
+   5. http://librdf.org/NEWS.html
+   6. http://purl.org/net/dajobe/
+   7. http://www.bristol.ac.uk/

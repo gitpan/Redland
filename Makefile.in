@@ -18,7 +18,7 @@
 #
 # Makefile.am - top level automake file for Redland Bindings
 #
-# $Id: Makefile.am 11644 2006-11-29 05:28:09Z dajobe $
+# $Id: Makefile.am 11653 2006-11-30 05:34:14Z dajobe $
 #
 # Copyright (C) 2000-2006, David Beckett http://purl.org/net/dajobe/
 # Copyright (C) 2000-2005  University of Bristol, UK http://www.bristol.ac.uk/
@@ -127,9 +127,6 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
-LIBRDF_CPPFLAGS = @LIBRDF_CPPFLAGS@
-LIBRDF_LDFLAGS = @LIBRDF_LDFLAGS@
-LIBRDF_LIBTOOLLIBS = @LIBRDF_LIBTOOLLIBS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
@@ -139,8 +136,6 @@ MAINT = @MAINT@
 MAINTAINER_MODE_FALSE = @MAINTAINER_MODE_FALSE@
 MAINTAINER_MODE_TRUE = @MAINTAINER_MODE_TRUE@
 MAKEINFO = @MAKEINFO@
-MEM = @MEM@
-MEM_LIBS = @MEM_LIBS@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -158,8 +153,6 @@ RANLIB = @RANLIB@
 REDLAND_CONFIG = @REDLAND_CONFIG@
 REDLAND_MIN_VERSION = @REDLAND_MIN_VERSION@
 REDLAND_RUN = @REDLAND_RUN@
-REDLAND_SWIG = @REDLAND_SWIG@
-REDLAND_VERSION = @REDLAND_VERSION@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STANDARD_CFLAGS = @STANDARD_CFLAGS@
@@ -230,6 +223,7 @@ Makefile.PL \
 redland-perl.spec redland-perl.spec.in \
 MANIFEST.SKIP
 
+CLEANFILES = perl-config-stamp
 
 # Create some text files from HTML sources
 @MAINTAINER_MODE_TRUE@LYNX = lynx
@@ -589,6 +583,7 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
@@ -672,6 +667,8 @@ uninstall-info: uninstall-info-recursive
 
 @MAINTAINER_MODE_TRUE@NEWS: NEWS.html
 @MAINTAINER_MODE_TRUE@	$(HTML_TO_TEXT)
+
+test: clean
 
 @SET_MAKE@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

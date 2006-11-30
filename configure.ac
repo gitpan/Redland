@@ -3,7 +3,7 @@ dnl
 dnl configure.in - top level autoconf file for Redland Perl binding
 dnl (Process this file with autoconf to produce a configure script.)
 dnl
-dnl $Id: configure.ac 11644 2006-11-29 05:28:09Z dajobe $
+dnl $Id: configure.ac 11661 2006-11-30 18:34:27Z dajobe $
 dnl
 dnl Copyright (C) 2000-2006, David Beckett http://purl.org/net/dajobe/
 dnl Copyright (C) 2000-2005 Copyright (C) 2000-2005, University of Bristol, UK http://www.bristol.ac.uk/
@@ -25,10 +25,10 @@ dnl
 dnl 
 
 
-AC_INIT([Redland Perl binding], 1.0.5.3, http://bugs.librdf.org/, redland-perl)
+AC_INIT([Redland Perl binding], 1.0.5.4, http://bugs.librdf.org/, redland-perl)
 AC_PREREQ(2.53)
 AC_CONFIG_SRCDIR(perl/example.pl)
-AC_REVISION($Revision: 11644 $)dnl
+AC_REVISION($Revision: 11661 $)dnl
 
 AM_INIT_AUTOMAKE([1.7 check-news tar-ustar])
 AM_MAINTAINER_MODE
@@ -208,25 +208,15 @@ else
   fi
   redland_dir=$dir
 
+  REDLAND_VERSION_VERBOSE="internal redland in $redland_dir"
   REDLAND_CONFIG=$redland_dir/redland-src-config
-  REDLAND_VERSION=`$REDLAND_CONFIG --version 2>/dev/null`
-  REDLAND_VERSION_VERBOSE="internal $REDLAND_VERSION in $redland_dir"
   REDLAND_RUN="$REDLAND_CONFIG --run "
   with_redland=internal
 fi
 AC_MSG_RESULT($REDLAND_VERSION_VERBOSE)
 
-AC_SUBST(REDLAND_VERSION)
 AC_SUBST(REDLAND_CONFIG)
 AC_SUBST(REDLAND_RUN)
-
-REDLAND_SWIG=`$REDLAND_CONFIG --swig`
-AC_SUBST(REDLAND_SWIG)
-
-
-LIBRDF_CPPFLAGS="$LIBRDF_CPPFLAGS `$REDLAND_CONFIG --cflags`"
-LIBRDF_LIBS="$LIBRDF_LIBS `$REDLAND_CONFIG --libs`"
-
 
 if test "X$with_redland" = Xinternal -o "$USE_MAINTAINER_MODE" = yes; then 
   AC_CONFIG_SUBDIRS(redland)
@@ -242,9 +232,6 @@ AC_SUBST(LOCAL_SUBDIRS)
 
 
 # Make final changes to cflags
-MEM=
-MEM_LIBS=
-
 STANDARD_CFLAGS="$STANDARD_CFLAGS $CFLAGS"
 if test "$USE_MAINTAINER_MODE" = yes; then
   CFLAGS="$MAINTAINER_CFLAGS $CFLAGS"
@@ -254,14 +241,6 @@ LIBS=
 CPPFLAGS=
 LDFLAGS=
 
-LIBRDF_LIBTOOLLIBS=`$REDLAND_CONFIG --libtool-libs`
-AC_SUBST(LIBRDF_LIBTOOLLIBS)
-
-AC_SUBST(LIBRDF_CPPFLAGS)
-AC_SUBST(LIBRDF_LDFLAGS)
-
-AC_SUBST(MEM)
-AC_SUBST(MEM_LIBS)
 AC_SUBST(STANDARD_CFLAGS)
 
 abs_top_srcdir=`cd $srcdir; pwd`

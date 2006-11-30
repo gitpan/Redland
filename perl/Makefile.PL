@@ -2,7 +2,7 @@
 #
 # Makefile.PL - Makefile for Perl 5 interface to Redland
 #
-# $Id: Makefile.PL 11632 2006-11-27 18:18:48Z dajobe $
+# $Id: Makefile.PL 11656 2006-11-30 06:24:24Z dajobe $
 #
 # Copyright (C) 2000-2005 David Beckett - http://purl.org/net/dajobe/
 # Copyright (C) 2000-2005 University of Bristol - http://www.bristol.ac.uk/
@@ -22,7 +22,7 @@ use ExtUtils::MakeMaker;
 
 $REDLAND_CONFIG=$ENV{REDLAND_CONFIG} || 'redland-config';
 $CFLAGS=$ENV{CFLAGS} || "";
-$MEM_LIBS=$ENV{MEM_LIBS} || "";
+$LIBS=$ENV{LIBS} || "";
 
 $CORE_PACKAGE="CORE";
 
@@ -87,7 +87,7 @@ WriteMakefile(
 
     'DEFINE'    => "-DHAVE_CONFIG_H $CFLAGS",
     'OBJECT'    => "$objects",
-    'dynamic_lib' => {'OTHERLDFLAGS' => "$MEM_LIBS $CFLAGS"},
+    'dynamic_lib' => {'OTHERLDFLAGS' => "$LIBS $CFLAGS"},
 
     'PM' => { map { ("lib/RDF/$_", "\$(INST_LIBDIR)/$_") }
  qw(Redland.pm

@@ -18,7 +18,7 @@
 #
 # Makefile.am - automake file for Perl 5 interface to Redland
 #
-# $Id: Makefile.am 11636 2006-11-27 18:27:15Z dajobe $
+# $Id: Makefile.am 11655 2006-11-30 06:24:06Z dajobe $
 #
 # Copyright (C) 2000-2005 David Beckett - http://purl.org/net/dajobe/
 # Copyright (C) 2000-2005 University of Bristol - http://www.bristol.ac.uk/
@@ -117,9 +117,6 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
-LIBRDF_CPPFLAGS = @LIBRDF_CPPFLAGS@
-LIBRDF_LDFLAGS = @LIBRDF_LDFLAGS@
-LIBRDF_LIBTOOLLIBS = @LIBRDF_LIBTOOLLIBS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
@@ -129,8 +126,6 @@ MAINT = @MAINT@
 MAINTAINER_MODE_FALSE = @MAINTAINER_MODE_FALSE@
 MAINTAINER_MODE_TRUE = @MAINTAINER_MODE_TRUE@
 MAKEINFO = @MAKEINFO@
-MEM = @MEM@
-MEM_LIBS = @MEM_LIBS@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -139,6 +134,7 @@ PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+#LIBRDF_LIBS=$(shell $(REDLAND_CONFIG) --libs)
 PERL = @PERL@
 PERLINSTALLSITEARCH = @PERLINSTALLSITEARCH@
 PERLMAN3DIR = @PERLMAN3DIR@
@@ -148,8 +144,6 @@ RANLIB = @RANLIB@
 REDLAND_CONFIG = @REDLAND_CONFIG@
 REDLAND_MIN_VERSION = @REDLAND_MIN_VERSION@
 REDLAND_RUN = @REDLAND_RUN@
-REDLAND_SWIG = @REDLAND_SWIG@
-REDLAND_VERSION = @REDLAND_VERSION@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STANDARD_CFLAGS = @STANDARD_CFLAGS@
@@ -203,9 +197,8 @@ sharedstatedir = @sharedstatedir@
 subdirs = @subdirs@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-AM_CPPFLAGS = @CPPFLAGS@ @LIBRDF_CPPFLAGS@
-AM_CFLAGS = @CFLAGS@ @LIBRDF_CPPFLAGS@ $(MEM)
-AM_STANDARD_CFLAGS = @STANDARD_CFLAGS@ @LIBRDF_CPPFLAGS@ $(MEM)
+REDLAND_SWIG = $(shell $(REDLAND_CONFIG) --swig)
+LIBRDF_CPPFLAGS = $(shell $(REDLAND_CONFIG) --cflags)
 PERL_REDLAND_PACKAGE = RDF::Redland
 PERL_CORE_PACKAGE = CORE
 PERL_FULL_CORE_PACKAGE = "$(PERL_REDLAND_PACKAGE)::$(PERL_CORE_PACKAGE)"
@@ -553,15 +546,14 @@ uninstall-info: uninstall-info-recursive
 	mostlyclean-recursive pdf pdf-am ps ps-am tags tags-recursive \
 	uninstall uninstall-am uninstall-fakeDATA uninstall-info-am
 
-#MEM_LIBS=-ldmalloc
 
 $(perlshareRDFdir)/Redland.pm: build-perl
 
-$(PERL_CORE_PACKAGE)_wrap.c lib/RDF/Redland/$(PERL_CORE_PACKAGE).pm : @REDLAND_SWIG@ redland-pre.i redland-post.i redland-decl.i
-	swig -v -perl5 $(SWIG_OPTS) -module $(PERL_FULL_CORE_PACKAGE) -o $(PERL_CORE_PACKAGE)_wrap.c @REDLAND_SWIG@ && mv $(PERL_CORE_PACKAGE).pm lib/RDF/Redland/$(PERL_CORE_PACKAGE).pm
+$(PERL_CORE_PACKAGE)_wrap.c lib/RDF/Redland/$(PERL_CORE_PACKAGE).pm : $(REDLAND_SWIG) redland-pre.i redland-post.i redland-decl.i
+	swig -v -perl5 $(SWIG_OPTS) -module $(PERL_FULL_CORE_PACKAGE) -o $(PERL_CORE_PACKAGE)_wrap.c $(REDLAND_SWIG) && mv $(PERL_CORE_PACKAGE).pm lib/RDF/Redland/$(PERL_CORE_PACKAGE).pm
 
 $(PERL_MAKEFILE): $(srcdir)/Makefile.PL lib/RDF/Redland/$(PERL_CORE_PACKAGE).pm
-	VERSION=$(VERSION) REDLAND_CONFIG=@REDLAND_CONFIG@ CFLAGS="$(AM_CPPFLAGS) $(SWIG_OPTS) $(CPPFLAGS) $(AM_STANDARD_CFLAGS)" $(PERL) $(srcdir)/Makefile.PL $(MAKE_PL_OPTS)
+	VERSION=$(VERSION) REDLAND_CONFIG=@REDLAND_CONFIG@ CFLAGS="$(AM_CPPFLAGS) $(LIBRDF_CPPFLAGS) $(SWIG_OPTS) $(CPPFLAGS) $(AM_STANDARD_CFLAGS)" $(PERL) $(srcdir)/Makefile.PL $(MAKE_PL_OPTS)
 
 -perl install-perl: $(PERL_MAKEFILE)
 	@target=`echo $@ | sed -e 's/-perl//'`; \
@@ -580,8 +572,10 @@ clean-perl realclean-perl:
 
 build-perl: -perl
 
-build-perl-stamp: @REDLAND_SWIG@
+build-perl-stamp: $(REDLAND_SWIG)
 	$(MAKE) build-perl && touch build-perl-stamp
+
+test: check
 
 check-local: build-perl-stamp test-perl
 

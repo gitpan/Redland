@@ -1,7 +1,7 @@
 #
 # Fake MakeMaker Makefile.PL - top level Makefile.PL for Redland
 #
-# $Id: Makefile.PL 11633 2006-11-27 18:19:45Z dajobe $
+# $Id: Makefile.PL 11660 2006-11-30 07:28:57Z dajobe $
 #
 # Copyright (C) 2001-2006 David Beckett http://purl.org/net/dajobe/
 # Copyright (C) 2001-2005 University of Bristol, UK http://www.bristol.ac.uk/
@@ -127,7 +127,8 @@ DIST_DEFAULT = tardist
 all: config
 
 # MakeMaker target
-config:
+config: perl-config-stamp
+perl-config-stamp:
 	\@if [ ! -f ${standalone_makefile} ]; then \\
 	  cp ${perl_makefile} Makefile.perl; \\
 	  echo "${ccarg}PERL=$perl ./configure --prefix=$prefix"; \\
@@ -146,26 +147,34 @@ config:
 	  echo "\$(MAKE) \$(MFLAGS) -f Makefile.perl all"; \\
 	  \$(MAKE) \$(MFLAGS) -f Makefile.perl all; \\
 	fi
+	touch perl-config-stamp
 
 # MakeMaker targets
-test: config
-	cd perl && \$(MAKE) \$(MFLAGS) -f Makefile.perl \$@
+check test: config
+	cd perl && \$(MAKE) \$(MFLAGS) \$@
 
 install: config
-	cd perl && \$(MAKE) \$(MFLAGS) -f Makefile.perl \$@
-
-# MakeMaker target
-clean:
 	\@if [ -f ${standalone_makefile} ]; then \\
 	  echo \$(MAKE) -k \$(MFLAGS) -f ${standalone_makefile} \$@; \\
 	  (\$(MAKE) -k \$(MFLAGS) -f ${standalone_makefile} \$@; exit 0; ); \\
 	fi
+	cd perl && \$(MAKE) \$(MFLAGS) -f Makefile.perl \$@
+
+clean-core:
+	\@if [ -f ${standalone_makefile} ]; then \\
+	  echo \$(MAKE) -k \$(MFLAGS) -f ${standalone_makefile} clean; \\
+	  (\$(MAKE) -k \$(MFLAGS) -f ${standalone_makefile} clean; exit 0; ); \\
+	fi
+
+# MakeMaker target
+clean: clean-core
 	\@if [ -f perl/Makefile.perl ]; then \\
 	  echo "cd perl"; \\
 	  cd perl; \\
 	  echo "\$(MAKE) \$(MFLAGS) \$@\-perl"; \\
 	  \$(MAKE) \$(MFLAGS) \$\@-perl; \\
 	fi
+	rm -f perl-config-stamp
 
 # MakeMaker/GNU target
 distclean:
@@ -181,7 +190,7 @@ Makefile: Makefile.PL
 # MakeMaker[dist]/GNU targets
 # Pass on some targets to GNU autoconfigured makefile in order
 # so that 'make [all]' and 'make dist' work
-all-recursive all-am dist dist-hook: config
+all-recursive all-am clean-am distclean-am dist dist-hook: config
 	\$(MAKE) \$(MFLAGS) -f ${standalone_makefile} \$@
 
 
@@ -196,7 +205,7 @@ skipcheck:
 
 manifest: MANIFEST
 
-MANIFEST:
+MANIFEST: clean-core
 	$perl -MExtUtils::Manifest=mkmanifest -e mkmanifest
 
 # MakeMaker dist_dir section:

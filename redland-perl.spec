@@ -1,11 +1,11 @@
 # -*- RPM-SPEC -*-
 # Note that this is NOT a relocatable package
 %define name    redland-perl
-%define version 1.0.5.3
+%define version 1.0.5.4
 %define release SNAP
 %define prefix  /usr
 
-%define redland_version 1.0.5
+%define redland_version @REDLAND_VERSION@
 
 # Installation directories for perl, python and ruby are host-specific
 %define perl_sitearch	%(eval "`perl -V:installsitearch`"; echo $installsitearch)

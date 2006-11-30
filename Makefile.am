@@ -2,7 +2,7 @@
 #
 # Makefile.am - top level automake file for Redland Bindings
 #
-# $Id: Makefile.am 11646 2006-11-29 05:52:50Z dajobe $
+# $Id: Makefile.am 11653 2006-11-30 05:34:14Z dajobe $
 #
 # Copyright (C) 2000-2006, David Beckett http://purl.org/net/dajobe/
 # Copyright (C) 2000-2005  University of Bristol, UK http://www.bristol.ac.uk/
@@ -40,6 +40,7 @@ Makefile.PL \
 redland-perl.spec redland-perl.spec.in \
 MANIFEST.SKIP
 
+CLEANFILES=perl-config-stamp
 
 if MAINTAINER_MODE
 # Create some text files from HTML sources
@@ -59,5 +60,7 @@ NEWS: NEWS.html
 	$(HTML_TO_TEXT)
 
 endif
+
+test: clean
 
 @SET_MAKE@
