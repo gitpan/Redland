@@ -2,16 +2,18 @@
 #
 # test1.t - Redland perl test 1 - RDF::Redland::CORE low level APIs
 #
-# $Id: test1.t 10593 2006-03-05 08:30:38Z dajobe $
-#
-# Copyright (C) 2000-2003 David Beckett - http://purl.org/net/dajobe/
+# Copyright (C) 2000-2003 David Beckett - http://www.dajobe.org/
 # Copyright (C) 2000-2003 University of Bristol - http://www.bristol.ac.uk/
 # 
-# This package is Free Software or Open Source available under the
-# following licenses (these are alternatives):
-#   1. GNU Lesser General Public License (LGPL)
-#   2. GNU General Public License (GPL)
-#   3. Mozilla Public License (MPL)
+# This package is Free Software and part of Redland http://librdf.org/
+# 
+# It is licensed under the following three licenses as alternatives:
+#   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
+#   2. GNU General Public License (GPL) V2 or any newer version
+#   3. Apache License, V2.0 or any newer version
+# 
+# You may not use this file except in compliance with at least one of
+# the above three licenses.
 # 
 # See LICENSE.html or LICENSE.txt at the top of this package for the
 # full license terms.
@@ -60,7 +62,7 @@ print "ok $test\n";
 $test++;
 
 my $statement=&RDF::Redland::CORE::librdf_new_statement_from_nodes($world, 
-							  &RDF::Redland::CORE::librdf_new_node_from_uri_string($world, "http://purl.org/net/dajobe/"),
+							  &RDF::Redland::CORE::librdf_new_node_from_uri_string($world, "http://www.dajobe.org/"),
 							  &RDF::Redland::CORE::librdf_new_node_from_uri_string($world, "http://purl.org/dc/elements/1.1/creator"),
 							  &RDF::Redland::CORE::librdf_new_node_from_literal($world, "Dave Beckett", "", 0)
 							  );
@@ -102,7 +104,7 @@ last if $failed;
 print "ok $test\n";
 $test++;
 
-my $source_node=&RDF::Redland::CORE::librdf_new_node_from_uri_string($world, "http://purl.org/net/dajobe/");
+my $source_node=&RDF::Redland::CORE::librdf_new_node_from_uri_string($world, "http://www.dajobe.org/");
 my $target_node=&RDF::Redland::CORE::librdf_new_node_from_uri_string($world, "http://purl.org/dc/elements/1.1/creator");
 
 my $iterator=&RDF::Redland::CORE::librdf_model_get_targets($model,$source_node,$target_node);

@@ -2,50 +2,53 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title>Redland RDF Library Perl Binding</title>
+  <title>Redland RDF Application Framework - Perl Interface</title>
 </head>
 <body>
 
-<h1 style="text-align:center">Redland RDF Library Perl Binding</h1>
+<h1 style="text-align:center">Redland RDF Application Framework - Perl Interface</h1>
 
-<h2>Configuring the Redland Perl Binding</h2>
+<h2>Installing the Redland Perl interface</h2>
 
-<p>This can be built two ways - using the <tt>configure</tt>
-program or using Perl's CPAN style <tt>perl Makefile.PL</tt>
-</p>
+<p>This is built if <tt>--with-perl</tt> is given to the configure
+line, or <tt>--with-perl=perl5.8</tt> to use a particular perl
+version/program.  The standard 'make' at the top level will build it.</p>
 
-<h3>Configuring the Perl binding with <tt>configure</tt></h3>
-
-<p>Run <tt>./configure</tt> optionally with
-<tt>--with-perl=<em>/path/to/perl</em></tt> to use a particular perl
-version/program.  The standard 'make' at the top level will then
-compile the binding against Redland.  If Redland is not already
-installed, an internal copy will be configured and built.</p>
-
-<h3>Configuring the Perl building with CPAN <tt>perl Makefile.PL</tt></h3>
-
-<p>Run <tt>perl Makefile.PL</tt> and a top-level Makefile will be
-created that is suitable for using in a CPAN or perl MakeMaker
-style.  It will invoke <tt>configure</tt> and the makefile
-it generates internally.
-</p>
-
-<h2>Building the Perl binding</h2>
+<p>You can also compile the perl interface by hand as follows:</p>
 
 <pre>
-  $ make
+  cd perl
+  make
+
+  # optional
+  make check
 </pre>
 
-and optionally
+<p>To install it system wide do this as <em>root</em> (or maybe via
+sudo make install):</p>
+
 <pre>
-  $ make check
+  root# make install
 </pre>
 
+<p>The Redland Perl interface is mature has been tested with the
+following versions (5.6.0 is the likely minimum; 5.005 is too
+old).</p>
 
-<h2>Testing the Redland Perl binding</h2>
+<blockquote>
+5.8.3 on Solaris/Sparc<br />
+5.8.3 on Linux/x86<br />
+5.8.2 on Linux/x86<br />
+5.8.1-RC3 on OSX/PPC<br />
+5.8.0 on Linux/x86<br />
+5.8.0 on Linux/IA64
+</blockquote>
 
-<p>If you did the install below, run the perl example program
-with:</p>
+
+<h2>Testing the Redland Perl interface</h2>
+
+<p>If you did the optional install above, run the perl example
+program with:</p>
 <pre>
   perl ./example.pl
 </pre>
@@ -75,27 +78,27 @@ with:</p>
   Printing all statements
   Statement: {[http://example.org/foo], [http://example.org/foo], [http://example.org/foo]}
   Statement: {[http://example.org/foo], [http://example.org/foo], [http://example.org/foo]}
-  Statement: {[http://purl.org/net/dajobe/], [http://purl.org/dc/elements/1.1/title], "Dave Beckett's Home Page"}
-  Statement: {[http://purl.org/net/dajobe/], [http://purl.org/dc/elements/1.1/creator], "Dave Beckett"}
-  Statement: {[http://purl.org/net/dajobe/], [http://purl.org/dc/elements/1.1/creator], "Dave Beckett"}
-  Statement: {[http://purl.org/net/dajobe/], [http://purl.org/dc/elements/1.1/description], "The generic home page of Dave Beckett."}
+  Statement: {[http://www.dajobe.org/], [http://purl.org/dc/elements/1.1/title], "Dave Beckett's Home Page"}
+  Statement: {[http://www.dajobe.org/], [http://purl.org/dc/elements/1.1/creator], "Dave Beckett"}
+  Statement: {[http://www.dajobe.org/], [http://purl.org/dc/elements/1.1/creator], "Dave Beckett"}
+  Statement: {[http://www.dajobe.org/], [http://purl.org/dc/elements/1.1/description], "The generic home page of Dave Beckett."}
 
   Searching model for statements matching predicate http://purl.org/dc/elements/1.1/creator
-  Matching Statement: {[http://purl.org/net/dajobe/], [http://purl.org/dc/elements/1.1/creator], "Dave Beckett"}
-    Subject: [http://purl.org/net/dajobe/]
+  Matching Statement: {[http://www.dajobe.org/], [http://purl.org/dc/elements/1.1/creator], "Dave Beckett"}
+    Subject: [http://www.dajobe.org/]
     Predicate: [http://purl.org/dc/elements/1.1/creator]
     Object: Dave Beckett
-  Matching Statement: {[http://purl.org/net/dajobe/], [http://purl.org/dc/elements/1.1/creator], "Dave Beckett"}
-    Subject: [http://purl.org/net/dajobe/]
+  Matching Statement: {[http://www.dajobe.org/], [http://purl.org/dc/elements/1.1/creator], "Dave Beckett"}
+    Subject: [http://www.dajobe.org/]
     Predicate: [http://purl.org/dc/elements/1.1/creator]
     Object: Dave Beckett
 
-  Searching model for targets of subject http://purl.org/net/dajobe/ predicate http://purl.org/dc/elements/1.1/creator
+  Searching model for targets of subject http://www.dajobe.org/ predicate http://purl.org/dc/elements/1.1/creator
   Matching Node: Dave Beckett
   Matching Node: Dave Beckett
   Querying for dc:titles:
   result 1: {
-    a=[http://purl.org/net/dajobe/]
+    a=[http://www.dajobe.org/]
     c=Dave Beckett's Home Page
   }
 
@@ -103,30 +106,6 @@ with:</p>
 
 Done
 </pre>
-
-
-<h2>Installing the Perl Binding</h2>
-
-<p>To install the binding system wide do this as <em>root</em> (or
-maybe via sudo make install):</p>
-
-<pre>
-  root# make install
-</pre>
-
-<p>The Redland Perl interface is mature has been tested with the
-following versions (5.6.0 is the likely minimum; 5.005 is too
-old).</p>
-
-<blockquote>
-5.8.3 on Solaris/Sparc<br />
-5.8.3 on Linux/x86<br />
-5.8.2 on Linux/x86<br />
-5.8.1-RC3 on OSX/PPC<br />
-5.8.0 on Linux/x86<br />
-5.8.0 on Linux/IA64
-</blockquote>
-
 
 
 <h2>Using the Redland Perl API</h2>
@@ -217,7 +196,7 @@ and follow the references from there.</p>
 
 <hr />
 
-<p>Copyright (C) 2000-2006 <a href="http://purl.org/net/dajobe/">Dave Beckett</a>, Copyright (C) 2000-2005 <a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
+<p>Copyright (C) 2000-2007 <a href="http://www.dajobe.org/">Dave Beckett</a>, Copyright (C) 2000-2005 <a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
 
 </body>
 </html>

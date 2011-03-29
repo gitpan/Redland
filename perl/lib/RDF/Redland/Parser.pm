@@ -2,16 +2,18 @@
 #
 # Parser.pm - Redland Perl RDF Parser module
 #
-# $Id: Parser.pm 11575 2006-11-04 04:53:28Z dajobe $
-#
-# Copyright (C) 2000-2005 David Beckett - http://purl.org/net/dajobe/
+# Copyright (C) 2000-2005 David Beckett - http://www.dajobe.org/
 # Copyright (C) 2000-2005 University of Bristol - http://www.bristol.ac.uk/
 # 
-# This package is Free Software or Open Source available under the
-# following licenses (these are alternatives):
-#   1. GNU Lesser General Public License (LGPL)
-#   2. GNU General Public License (GPL)
-#   3. Mozilla Public License (MPL)
+# This package is Free Software and part of Redland http://librdf.org/
+# 
+# It is licensed under the following three licenses as alternatives:
+#   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
+#   2. GNU General Public License (GPL) V2 or any newer version
+#   3. Apache License, V2.0 or any newer version
+# 
+# You may not use this file except in compliance with at least one of
+# the above three licenses.
 # 
 # See LICENSE.html or LICENSE.txt at the top of this package for the
 # full license terms.
@@ -209,15 +211,47 @@ returned.
 sub feature ($$;$) {
   my($self,$uri,$value)=@_;
 
-  warn "RDF::Redland::Parser->feature('$uri', '$value')\n" if $RDF::Redland::Debug;
+  warn "RDF::Redland::Parser->feature('$uri', '$value')\n"
+    if $RDF::Redland::Debug;
   $uri=RDF::Redland::URI->new($uri)
     unless ref $uri;
 
-  return &RDF::Redland::CORE::librdf_parser_set_feature($self->{PARSER},$uri->{URI},$value->{NODE})
-      if $value;
+  if(!defined $value) {
+    $value=&RDF::Redland::CORE::librdf_parser_get_feature($self->{PARSER},
+							  $uri->{URI});
+    return $value ? RDF::Redland::Node->_new_from_object($value,1) : undef;
+  }
 
-  $value=&RDF::Redland::CORE::librdf_parser_get_feature($self->{PARSER},$uri->{URI});
-  return $value ? RDF::Redland::Node->_new_from_object($value,1) : undef;
+  $value=RDF::Redland::LiteralNode->new($value)
+    unless ref $value;
+
+  return &RDF::Redland::CORE::librdf_parser_set_feature($self->{PARSER},
+							$uri->{URI},
+							$value->{NODE})
+
+}
+
+
+=item namespaces_seen
+
+Get the set of namespace declarations seen during parsing as a
+hash of key:prefix string (may be ''), value: RDF::Redland::URI objects.
+
+=cut
+
+sub namespaces_seen($) {
+  my $self=shift;
+
+  my $count=&RDF::Redland::CORE::librdf_parser_get_namespaces_seen_count($self->{PARSER});
+  my(%namespaces)=();
+  for (my $offset=0; $offset < $count; $offset++) {
+    my $prefix=&RDF::Redland::CORE::librdf_parser_get_namespaces_seen_prefix($self->{PARSER}, $offset);
+    $prefix ||= '';
+    my $uri=&RDF::Redland::CORE::librdf_parser_get_namespaces_seen_uri($self->{PARSER}, $offset);
+    my $ruri=$uri ?  RDF::Redland::URI->_new_from_object($uri) : undef;
+    $namespaces{$prefix}=$ruri;
+    }
+  return %namespaces;
 }
 
 
@@ -231,7 +265,7 @@ L<RDF::Redland::URI>
 
 =head1 AUTHOR
 
-Dave Beckett - http://purl.org/net/dajobe/
+Dave Beckett - http://www.dajobe.org/
 
 =cut
 

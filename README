@@ -1,64 +1,73 @@
-
-                       Redland RDF Library Perl Binding
+                        Redland librdf Language Bindings
 
 [1]Dave Beckett
 
 Overview
 
-   [2]Redland is a library that provides a high-level interface for the
-   Resource Description Framework (RDF) allowing the RDF graph to be
+   [2]Redland librdf is a library that provides a high-level interface for
+   the Resource Description Framework (RDF) allowing the RDF graph to be
    parsed from XML, stored, queried and manipulated. Redland implements
    each of the RDF concepts in its own class via an object based API,
-   reflected into language APIs. Several classes providing functionality
-   such as for parsers, storage are built as modules that can be loaded
-   at compile or run-time as required.
+   reflected into the language APIs, currently Perl, PHP, Python and Ruby.
+   Several classes providing functionality such as for parsers, storage
+   are built as modules that can be loaded at compile or run-time as
+   required.
 
-   The redland-perl package provides the higher level language APIs to
-   Redland in Perl. For further information see the [3]Redland Perl
-   documentation
+   The Redland librdf language bindings provides the higher level language
+   APIs to Redland in the following languages.
+     * Lua (experimental)
+     * [3]Perl
+     * [4]PHP
+     * [5]Python
+     * [6]Ruby
 
 Sources and Binaries
 
    The packaged sources are available from
-   [4]http://download.librdf.org/source/ (master site) and also from the
-   [5]SourceForge site. The development Subversion sources can also be
-   [6]browsed with ViewCV. Binary packages of redland-perl and related
-   libraries are available from the [7]download site.
+   [7]http://download.librdf.org/source/ (master site) and also from the
+   [8]SourceForge site. The development GIT sources can also be [9]browsed
+   on GitHub
 
 License
 
-   This library is free software / open source software released under
-   the LGPL (GPL) or Apache 2.0 licenses. See [8]LICENSE.html for full
+   This library is free software / open source software released under the
+   LGPL 2.1 (GPL) or Apache 2.0 licenses. See [10]LICENSE.html for full
    details.
 
 Installation and Documentation
 
-   See [9]INSTALL.html for general installation and configuration
-   information and the [10]Redland Perl documentation for more detailed
-   information.
+   See [11]INSTALL.html for general installation and configuration
+   information and the language specific documents for installing the
+   interfaces in the current available APIs: [12]Perl, [13]PHP, [14]Python
+   or [15]Ruby . There are no LUA docs at this time.
 
 Mailing Lists
 
-   The [11]Redland mailing lists discuss the development and use of
+   The [16]Redland mailing lists discuss the development and use of
    Redland and Raptor as well as future plans and announcement of
    releases.
-     _________________________________________________________________
+     __________________________________________________________________
 
-   Copyright (C) 2004-2006 [12]Dave Beckett
-   Copyright (C) 2004-2005 [13]University of Bristol
+   Copyright (C) 2004-2011 [17]Dave Beckett
+   Copyright (C) 2004-2005 [18]University of Bristol
 
 References
 
-   1. http://purl.org/net/dajobe/
+   1. http://www.dajobe.org/
    2. http://librdf.org/
-   3. file://localhost/home/dajobe/dev/redland/perl/docs/perl.html
-   4. http://download.librdf.org/source/
-   5. http://sourceforge.net/projects/librdf/
-   6. http://svn.librdf.org/view/perl/
-   7. http://download.librdf.org/
-   8. file://localhost/home/dajobe/dev/redland/perl/LICENSE.html
-   9. file://localhost/home/dajobe/dev/redland/perl/INSTALL.html
-  10. file://localhost/home/dajobe/dev/redland/perl/docs/perl.html
-  11. http://librdf.org/lists/
-  12. http://purl.org/net/dajobe/
-  13. http://www.bristol.ac.uk/
+   3. docs/perl.html
+   4. docs/php.html
+   5. docs/python.html
+   6. docs/ruby.html
+   7. http://download.librdf.org/source/
+   8. http://sourceforge.net/projects/librdf/
+   9. http://github.com/dajobe/redland-bindings
+  10. LICENSE.html
+  11. INSTALL.html
+  12. docs/perl.html
+  13. docs/php.html
+  14. docs/python.html
+  15. docs/ruby.html
+  16. http://librdf.org/lists/
+  17. http://www.dajobe.org/
+  18. http://www.bristol.ac.uk/

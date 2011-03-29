@@ -45,35 +45,43 @@ CONFIG_DIR=${CONFIG_DIR-../config}
 # Set an envariable of the same name in uppercase, to override scan
 #
 programs="automake aclocal autoconf autoheader libtoolize"
-confs=`find . -name configure.ac -print`
+confs=`find . -name configure.ac -print | grep -v /releases/`
+
+gtkdoc_args=
 if grep "^GTK_DOC_CHECK" $confs >/dev/null; then
   programs="$programs gtkdocize"
+  gtkdoc_args="--enable-gtk-doc"
 fi
 if grep "^AC_CHECK_PROGS.SWIG" $confs >/dev/null; then
   programs="$programs swig"
 fi
+ltdl_args=
+if grep "^AC_LIBLTDL_" $confs >/dev/null; then
+  ltdl_args="--ltdl"
+fi
+silent_args=
+if grep "^AM_SILENT_RULES" $confs >/dev/null; then
+  silent_args="--enable-silent-rules"
+fi
 
 # Some dependencies for autotools:
-# automake 1.9 requires autoconf 2.58
-# automake 1.8 requires autoconf 2.58
-# automake 1.7 requires autoconf 2.54
-automake_min_vers=1.7
+# automake 1.11 requires autoconf 2.62 (needed for AM_SILENT_RULES)
+automake_min_vers=011100
 aclocal_min_vers=$automake_min_vers
-autoconf_min_vers=2.54
+autoconf_min_vers=026200
 autoheader_min_vers=$autoconf_min_vers
-libtoolize_min_vers=1.4
-gtkdocize_min_vers=1.3
-swig_min_vers=1.3.24
+libtoolize_min_vers=020200
+gtkdocize_min_vers=010300
+swig_min_vers=010324
 
 # Default program arguments
-automake_args="--add-missing"
-autoconf_args=
-libtoolize_args="--force --copy --automake"
-gtkdocize_args="--copy"
+automake_args="--gnu --add-missing --force --copy -Wall"
 aclocal_args=
-automake_args="--gnu --add-missing --force --copy"
+autoconf_args=
+libtoolize_args="--force --copy --automake $ltdl_args"
+gtkdocize_args="--copy"
 # --enable-gtk-doc does no harm if it's not available
-configure_args="--enable-maintainer-mode --enable-gtk-doc"
+configure_args="--enable-maintainer-mode $gtkdoc_args $silent_args"
 
 
 # You should not need to edit below here
@@ -91,6 +99,44 @@ if test "X$DRYRUN" != X; then
   DRYRUN=echo
 fi
 
+cat > autogen-get-version.pl <<EOF
+use File::Basename;
+my \$prog=basename \$0;
+die "\$prog: USAGE PATH PROGRAM-NAME\n  e.g. \$prog /usr/bin/foo-123 foo\n"
+  unless @ARGV==2;
+
+my(\$path,\$name)=@ARGV;
+exit 0 if !-f \$path;
+die "\$prog: \$path not found\n" if !-r \$path;
+
+my \$mname=\$name; \$mname =~ s/^g(libtoolize)\$/\$1/;
+
+my(@vnums);
+for my \$varg (qw(--version -version)) {
+  my \$cmd="\$path \$varg";
+  open(PIPE, "\$cmd 2>&1 |") || next;
+  while(<PIPE>) {
+    chomp;
+    next if @vnums; # drain pipe if we got a vnums
+    next unless /^\$mname/i;
+    my(\$v)=/(\S+)\$/i; \$v =~ s/-.*\$//;
+    @vnums=grep { defined \$_ && !/^\s*\$/} map { s/\D//g; \$_; } split(/\./, \$v);
+  }
+  close(PIPE);
+  last if @vnums;
+}
+
+@vnums=(@vnums, 0, 0, 0)[0..2];
+\$vn=join('', map { sprintf('%02d', \$_) } @vnums);
+print "\$vn\n";
+exit 0;
+EOF
+
+autogen_get_version="`pwd`/autogen-get-version.pl"
+
+trap "rm -f $autogen_get_version" 0 1 9 15
+
+
 update_prog_version() {
   dir=$1
   prog=$2
@@ -100,9 +146,10 @@ update_prog_version() {
   eval env=\$${ucprog}
   if test X$env != X; then
     prog_name=$env
-    prog_vers=`$prog_name --version 2>&1 | grep -i "^$prog" | awk '{print $NF; exit 0}'`
-    if [ "X$prog_vers" = "X" ]; then
-      prog_vers=`$prog_name -version 2>&1 | grep -i "^$prog" | awk '{print $NF; exit 0}'`
+    prog_vers=`perl $autogen_get_version $prog_name $prog`
+
+    if test X$prog_vers = X; then
+      prog_vers=0
     fi
     eval ${prog}_name=${prog_name}
     eval ${prog}_vers=${prog_vers}
@@ -119,24 +166,27 @@ update_prog_version() {
 
   save_PATH="$PATH"
 
-  cd $dir
+  cd "$dir"
   PATH=".:$PATH"
 
-  names=`ls $prog* 2>/dev/null`
+  nameglob="$prog*"
+  if [ -x /usr/bin/uname ]; then
+    if [ `/usr/bin/uname` = 'Darwin' -a $prog = 'libtoolize' ] ; then
+      nameglob="g$nameglob"
+    fi
+  fi
+  names=`ls $nameglob 2>/dev/null`
   if [ "X$names" != "X" ]; then
     for name in $names; do
-      vers=`$name --version 2>&1 | grep -i "^$prog" | awk '{print $NF; exit 0}'`
+      vers=`perl $autogen_get_version $dir/$name $prog`
       if [ "X$vers" = "X" ]; then
-        vers=`$name -version 2>&1 | grep -i "^$prog" | awk '{print $NF; exit 0}'`
-        if [ "X$vers" = "X" ]; then
-          continue
-        fi
+        continue
       fi
 
       if expr $vers '>' $prog_vers >/dev/null; then
         prog_name=$name
         prog_vers=$vers
-        prog_dir=$dir
+        prog_dir="$dir"
       fi
     done
   fi
@@ -193,12 +243,12 @@ here=`pwd`
 while [ $# -ne 0 ] ; do
   dir=$1
   shift
-  if [ ! -d $dir ]; then
+  if [ ! -d "$dir" ]; then
     continue
   fi
 
   for prog in $programs; do
-    update_prog_version $dir $prog
+    update_prog_version "$dir" $prog
   done
 done
 cd $here
@@ -216,6 +266,9 @@ done
 
 echo "$program: Dependencies satisfied"
 
+if test -d $SRCDIR/libltdl; then
+  touch $SRCDIR/libltdl/NO-AUTO-GEN
+fi
 
 config_dir=
 if test -d $CONFIG_DIR; then
@@ -223,15 +276,15 @@ if test -d $CONFIG_DIR; then
 fi
 
 
-for coin in `find $SRCDIR -name configure.ac -print`
+for coin in `find $SRCDIR -name configure.ac -print | grep -v /releases/`
 do 
   dir=`dirname $coin`
-  if test -f $dir/NO-AUTO-GEN; then
+  if test -f "$dir/NO-AUTO-GEN"; then
     echo $program: Skipping $dir -- flagged as no auto-gen
   else
     echo " "
     echo $program: Processing directory $dir
-    ( cd $dir
+    ( cd "$dir"
 
       # Ensure that these are created by the versions on this system
       # (indirectly via automake)
@@ -241,13 +294,26 @@ do
       # automake junk
       $DRYRUN rm -rf autom4te*.cache
 
+      config_macro_dir=`sed -ne 's/^AC_CONFIG_MACRO_DIR(\([^)]*\).*/\1/p' configure.ac`
+      if test "X$config_macro_dir" = X; then
+	config_macro_dir=.
+      else
+        aclocal_args="$aclocal_args -I $config_macro_dir "
+      fi
+
+      config_aux_dir=`sed -ne 's/^AC_CONFIG_AUX_DIR(\([^)]*\).*/\1/p' configure.ac`
+      if test "X$config_aux_dir" = X; then
+	config_aux_dir=.
+      fi
+
       if test "X$config_dir" != X; then
         echo "$program: Updating config.guess and config.sub"
 	for file in config.guess config.sub; do
 	  cfile=$config_dir/$file
+          xfile=$config_aux_dir/$file
 	  if test -f $cfile; then
-	    $DRYRUN rm -f $file
-	    $DRYRUN cp -p $cfile $file
+	    $DRYRUN rm -f $xfile
+	    $DRYRUN cp -p $cfile $xfile
 	  fi
 	done
       fi

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+
+    Methods
+
+  -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Redland RDF Application Framework - Ruby RDoc - Methods</title>
+<link rel="stylesheet" href="rdoc-style.css" type="text/css" />
+<base target="docwin" />
+</head>
+<body>
+<div id="index">
+<h1 class="section-bar">Methods</h1>
+<div id="index-entries"><a href="classes/Redland/Node.html#M000089">== (Redland::Node)</a><br />
+<a href="classes/Redland/Statement.html#M000147">== (Redland::Statement)</a><br />
+<a href="classes/Redland/Uri.html#M000039">== (Redland::Uri)</a><br />
+<a href="classes/Redland/Namespace.html#M000104">[] (Redland::Namespace)</a><br />
+<a href="classes/Redland/Model.html#M000048">add (Redland::Model)</a><br />
+<a href="classes/Redland/OWL.html#M000014">add_datatype (Redland::OWL)</a><br />
+<a href="classes/Redland/Parser.html#M000030">add_ident (Redland::Parser)</a><br />
+<a href="classes/Redland/RDFS.html#M000017">add_label (Redland::RDFS)</a><br />
+<a href="classes/Redland/Resource.html#M000129">add_property (Redland::Resource)</a><br />
+<a href="classes/Redland/Model.html#M000047">add_statement (Redland::Model)</a><br />
+<a href="classes/Redland/Model.html#M000049">add_statements (Redland::Model)</a><br />
+<a href="classes/Redland/Node.html#M000085">anon (Redland::Node)</a><br />
+<a href="classes/Redland/QueryResults.html#M000119">as_stream (Redland::QueryResults)</a><br />
+<a href="classes/Redland/Model.html#M000056">as_stream (Redland::Model)</a><br />
+<a href="classes/Redland/QueryResults.html#M000112">binding_name (Redland::QueryResults)</a><br />
+<a href="classes/Redland/QueryResults.html#M000111">binding_name (Redland::QueryResults)</a><br />
+<a href="classes/Redland/QueryResults.html#M000113">binding_names (Redland::QueryResults)</a><br />
+<a href="classes/Redland/QueryResults.html#M000114">binding_value (Redland::QueryResults)</a><br />
+<a href="classes/Redland/QueryResults.html#M000116">binding_value_by_name (Redland::QueryResults)</a><br />
+<a href="classes/Redland/QueryResults.html#M000115">binding_values (Redland::QueryResults)</a><br />
+<a href="classes/Redland/QueryResults.html#M000117">bindings (Redland::QueryResults)</a><br />
+<a href="classes/Redland/QueryResults.html#M000110">bindings_count (Redland::QueryResults)</a><br />
+<a href="classes/Redland/Node.html#M000088">blank? (Redland::Node)</a><br />
+<a href="classes/Redland/Node.html#M000094">blank_identifier (Redland::Node)</a><br />
+<a href="classes/Redland/Node.html#M000083">bnode (Redland::Node)</a><br />
+<a href="classes/Redland/RDFS.html#M000015">comment (Redland::RDFS)</a><br />
+<a href="classes/Redland/RDFS.html#M000016">comment= (Redland::RDFS)</a><br />
+<a href="classes/Redland/Stream.html#M000101">context (Redland::Stream)</a><br />
+<a href="classes/Redland/Model.html#M000067">contexts (Redland::Model)</a><br />
+<a href="classes/Redland/QueryResults.html#M000108">count (Redland::QueryResults)</a><br />
+<a href="classes/Redland/Parser.html#M000020">create_finalizer (Redland::Parser)</a><br />
+<a href="classes/Redland/TripleStore.html#M000149">create_finalizer (Redland::TripleStore)</a><br />
+<a href="classes/Redland/QueryResults.html#M000106">create_finalizer (Redland::QueryResults)</a><br />
+<a href="classes/Redland/Serializer.html#M000160">create_finalizer (Redland::Serializer)</a><br />
+<a href="classes/Redland/Query.html#M000035">create_finalizer (Redland::Query)</a><br />
+<a href="classes/Redland/Node.html#M000084">create_finalizer (Redland::Node)</a><br />
+<a href="classes/Redland/Uri.html#M000037">create_finalizer (Redland::Uri)</a><br />
+<a href="classes/Redland/World.html#M000157">create_finalizer (Redland::World)</a><br />
+<a href="classes/Redland/Stream.html#M000097">create_finalizer (Redland::Stream)</a><br />
+<a href="classes/Redland/NodeIterator.html#M000154">create_finalizer (Redland::NodeIterator)</a><br />
+<a href="classes/Redland/Model.html#M000043">create_finalizer (Redland::Model)</a><br />
+<a href="classes/Redland/Statement.html#M000139">create_finalizer (Redland::Statement)</a><br />
+<a href="classes/Redland/Model.html#M000044">create_resource (Redland::Model)</a><br />
+<a href="classes/Redland/NodeIterator.html#M000152">current (Redland::NodeIterator)</a><br />
+<a href="classes/Redland/Stream.html#M000099">current (Redland::Stream)</a><br />
+<a href="classes/Redland/Model.html#M000052">delete (Redland::Model)</a><br />
+<a href="classes/Redland/Model.html#M000053">delete_context (Redland::Model)</a><br />
+<a href="classes/Redland/Resource.html#M000131">delete_properties (Redland::Resource)</a><br />
+<a href="classes/Redland/Resource.html#M000130">delete_property (Redland::Resource)</a><br />
+<a href="classes/Redland/Model.html#M000051">delete_statement (Redland::Model)</a><br />
+<a href="classes/Redland/Model.html#M000069">dump_model (Redland::Model)</a><br />
+<a href="classes/Redland/Stream.html#M000098">end? (Redland::Stream)</a><br />
+<a href="classes/Redland/NodeIterator.html#M000151">end? (Redland::NodeIterator)</a><br />
+<a href="classes/Redland/Node.html#M000095">ensure (Redland::Node)</a><br />
+<a href="classes/Redland/Query.html#M000034">execute (Redland::Query)</a><br />
+<a href="classes/Redland/Serializer.html#M000162">feature (Redland::Serializer)</a><br />
+<a href="classes/Redland/Parser.html#M000028">feature (Redland::Parser)</a><br />
+<a href="classes/Redland/Model.html#M000060">find (Redland::Model)</a><br />
+<a href="classes/Redland/MergedModel.html#M000169">find_canonical (Redland::MergedModel)</a><br />
+<a href="classes/Redland/MergedModel.html#M000167">find_subject_in_master (Redland::MergedModel)</a><br />
+<a href="classes/Redland/QueryResults.html#M000109">finished? (Redland::QueryResults)</a><br />
+<a href="classes/FOAF.html#M000001">foaf_first (FOAF)</a><br />
+<a href="classes/FOAF.html#M000007">foaf_mbox (FOAF)</a><br />
+<a href="classes/FOAF.html#M000008">foaf_name (FOAF)</a><br />
+<a href="classes/FOAF.html#M000002">foaf_name (FOAF)</a><br />
+<a href="classes/FOAF.html#M000006">foaf_namespace (FOAF)</a><br />
+<a href="classes/FOAF.html#M000005">foaf_phone (FOAF)</a><br />
+<a href="classes/FOAF.html#M000004">foaf_surname (FOAF)</a><br />
+<a href="classes/FOAF.html#M000003">foaf_title (FOAF)</a><br />
+<a href="classes/Redland/Literal.html#M000078">from_node (Redland::Literal)</a><br />
+<a href="classes/Redland/Literal.html#M000079">from_xml (Redland::Literal)</a><br />
+<a href="classes/Redland/QueryResults.html#M000124">get_boolean? (Redland::QueryResults)</a><br />
+<a href="classes/Redland/Util.html#M000012">get_node_array (Redland::Util)</a><br />
+<a href="classes/Redland/Resource.html#M000127">get_properties (Redland::Resource)</a><br />
+<a href="classes/Redland/Resource.html#M000126">get_property (Redland::Resource)</a><br />
+<a href="classes/Redland/Model.html#M000045">get_resource (Redland::Model)</a><br />
+<a href="classes/Redland/Util.html#M000013">get_statement_array (Redland::Util)</a><br />
+<a href="classes/Redland/Model.html#M000055">include? (Redland::Model)</a><br />
+<a href="classes/Redland/Model.html#M000054">include_statement? (Redland::Model)</a><br />
+<a href="classes/Redland/QueryResults.html#M000121">is_bindings? (Redland::QueryResults)</a><br />
+<a href="classes/Redland/Util.html#M000011">is_blank? (Redland::Util)</a><br />
+<a href="classes/Redland/QueryResults.html#M000122">is_boolean? (Redland::QueryResults)</a><br />
+<a href="classes/Redland/QueryResults.html#M000123">is_graph? (Redland::QueryResults)</a><br />
+<a href="classes/Redland/Util.html#M000009">is_literal? (Redland::Util)</a><br />
+<a href="classes/Redland/Util.html#M000010">is_resource? (Redland::Util)</a><br />
+<a href="classes/Redland/RDFS.html#M000018">label (Redland::RDFS)</a><br />
+<a href="classes/Redland/Node.html#M000093">literal (Redland::Node)</a><br />
+<a href="classes/Redland/Node.html#M000086">literal? (Redland::Node)</a><br />
+<a href="classes/Redland/Model.html#M000074">load (Redland::Model)</a><br />
+<a href="classes/Redland/Serializer.html#M000165">model_to_string (Redland::Serializer)</a><br />
+<a href="classes/Redland/HashStore.html#M000171">new (Redland::HashStore)</a><br />
+<a href="classes/Redland/Resource.html#M000125">new (Redland::Resource)</a><br />
+<a href="classes/Redland/Node.html#M000080">new (Redland::Node)</a><br />
+<a href="classes/Redland/Parser.html#M000019">new (Redland::Parser)</a><br />
+<a href="classes/Redland/BNode.html#M000155">new (Redland::BNode)</a><br />
+<a href="classes/Redland/Stream.html#M000096">new (Redland::Stream)</a><br />
+<a href="classes/Redland/Model.html#M000042">new (Redland::Model)</a><br />
+<a href="classes/Redland/MemoryStore.html#M000041">new (Redland::MemoryStore)</a><br />
+<a href="classes/Redland/HashOpen.html#M000040">new (Redland::HashOpen)</a><br />
+<a href="classes/Redland/Serializer.html#M000158">new (Redland::Serializer)</a><br />
+<a href="classes/Redland/MergedModel.html#M000166">new (Redland::MergedModel)</a><br />
+<a href="classes/Redland/FileStore.html#M000102">new (Redland::FileStore)</a><br />
+<a href="classes/Redland/Namespace.html#M000103">new (Redland::Namespace)</a><br />
+<a href="classes/Redland/Uri.html#M000036">new (Redland::Uri)</a><br />
+<a href="classes/Redland/QueryResults.html#M000105">new (Redland::QueryResults)</a><br />
+<a href="classes/Redland/Query.html#M000033">new (Redland::Query)</a><br />
+<a href="classes/Redland/Literal.html#M000077">new (Redland::Literal)</a><br />
+<a href="classes/Redland/NodeIterator.html#M000150">new (Redland::NodeIterator)</a><br />
+<a href="classes/Redland/ContextParser.html#M000075">new (Redland::ContextParser)</a><br />
+<a href="classes/Redland/TripleStore.html#M000148">new (Redland::TripleStore)</a><br />
+<a href="classes/Redland/Statement.html#M000138">new (Redland::Statement)</a><br />
+<a href="classes/Redland/World.html#M000156">new (Redland::World)</a><br />
+<a href="classes/Redland/Stream.html#M000100">next (Redland::Stream)</a><br />
+<a href="classes/Redland/NodeIterator.html#M000153">next (Redland::NodeIterator)</a><br />
+<a href="classes/Redland/QueryResults.html#M000118">next (Redland::QueryResults)</a><br />
+<a href="classes/Redland/Node.html#M000081">node_from_hash (Redland::Node)</a><br />
+<a href="classes/Redland/Node.html#M000082">node_from_literal (Redland::Node)</a><br />
+<a href="classes/Redland/Node.html#M000091">node_type (Redland::Node)</a><br />
+<a href="classes/Redland/Parser.html#M000021">ntriples (Redland::Parser)</a><br />
+<a href="classes/Redland/Serializer.html#M000159">ntriples (Redland::Serializer)</a><br />
+<a href="classes/Redland/Statement.html#M000142">object (Redland::Statement)</a><br />
+<a href="classes/Redland/Model.html#M000062">object (Redland::Model)</a><br />
+<a href="classes/Redland/Statement.html#M000144">object= (Redland::Statement)</a><br />
+<a href="classes/Redland/Resource.html#M000128">object_of_predicate (Redland::Resource)</a><br />
+<a href="classes/Redland/Model.html#M000070">parse_and_merge (Redland::Model)</a><br />
+<a href="classes/Redland/Parser.html#M000024">parse_as_stream (Redland::Parser)</a><br />
+<a href="classes/Redland/Parser.html#M000025">parse_into_model (Redland::Parser)</a><br />
+<a href="classes/Redland/ContextParser.html#M000076">parse_into_model (Redland::ContextParser)</a><br />
+<a href="classes/Redland/Parser.html#M000026">parse_string_as_stream (Redland::Parser)</a><br />
+<a href="classes/Redland/Parser.html#M000027">parse_string_into_model (Redland::Parser)</a><br />
+<a href="classes/Redland/Statement.html#M000141">predicate (Redland::Statement)</a><br />
+<a href="classes/Redland/Statement.html#M000145">predicate= (Redland::Statement)</a><br />
+<a href="classes/Redland/Model.html#M000065">predicates (Redland::Model)</a><br />
+<a href="classes/Redland/Model.html#M000072">query_execute (Redland::Model)</a><br />
+<a href="classes/Redland/Parser.html#M000023">raptor (Redland::Parser)</a><br />
+<a href="classes/Redland/HashStore.html#M000172">read_store (Redland::HashStore)</a><br />
+<a href="classes/Redland/Node.html#M000087">resource? (Redland::Node)</a><br />
+<a href="classes/Redland/MergedModel.html#M000170">rewrite (Redland::MergedModel)</a><br />
+<a href="classes/Redland/Model.html#M000071">rewrite (Redland::Model)</a><br />
+<a href="classes/Redland/Model.html#M000068">save (Redland::Model)</a><br />
+<a href="classes/Redland/Parser.html#M000029">setFeature (Redland::Parser)</a><br />
+<a href="classes/Redland/Serializer.html#M000163">setFeature (Redland::Serializer)</a><br />
+<a href="classes/Redland/Resource.html#M000137">set_context (Redland::Resource)</a><br />
+<a href="classes/Redland/Serializer.html#M000164">set_namespace (Redland::Serializer)</a><br />
+<a href="classes/Redland/Resource.html#M000136">set_type (Redland::Resource)</a><br />
+<a href="classes/Redland/Model.html#M000046">size (Redland::Model)</a><br />
+<a href="classes/Redland/QueryResults.html#M000107">size (Redland::QueryResults)</a><br />
+<a href="classes/Redland/MergedModel.html#M000168">smush (Redland::MergedModel)</a><br />
+<a href="classes/Redland/Model.html#M000050">smush (Redland::Model)</a><br />
+<a href="classes/Redland/Parser.html#M000032">smush_file (Redland::Parser)</a><br />
+<a href="classes/Redland/Parser.html#M000031">smush_string (Redland::Parser)</a><br />
+<a href="classes/Redland/Model.html#M000061">statement_array_or_yield (Redland::Model)</a><br />
+<a href="classes/Redland/Model.html#M000058">statements (Redland::Model)</a><br />
+<a href="classes/Redland/Model.html#M000064">subject (Redland::Model)</a><br />
+<a href="classes/Redland/Statement.html#M000140">subject (Redland::Statement)</a><br />
+<a href="classes/Redland/Statement.html#M000143">subject= (Redland::Statement)</a><br />
+<a href="classes/Redland/Model.html#M000063">subjects (Redland::Model)</a><br />
+<a href="classes/Redland/Serializer.html#M000161">to_file (Redland::Serializer)</a><br />
+<a href="classes/Redland/Node.html#M000090">to_s (Redland::Node)</a><br />
+<a href="classes/Redland/Statement.html#M000146">to_s (Redland::Statement)</a><br />
+<a href="classes/Redland/Uri.html#M000038">to_s (Redland::Uri)</a><br />
+<a href="classes/Redland/QueryResults.html#M000120">to_string (Redland::QueryResults)</a><br />
+<a href="classes/Redland/Model.html#M000073">to_string (Redland::Model)</a><br />
+<a href="classes/Redland/Model.html#M000057">triples (Redland::Model)</a><br />
+<a href="classes/Redland/Model.html#M000059">triples_with_context (Redland::Model)</a><br />
+<a href="classes/Redland/Parser.html#M000022">turtle (Redland::Parser)</a><br />
+<a href="classes/Redland/Resource.html#M000135">type (Redland::Resource)</a><br />
+<a href="classes/Redland/Resource.html#M000134">type= (Redland::Resource)</a><br />
+<a href="classes/Redland/Resource.html#M000132">type? (Redland::Resource)</a><br />
+<a href="classes/Redland/Resource.html#M000133">update_property (Redland::Resource)</a><br />
+<a href="classes/Redland/Node.html#M000092">uri (Redland::Node)</a><br />
+<a href="classes/Redland/Model.html#M000066">yield_node_or_array (Redland::Model)</a><br /></div>
+</div>
+<hr />
+
+<p>(C) Copyright 2004-2011 <a href="http://www.dajobe.org/" target="_parent">Dave Beckett</a>, (C) Copyright 2004-2005 <a href="http://www.bristol.ac.uk/" target="_parent">University of Bristol</a></p>
+
+</div> <!-- end outerBlock -->
+
+</body>
+</html>

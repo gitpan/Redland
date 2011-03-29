@@ -2,9 +2,7 @@
 #
 # Makefile.am - top level automake file for Redland Bindings
 #
-# $Id: Makefile.am 11653 2006-11-30 05:34:14Z dajobe $
-#
-# Copyright (C) 2000-2006, David Beckett http://purl.org/net/dajobe/
+# Copyright (C) 2000-2007, David Beckett http://www.dajobe.org/
 # Copyright (C) 2000-2005  University of Bristol, UK http://www.bristol.ac.uk/
 # 
 # This package is Free Software and part of Redland http://librdf.org/
@@ -24,23 +22,23 @@
 # 
 
 # Subdirectories to build/install etc.
-SUBDIRS=@LOCAL_SUBDIRS@ perl data docs demos
+SUBDIRS=@SD@ data
 # Subdirectories to use for distribution
-DIST_SUBDIRS=@LOCAL_SUBDIRS@ perl data docs demos
+DIST_SUBDIRS=data docs \
+lua perl php python ruby
 
 EXTRA_DIST=ChangeLog  ChangeLog.1 ChangeLog.2 \
-ChangeLog.3 ChangeLog.4 ChangeLog.5 ChangeLog.6 \
-README      NEWS      LICENSE.txt  \
-README.html NEWS.html LICENSE.html \
+ChangeLog.3 ChangeLog.4 ChangeLog.5 ChangeLog.6 ChangeLog.7 \
+ChangeLog.8 ChangeLog.9 \
+README      NEWS      LICENSE.txt  TODO \
+README.html NEWS.html LICENSE.html TODO.html \
 RELEASE.html INSTALL.html \
 LICENSE-2.0.txt NOTICE \
-redland-perl.rdf.in \
+bindings.rdf.in \
 autogen.sh \
 Makefile.PL \
-redland-perl.spec redland-perl.spec.in \
-MANIFEST.SKIP
+redland-bindings.spec redland-bindings.spec.in
 
-CLEANFILES=perl-config-stamp
 
 if MAINTAINER_MODE
 # Create some text files from HTML sources
@@ -59,8 +57,8 @@ README: README.html
 NEWS: NEWS.html
 	$(HTML_TO_TEXT)
 
+TODO: TODO.html
+	$(HTML_TO_TEXT)
 endif
-
-test: clean
 
 @SET_MAKE@

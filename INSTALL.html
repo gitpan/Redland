@@ -2,11 +2,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-  <title>Redland RDF Application Framework Bindings - Building and Installing from Source</title>
+  <title>Redland librdf Language Bindings - Building and Installing from Source</title>
 </head>
 <body>
 
-<h1>Redland RDF Application Framework Bindings - Building and Installing from Source</h1>
+<h1>Redland librdf Language Bindings - Building and Installing from Source</h1>
 
 
 <h2>1. Get pre-requisites</h2>
@@ -24,9 +24,9 @@ or a sibling directory called 'librdf'.</p>
 <p>There are several ways to get the sources.  The most stable and
 tested versions are the sources shipped with each release and these
 are recommended as the first place to start.  For the latest
-developent sources, anonymous Subversion access is available but this may
+developent sources, anonymous GIT access is available but this may
 require some configuring of developer tools that are not needed for
-the snapshot releases.</p>
+releases.</p>
 
 <p>The source bundle and package files contain all the HTML files and
 documentation provided on the web site.</p>
@@ -40,20 +40,14 @@ documentation provided on the web site.</p>
 </p>
 
 
-<h3>2.2. Getting the sources from Subversion</h3>
-
-<p><strong>NOTE</strong>: Redland Bindings switched to use
-<a href="http://subversion.tigris.org/">Subversion</a>
-for version control after the 1.0.3.1 release.  If you were
-using CVS, you will need to re-check out the sources.</p>
+<h3>2.2. Getting the sources from GIT</h3>
 
 <pre>
-  svn checkout http://svn.librdf.org/repository/bindings/trunk/
-  mv trunk bindings
-  cd bindings
+  git clone git://github.com/dajobe/redland-bindings.git
+  cd redland-bindings
 </pre>
 
-<p>At this stage, or after a <code>svn update</code> you will
+<p>At this stage, or after a <code>git pull</code> you will
 need to create the automake and autoconf derived files, as described
 below in <a href="#sec-create-configure">Create the configure program</a>
 by using the <code>autogen.sh</code> script.</p>
@@ -68,23 +62,19 @@ of the auto* tools and checks that they meet the minimum versions.</p>
 
 <h2>3. Configuring and building</h2>
 
-<p>Redland bindings uses the GNU automake and autoconf to handle
-system dependency checking.  <code>configure</code> tries very hard
+<p>Redland uses the GNU automake and autoconf to handle system
+dependency checking.  It is developed and built on x86 Linux
+and x86 OSX but is also tested on other systems occasionally.
+</p>
+
+<p><code>configure</code> tries very hard
 to find several programs and libraries that the Redland bindings
 need.  These include the binding binaries: perl, python, etc.,
-headers for the bindings such as the JDK, Python etc.  and various
+C header files for the bindings such as for Python etc.  and various
 others.  A summary of the parts found is given at the end of the
 configure run.  Several options to configure given below can be used
 to point to locations or names of dependencies that cannot be
 automatically determined.</p>
-
-<p>Redland Bindings is developed and built on x86 GNU/Linux
-(Redhat Fedora Core 4, Debian unstable) but is also regularly tested on
-sparc Sun Solaris, x86 FreeBSD, ppc Apple OSX 
-and as part of Redland on several other systems via the 
-<a href="http://sourceforge.net/">SourceForge</a> compile farm
-(typically AMD64, Alpha, Solaris x86, OpenBSD, NetBSD).</p>
-
 
 <h3><a id="sec-create-configure" name="sec-create-configure"></a>3.1. Create <code>configure</code> program</h3>
 
@@ -102,6 +92,16 @@ below for what these are):</p>
   ./autogen.sh --prefix=/usr/local/somewhere
 </pre>
 
+<blockquote>
+<p>On OSX you may have to explicitly set the <code>LIBTOOLIZE</code>
+variable for the <code>libtoolize</code> utility since on
+OSX <code>libtoolize</code> is a different program.  The full
+path to the utility should be given:</p>
+<pre>
+  LIBTOOLIZE=/opt/local/bin/glibtoolize ./autogen.sh
+</pre>
+</blockquote>
+
 <p>Alternatively you can run the automake and autoconf programs by
 hand with:</p>
 <pre>
@@ -109,12 +109,11 @@ hand with:</p>
 </pre>
 
 <p>The automake and autoconf tools have many different versions and
-at present development is being done with automake 1.8.3 (minimum
-version 1.7), autoconf 2.59 (minimum version 2.54) and libtool 1.5.4
-(minimum version 1.4).  These are only needed when compiling from Subversion
-sources.  autogen.sh enforces the requirements.  In future
-development will move to require automake 1.8, autoconf 2.58 and
-libtool 1.5.</p>
+<code>autogen.sh</code> enforces the minimums. At present development
+is being done with automake 1.10.2 (minimum version 1.7), autoconf
+2.63 (minimum version 2.54) and libtool 2.2.6 (minimum version 2.2.0).
+These are only needed when compiling from GIT sources.
+autogen.sh enforces the requirements.</p>
 
 
 <h3>3.2. Options for <code>configure</code></h3>
@@ -125,12 +124,11 @@ such as <code>--prefix</code> etc.</p>
 
 <dl>
 
-<dt><code>--with-java</code>(=<em>JAVA-COMMAND</em>)<br /></dt>
+<dt><code>--with-lua</code>(=<em>LUA-COMMAND</em>)<br /></dt>
 <dt><code>--with-perl</code>(=<em>PERL-COMMAND</em>)<br /></dt>
 <dt><code>--with-php</code>(=<em>PHP-COMMAND</em>)<br /></dt>
 <dt><code>--with-python</code>(=<em>PYTHON-COMMAND</em>)<br /></dt>
 <dt><code>--with-ruby</code>(=<em>RUBY-COMMAND</em>)<br /></dt>
-<dt><code>--with-tcl</code>(=<em>TCL-COMMAND</em>)<br /></dt>
 <dd><p>Enable the given language APIs - the default is to build
 no language APIs automatically.  If the option value is omitted or
 <em>yes</em>, configure will guess the location of the language
@@ -146,29 +144,71 @@ An absolute path could alternatively be given such as
 <code>--with-python=/opt/mypython/bin/python</code> 
 to use a python installation in a different location.</p></dd>
 
+<dt><code>--with-perl-makemaker-args</code>=<em>ARGS</em><br /></dt>
+<dd><p>Set the arguments for the Perl
+<a href="http://perldoc.perl.org/ExtUtils/MakeMaker.html">ExtUtils::MakeMaker</a>
+Makefile.PL invocation.  The default arguments is ''.  This is useful
+to set the set of installation directories such as with
+<code>--with-perl-makemaker-args=INSTALLDIRS=vendor</code>
+to move the installation to the vendor directories.  Useful choices
+are '', 'perl', 'site' and 'vendor'.  See the ExtUtils::MakeMaker
+docs above for more information on the options.
+</p></dd>
+
+<dt><code>--with-python-get-python-lib-args</code>=<em>ARGS</em><br /></dt>
+<dd><p>Set the arguments for the Python
+<code>distutils.sysconfig</code> function
+<a href="http://docs.python.org/distutils/apiref.html#module-distutils.sysconfig"><code>get_python_lib()</code></a> which determines the install directory
+for the shared object for the python binding. The default value is ''
+which puts the installed objects in the general library dir for
+third-party extensions.  Other useful values are probably '1' which
+returns the platform-dependent library dir and '1,1' which returns
+the standard library directory for platform-dependent libraries.
+</p></dd>
+
 <dt><code>--with-python-ldflags</code>(=<em>FLAGS</em>)<br /></dt>
 <dd><p>Set the linker flags for linking Python.  This can also be
 done by setting the environment variable <code>PYTHON_LDFLAGS</code>.
 If neither is set, <code>configure</code> will guess an appropriate
-set for the current system.
-</p></dd>
+set for the current system.  Cygwin example:</p>
+<pre>
+  -with-python-ldflags='-shared -L/usr/lib/python2.5/config -lpython2.5'
+</pre>
+</dd>
 
-<dt><code>--with-jdk=</code><em>DIR</em><br /></dt>
-<dd><p>Choose the location of the Java JDK to use for building
-the Java API with Java JNI.  If omitted, Redland will guess likely
-locations but this is not guaranteed to work.
-</p></dd>
+<dt><code>--with-python-libext</code>=<em>.EXT</em><br /></dt>
+<dd><p>Set the python shared library link extension (default <code>.so</code>).
+Useful on systems where .so does not work as a shared library extension.
+Cygwin example:</p>
+<pre>
+  -with-python-libext=.dll
+</pre>
+</dd>
 
-
-<dt><code>--with-redland=</code> <code>system</code> or <code>internal</code><br /></dt>
+<dt><code>--with-ruby-install-dir</code>=<em>DIR</em><br /></dt>
 <dd><p>
-This option tells the bindings to use either the system installed version
-of <a href="http://librdf.org/">redland</a>
-or an internal version, in a parent or sibling directory as
-described above.  If the option is omittted, the system one is
-prefered, and if none is available, configure will stop.
+Set the directory to  install the archhitecture-independent Ruby bindings files.
+The default value is '' which will install the files to directory given
+by the the value of the <code>Config::CONFIG['rubylibdir']</code> variable
 </p></dd>
 
+<dt><code>--with-ruby-arch-install-dir</code>=<em>DIR</em><br /></dt>
+<dd><p>
+Set the directory to  install the architecture-specific Ruby bindings files.
+The default value is '' which will use the value of the variable
+configured by <code>--with-ruby-arch-install-dir-variable</code> to get
+the the installation directory.
+Setting this configuration overrides setting the variable name. 
+</p></dd>
+
+<dt><code>--with-ruby-arch-install-dir-variable</code>=<em>NAME</em><br /></dt>
+<dd><p>
+Set the <code>Config::CONFIG['sitearchdir']</code> variable name
+to get the the installation directory for installing architecture-specific Ruby
+bindings files.  The default variable is 'archdir'.
+Other useful values are probably 'sitearchdir'.
+This is overridden if <code>--with-ruby-arch-install-dir</code> is set.
+</p></dd>
 </dl>
 
 
@@ -184,6 +224,13 @@ which binding or bindings are wanted:</p>
 <pre>
    ./configure --with-python
 </pre>
+
+<p>NOTE: It is usually safe to use older redland bindings with newer
+redland releases, it will just omit any new functions added.
+<code>configure</code> may warn about this and stop, and if this is
+the case, you can override it with <code>--with-redland=system</code>
+to let configuration continue.
+</p>
 
 <p>If you are having problems with configuring several times when
 adding or removing options, you may have to tidy up first with either
@@ -253,43 +300,20 @@ full information on installing and using Redland from Perl.</p>
 <p>See the <a href="docs/python.html">Redland Python Interface</a> document for
 full information on installing and using Redland from Python.</p>
 
-<h2>7. Using the Tcl interface</h2>
-
-<p>See the <a href="docs/tcl.html">Redland Tcl Interface</a> document for
-full information on installing and using Redland from Tcl, and/or Tcl/Tk.</p>
-
-<h2>8. Using the Java interface</h2>
-
-<p>See the <a href="docs/java.html">Redland Java Interface</a> document for
-full information on installing and using Redland from Java.</p>
-
-<h2>9. Using the Ruby interface</h2>
+<h2>7. Using the Ruby interface</h2>
 
 <p>See the <a href="docs/ruby.html">Redland Ruby Interface</a> document for
 full information on installing and using Redland from Ruby.</p>
 
-<h2>10. Using the PHP interface</h2>
+<h2>8. Using the PHP interface</h2>
 
 <p>See the <a href="docs/php.html">Redland PHP Interface</a> document for
 full information on installing and using Redland from PHP.</p>
 
-<h2>11. Using the C# interface</h2>
-
-<p>See the <a href="docs/csharp.html">Redland C# Interface</a> document for
-full information on installing and using Redland from C# or an ECMA CLI
-language.</p>
-
-<h2>12. Using the Obj-C interface</h2>
-
-<p>See the <a href="docs/objc.html">Redland Obj-C Interface</a> document for
-information on obtaining and installing the Objective-C bindings for OSX
-which are maintained separately.</p>
-
-
 
 <hr />
 
-<p>Copyright (C) 2004-2006 <a href="http://purl.org/net/dajobe/">Dave Beckett</a><br />Copyright (C) 2004-2005 <a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
+<p>Copyright (C) 2004-2011 <a href="http://www.dajobe.org/">Dave Beckett</a><br />Copyright (C) 2004-2005 <a href="http://www.bristol.ac.uk/">University of Bristol</a></p>
 
 </body>
 </html>

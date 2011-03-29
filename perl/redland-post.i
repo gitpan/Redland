@@ -2,9 +2,7 @@
  *
  * redland-post.i - Perl SWIG helper routines
  *
- * $Id: redland-post.i 10586 2006-03-05 07:49:32Z cmdjb $
- *
- * Copyright (C) 2000-2006, David Beckett http://purl.org/net/dajobe/
+ * Copyright (C) 2000-2006, David Beckett http://www.dajobe.org/
  * Copyright (C) 2000-2005, University of Bristol, UK http://www.bristol.ac.uk/
  * 
  * This package is Free Software and part of Redland http://librdf.org/
@@ -18,9 +16,7 @@
  * the above three licenses.
  * 
  * See LICENSE.html or LICENSE.txt at the top of this package for the
- * complete terms and further detail along with the license texts for
- * the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
- * 
+ * full license terms.
  * 
  */
 

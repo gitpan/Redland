@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Redland RDF Application Framework - Ruby RDoc - Module: Redland</title>
+<link rel="stylesheet" href=".././rdoc-style.css" type="text/css" media="screen" />
+<script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }<\/style>" )
+  
+  // ]]>
+</script>
+</head>
+<body>
+<div class="outerBlock">
+
+<div class="outerHeader">
+Go to <a href="/" target="_parent">Redland Home</a> - 
+<a href="/bindings/" target="_parent">Language Bindings Home</a> - 
+<a href="/docs/ruby.html" target="_parent">Ruby API Home</a>
+</div>
+
+<div id="classHeader">
+<table class="header-table">
+<tr class="top-aligned-row">
+<td><strong>Module</strong></td>
+<td class="class-name-in-header">Redland</td>
+</tr>
+<tr class="top-aligned-row">
+<td><strong>In:</strong></td>
+<td><a href="../files/rdf/redland/stream_rb.html">rdf/redland/stream.rb</a><br />
+<a href="../files/rdf/redland/parser_rb.html">rdf/redland/parser.rb</a><br />
+<a href="../files/rdf/redland/statement_rb.html">rdf/redland/statement.rb</a><br />
+<a href="../files/rdf/redland/resource_rb.html">rdf/redland/resource.rb</a><br />
+<a href="../files/rdf/redland/model_rb.html">rdf/redland/model.rb</a><br />
+<a href="../files/rdf/redland/queryresults_rb.html">rdf/redland/queryresults.rb</a><br />
+<a href="../files/rdf/redland/serializer_rb.html">rdf/redland/serializer.rb</a><br />
+<a href="../files/rdf/redland/node_rb.html">rdf/redland/node.rb</a><br />
+<a href="../files/rdf/redland/uri_rb.html">rdf/redland/uri.rb</a><br />
+<a href="../files/rdf/redland/query_rb.html">rdf/redland/query.rb</a><br />
+<a href="../files/rdf/redland/util_rb.html">rdf/redland/util.rb</a><br />
+<a href="../files/rdf/redland/store_rb.html">rdf/redland/store.rb</a><br />
+<a href="../files/rdf/redland_rb.html">rdf/redland.rb</a><br /></td>
+</tr>
+</table>
+</div>
+<!-- banner header -->
+<div id="bodyContent">
+<div id="contextContent">
+<div id="description">
+<p>This module initialises the <a href="Redland.html">Redland</a> library and references all resources from it.</p>
+</div>
+</div>
+</div>
+<!-- if includes -->
+<div id="section">
+<div id="class-list">
+<h3 class="section-bar">Classes and Modules</h3>
+Module <a href="Redland/OWL.html" class="link">Redland::OWL</a><br />
+Module <a href="Redland/RDFS.html" class="link">Redland::RDFS</a><br />
+Module <a href="Redland/Util.html" class="link">Redland::Util</a><br />
+Class <a href="Redland/BNode.html" class="link">Redland::BNode</a><br />
+Class <a href="Redland/ContextParser.html" class="link">Redland::ContextParser</a><br />
+Class <a href="Redland/FileStore.html" class="link">Redland::FileStore</a><br />
+Class <a href="Redland/HashOpen.html" class="link">Redland::HashOpen</a><br />
+Class <a href="Redland/HashStore.html" class="link">Redland::HashStore</a><br />
+Class <a href="Redland/Literal.html" class="link">Redland::Literal</a><br />
+Class <a href="Redland/MemoryStore.html" class="link">Redland::MemoryStore</a><br />
+Class <a href="Redland/MergedModel.html" class="link">Redland::MergedModel</a><br />
+Class <a href="Redland/Model.html" class="link">Redland::Model</a><br />
+Class <a href="Redland/Namespace.html" class="link">Redland::Namespace</a><br />
+Class <a href="Redland/Node.html" class="link">Redland::Node</a><br />
+Class <a href="Redland/NodeIterator.html" class="link">Redland::NodeIterator</a><br />
+Class <a href="Redland/NodeTypeError.html" class="link">Redland::NodeTypeError</a><br />
+Class <a href="Redland/Parser.html" class="link">Redland::Parser</a><br />
+Class <a href="Redland/Query.html" class="link">Redland::Query</a><br />
+Class <a href="Redland/QueryResults.html" class="link">Redland::QueryResults</a><br />
+Class <a href="Redland/RedlandError.html" class="link">Redland::RedlandError</a><br />
+Class <a href="Redland/Resource.html" class="link">Redland::Resource</a><br />
+Class <a href="Redland/Serializer.html" class="link">Redland::Serializer</a><br />
+Class <a href="Redland/Statement.html" class="link">Redland::Statement</a><br />
+Class <a href="Redland/Stream.html" class="link">Redland::Stream</a><br />
+Class <a href="Redland/TripleStore.html" class="link">Redland::TripleStore</a><br />
+Class <a href="Redland/Uri.html" class="link">Redland::Uri</a><br />
+Class <a href="Redland/World.html" class="link">Redland::World</a><br /></div>
+<!-- if method_list --></div>
+<hr />
+
+<div class="outerHeader">
+Go to <a href="/" target="_parent">Redland Home</a> - 
+<a href="/bindings/" target="_parent">Language Bindings Home</a> - 
+<a href="/docs/ruby.html" target="_parent">Ruby API Home</a>
+</div>
+
+<p>(C) Copyright 2004-2011 <a href="http://www.dajobe.org/" target="_parent">Dave Beckett</a>, (C) Copyright 2004-2005 <a href="http://www.bristol.ac.uk/" target="_parent">University of Bristol</a></p>
+
+</div> <!-- end outerBlock -->
+
+</body>
+</html>

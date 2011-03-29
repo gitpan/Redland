@@ -2,16 +2,18 @@
 #
 # Redland.pm - Redland top level Perl module
 #
-# $Id: Redland.pm.in 10592 2006-03-05 08:28:27Z cmdjb $
-#
-# Copyright (C) 2000-2005 David Beckett - http://purl.org/net/dajobe/
+# Copyright (C) 2000-2005 David Beckett - http://www.dajobe.org/
 # Copyright (C) 2000-2005 University of Bristol - http://www.bristol.ac.uk/
 # 
-# This package is Free Software or Open Source available under the
-# following licenses (these are alternatives):
-#   1. GNU Lesser General Public License (LGPL)
-#   2. GNU General Public License (GPL)
-#   3. Mozilla Public License (MPL)
+# This package is Free Software and part of Redland http://librdf.org/
+# 
+# It is licensed under the following three licenses as alternatives:
+#   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
+#   2. GNU General Public License (GPL) V2 or any newer version
+#   3. Apache License, V2.0 or any newer version
+# 
+# You may not use this file except in compliance with at least one of
+# the above three licenses.
 # 
 # See LICENSE.html or LICENSE.txt at the top of this package for the
 # full license terms.
@@ -85,7 +87,7 @@ package RDF::Redland;
 
 use vars qw($VERSION $Debug $World $Error_Sub $Warning_Sub);
 
-$VERSION= eval sprintf("%s.%02d_%02d_%02d", split(/\./, "1.0.5.4"));
+$VERSION= eval sprintf("%s.%02d_%02d_%02d", split(/\./, "1.0.13.1"));
 
 $Debug=0;
 
@@ -233,7 +235,7 @@ and L<RDF::Redland::RSS>.
 
 =head1 AUTHOR
 
-Dave Beckett - http://purl.org/net/dajobe/
+Dave Beckett - http://www.dajobe.org/
 
 =cut
 

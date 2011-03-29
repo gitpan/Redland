@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Redland RDF Application Framework - Ruby RDoc - Class: Redland::Resource</title>
+<link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+<script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }<\/style>" )
+  
+  // ]]>
+</script>
+</head>
+<body>
+<div class="outerBlock">
+
+<div class="outerHeader">
+Go to <a href="/" target="_parent">Redland Home</a> - 
+<a href="/bindings/" target="_parent">Language Bindings Home</a> - 
+<a href="/docs/ruby.html" target="_parent">Ruby API Home</a>
+</div>
+
+<div id="classHeader">
+<table class="header-table">
+<tr class="top-aligned-row">
+<td><strong>Class</strong></td>
+<td class="class-name-in-header">Redland::Resource</td>
+</tr>
+<tr class="top-aligned-row">
+<td><strong>In:</strong></td>
+<td><a href="../../files/rdf/redland/resource_rb.html">rdf/redland/resource.rb</a><br /></td>
+</tr>
+<tr class="top-aligned-row">
+<td><strong>Parent:</strong></td>
+<td><a href="Node.html">Node</a></td>
+</tr>
+</table>
+</div>
+<!-- banner header -->
+<div id="bodyContent">
+<div id="contextContent">
+<div id="description">
+<p>include <a href="../Redland.html">Redland</a></p>
+</div>
+</div>
+<div id="method-list">
+<h3 class="section-bar">Methods</h3>
+<div class="name-list"><a href="#M000129">add_property</a>&nbsp;&nbsp; <a href="#M000131">delete_properties</a>&nbsp;&nbsp; <a href="#M000130">delete_property</a>&nbsp;&nbsp; <a href="#M000127">get_properties</a>&nbsp;&nbsp; <a href="#M000126">get_property</a>&nbsp;&nbsp; <a href="#M000125">new</a>&nbsp;&nbsp; <a href="#M000128">object_of_predicate</a>&nbsp;&nbsp; <a href="#M000137">set_context</a>&nbsp;&nbsp; <a href="#M000136">set_type</a>&nbsp;&nbsp; <a href="#M000135">type</a>&nbsp;&nbsp; <a href="#M000134">type=</a>&nbsp;&nbsp; <a href="#M000132">type?</a>&nbsp;&nbsp; <a href="#M000133">update_property</a>&nbsp;&nbsp;</div>
+</div>
+</div>
+<!-- if includes -->
+<div id="section">
+<div id="attribute-list">
+<h3 class="section-bar">Attributes</h3>
+<div class="name-list">
+<table>
+<tr class="top-aligned-row context-row">
+<td class="context-item-name">model</td>
+<td class="context-item-value">&nbsp;[R]&nbsp;</td>
+<td class="context-item-desc">The internal model this <a href="Resource.html">Resource</a> is connected to</td>
+</tr>
+<tr class="top-aligned-row context-row">
+<td class="context-item-name">node</td>
+<td class="context-item-value">&nbsp;[R]&nbsp;</td>
+<td class="context-item-desc">The internal librdf_node</td>
+</tr>
+</table>
+</div>
+</div>
+<!-- if method_list -->
+<div id="methods">
+<h3 class="section-bar">Public Class methods</h3>
+<div id="method-M000125" class="method-detail"><a name="M000125" id="M000125"></a>
+<div class="method-heading"><a href="#M000125" class="method-signature"><span class="method-name">new</span><span class="method-args">(arg=nil,model=nil,new_node=true)</span></a></div>
+<div class="method-description">
+<p>Create a <a href="Resource.html">Redland::Resource</a>. Arg can be a String, or a <a href="Uri.html">Redland::Uri</a></p>
+<p><a class="source-toggle" href="#" onclick="toggleCode('M000125-source');return false;">[Source]</a></p>
+<div class="method-source-code" id="M000125-source">
+<pre>
+<span class="ruby-comment cmt"># File rdf/redland/resource.rb, line 16</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">arg</span>=<span class="ruby-keyword kw">nil</span>,<span class="ruby-identifier">model</span>=<span class="ruby-keyword kw">nil</span>,<span class="ruby-identifier">new_node</span>=<span class="ruby-keyword kw">true</span>)
+      <span class="ruby-ivar">@context</span> = <span class="ruby-keyword kw">nil</span>
+      <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">arg</span>
+      <span class="ruby-keyword kw">when</span> <span class="ruby-keyword kw">nil</span>
+        <span class="ruby-ivar">@node</span> = <span class="ruby-constant">Redland</span>.<span class="ruby-identifier">librdf_new_node_from_blank_identifier</span>(<span class="ruby-identifier">$world</span>.<span class="ruby-identifier">world</span>,<span class="ruby-keyword kw">nil</span>)
+      <span class="ruby-keyword kw">when</span> <span class="ruby-constant">String</span>
+        <span class="ruby-ivar">@node</span> = <span class="ruby-constant">Redland</span>.<span class="ruby-identifier">librdf_new_node_from_uri_string</span>(<span class="ruby-identifier">$world</span>.<span class="ruby-identifier">world</span>,<span class="ruby-identifier">arg</span>)
+      <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Uri</span>
+        <span class="ruby-ivar">@node</span> = <span class="ruby-constant">Redland</span>.<span class="ruby-identifier">librdf_new_node_from_uri</span>(<span class="ruby-identifier">$world</span>.<span class="ruby-identifier">world</span>,<span class="ruby-identifier">arg</span>.<span class="ruby-identifier">uri</span>)
+      <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Node</span>
+        <span class="ruby-ivar">@node</span> = <span class="ruby-constant">Redland</span>.<span class="ruby-identifier">librdf_new_node_from_node</span>(<span class="ruby-identifier">arg</span>.<span class="ruby-identifier">node</span>)
+      <span class="ruby-keyword kw">when</span> <span class="ruby-constant">SWIG</span><span class="ruby-operator">::</span><span class="ruby-constant">TYPE_p_librdf_node_s</span>
+        
+        <span class="ruby-ivar">@node</span> = <span class="ruby-identifier">new_node</span> <span class="ruby-value">? </span><span class="ruby-constant">Redland</span>.<span class="ruby-identifier">librdf_new_node_from_node</span>(<span class="ruby-identifier">arg</span>)<span class="ruby-operator">:</span> <span class="ruby-identifier">arg</span>
+      <span class="ruby-keyword kw">end</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">RedlandError</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value str">"Node construction failed"</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">not</span> <span class="ruby-ivar">@node</span>
+      <span class="ruby-constant">ObjectSpace</span>.<span class="ruby-identifier">define_finalizer</span>(<span class="ruby-keyword kw">self</span>,<span class="ruby-constant">Node</span>.<span class="ruby-identifier">create_finalizer</span>(<span class="ruby-ivar">@node</span>))
+
+      <span class="ruby-identifier">model</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Model</span>.<span class="ruby-identifier">new</span>
+      <span class="ruby-ivar">@model</span> = <span class="ruby-identifier">model</span>
+    <span class="ruby-keyword kw">end</span>
+</pre></div>
+</div>
+</div>
+<h3 class="section-bar">Public Instance methods</h3>
+<div id="method-M000129" class="method-detail"><a name="M000129" id="M000129"></a>
+<div class="method-heading"><a href="#M000129" class="method-signature"><span class="method-name">add_property</span><span class="method-args">(p,o,context=nil)</span></a></div>
+<div class="method-description">
+<p>Adds a statement to the model with the subject as the resource and p as the predicate and o as the object same as <a href="Model.html#M000048">Model.add</a>(this,p,o)</p>
+<p><a class="source-toggle" href="#" onclick="toggleCode('M000129-source');return false;">[Source]</a></p>
+<div class="method-source-code" id="M000129-source">
+<pre>
+<span class="ruby-comment cmt"># File rdf/redland/resource.rb, line 94</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_property</span>(<span class="ruby-identifier">p</span>,<span class="ruby-identifier">o</span>,<span class="ruby-identifier">context</span>=<span class="ruby-keyword kw">nil</span>)
+      <span class="ruby-ivar">@model</span>.<span class="ruby-identifier">add</span>(<span class="ruby-keyword kw">self</span>,<span class="ruby-identifier">p</span>,<span class="ruby-identifier">o</span>,<span class="ruby-identifier">context</span>)
+      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">self</span>
+    <span class="ruby-keyword kw">end</span>
+</pre></div>
+</div>
+</div>
+<div id="method-M000131" class="method-detail"><a name="M000131" id="M000131"></a>
+<div class="method-heading"><a href="#M000131" class="method-signature"><span class="method-name">delete_properties</span><span class="method-args">()</span></a></div>
+<div class="method-description">
+<p>Removes all of the properties from the model with this resource as the subject</p>
+<p><a class="source-toggle" href="#" onclick="toggleCode('M000131-source');return false;">[Source]</a></p>
+<div class="method-source-code" id="M000131-source">
+<pre>
+<span class="ruby-comment cmt"># File rdf/redland/resource.rb, line 108</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">delete_properties</span>()
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">get_properties</span>().<span class="ruby-identifier">each</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">st</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@model</span>.<span class="ruby-identifier">delete_statement</span>(<span class="ruby-identifier">st</span>)}
+    <span class="ruby-keyword kw">end</span>
+</pre></div>
+</div>
+</div>
+<div id="method-M000130" class="method-detail"><a name="M000130" id="M000130"></a>
+<div class="method-heading"><a href="#M000130" class="method-signature"><span class="method-name">delete_property</span><span class="method-args">(pred,context=nil)</span></a></div>
+<div class="method-description">
+<p>Removes the property from the model with the predicate pred and optional context</p>
+<p><a class="source-toggle" href="#" onclick="toggleCode('M000130-source');return false;">[Source]</a></p>
+<div class="method-source-code" id="M000130-source">
+<pre>
+<span class="ruby-comment cmt"># File rdf/redland/resource.rb, line 101</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">delete_property</span>(<span class="ruby-identifier">pred</span>,<span class="ruby-identifier">context</span>=<span class="ruby-keyword kw">nil</span>)
+      <span class="ruby-ivar">@model</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-keyword kw">self</span>,<span class="ruby-identifier">pred</span>,<span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">get_property</span>(<span class="ruby-identifier">pred</span>),<span class="ruby-identifier">context</span>)
+      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">self</span>
+    <span class="ruby-keyword kw">end</span>
+</pre></div>
+</div>
+</div>
+<div id="method-M000127" class="method-detail"><a name="M000127" id="M000127"></a>
+<div class="method-heading"><a href="#M000127" class="method-signature"><span class="method-name">get_properties</span><span class="method-args">(pred=nil) {|st.object| ...}</span></a></div>
+<div class="method-description">
+<p>Answer model.find(self,pred,nil) in the associated model If no predicate or block given, returns and array of statements matching model.find(self,nil,nil) If block_given? yields the predicate and the object</p>
+<pre>
+  resource.get_properties() do |p,o|
+    puts "&lt;td&gt;#{p}&lt;/td&gt;&lt;td&gt;#{o}&lt;/td&gt;"
+  end
+</pre>
+<p>If pred given, answers model.find(self,pred,nil) if no block return an array of the object values</p>
+<pre>
+  nicknames = resource.get_properties(FOAF::NICK)
+</pre>
+<p>if block_given yields the objects which satisfy the predicate</p>
+<pre>
+  puts "Nicknames are"
+    resource.get_properties(FOAF_NICK){|o| puts o}
+</pre>
+<p><a class="source-toggle" href="#" onclick="toggleCode('M000127-source');return false;">[Source]</a></p>
+<div class="method-source-code" id="M000127-source">
+<pre>
+<span class="ruby-comment cmt"># File rdf/redland/resource.rb, line 60</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_properties</span>(<span class="ruby-identifier">pred</span>=<span class="ruby-keyword kw">nil</span>)
+      <span class="ruby-identifier">statements</span> = <span class="ruby-ivar">@model</span>.<span class="ruby-identifier">find</span>(<span class="ruby-keyword kw">self</span>,<span class="ruby-identifier">pred</span>,<span class="ruby-keyword kw">nil</span>)
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">pred</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+          <span class="ruby-identifier">statements</span>.<span class="ruby-identifier">each</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">st</span><span class="ruby-operator">|</span> <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">st</span>.<span class="ruby-identifier">object</span>}
+        <span class="ruby-keyword kw">else</span>
+          <span class="ruby-identifier">statements</span>.<span class="ruby-identifier">map</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">st</span><span class="ruby-operator">|</span> <span class="ruby-identifier">st</span>.<span class="ruby-identifier">object</span>}
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">else</span>
+        <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">statements</span> <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">not</span> <span class="ruby-identifier">block_given?</span>
+        <span class="ruby-identifier">statements</span>.<span class="ruby-identifier">each</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">st</span><span class="ruby-operator">|</span> <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">st</span>.<span class="ruby-identifier">predicate</span>,<span class="ruby-identifier">st</span>.<span class="ruby-identifier">object</span>}
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+</pre></div>
+</div>
+</div>
+<div id="method-M000126" class="method-detail"><a name="M000126" id="M000126"></a>
+<div class="method-heading"><a href="#M000126" class="method-signature"><span class="method-name">get_property</span><span class="method-args">(p)</span></a></div>
+<div class="method-description">
+<p>Answer model.find(self,p,nil) in the associated model. If there are several such statements, any one of them may be returned</p>
+<p><a class="source-toggle" href="#" onclick="toggleCode('M000126-source');return false;">[Source]</a></p>
+<div class="method-source-code" id="M000126-source">
+<pre>
+<span class="ruby-comment cmt"># File rdf/redland/resource.rb, line 40</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_property</span>(<span class="ruby-identifier">p</span>)
+      <span class="ruby-ivar">@model</span>.<span class="ruby-identifier">object</span>(<span class="ruby-keyword kw">self</span>,<span class="ruby-identifier">p</span>)
+    <span class="ruby-keyword kw">end</span>
+</pre></div>
+</div>
+</div>
+<div id="method-M000128" class="method-detail"><a name="M000128" id="M000128"></a>
+<div class="method-heading"><a href="#M000128" class="method-signature"><span class="method-name">object_of_predicate</span><span class="method-args">(pred = nil) {|sub| ...}</span></a></div>
+<div class="method-description">
+<p>Finds all objects of a given predicate. Takes an optional block, yielding each statement if given.</p>
+<p><a class="source-toggle" href="#" onclick="toggleCode('M000128-source');return false;">[Source]</a></p>
+<div class="method-source-code" id="M000128-source">
+<pre>
+<span class="ruby-comment cmt"># File rdf/redland/resource.rb, line 76</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">object_of_predicate</span>(<span class="ruby-identifier">pred</span> = <span class="ruby-keyword kw">nil</span>)
+      <span class="ruby-comment cmt"># statements = @model.find(nil,pred,self)</span>
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">pred</span>
+        <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block_given?</span>
+          <span class="ruby-ivar">@model</span>.<span class="ruby-identifier">subjects</span>(<span class="ruby-identifier">pred</span>,<span class="ruby-keyword kw">self</span>){<span class="ruby-operator">|</span><span class="ruby-identifier">sub</span><span class="ruby-operator">|</span> <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">sub</span>}
+        <span class="ruby-keyword kw">else</span>
+          <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@model</span>.<span class="ruby-identifier">subjects</span>(<span class="ruby-identifier">pred</span>,<span class="ruby-keyword kw">self</span>)
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">else</span>
+        <span class="ruby-identifier">statements</span> = <span class="ruby-ivar">@model</span>.<span class="ruby-identifier">find</span>(<span class="ruby-keyword kw">nil</span>,<span class="ruby-keyword kw">nil</span>,<span class="ruby-keyword kw">self</span>)
+        <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">statements</span> <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">not</span> <span class="ruby-identifier">block_given?</span>
+        <span class="ruby-identifier">statements</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">st</span><span class="ruby-operator">|</span> <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">st</span>.<span class="ruby-identifier">subject</span>,<span class="ruby-identifier">st</span>.<span class="ruby-identifier">predicate</span>}
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+</pre></div>
+</div>
+</div>
+<div id="method-M000137" class="method-detail"><a name="M000137" id="M000137"></a>
+<div class="method-heading"><a href="#M000137" class="method-signature"><span class="method-name">set_context</span><span class="method-args">(context)</span></a></div>
+<div class="method-description">
+<p>Defines a context for this resource</p>
+<p><a class="source-toggle" href="#" onclick="toggleCode('M000137-source');return false;">[Source]</a></p>
+<div class="method-source-code" id="M000137-source">
+<pre>
+<span class="ruby-comment cmt"># File rdf/redland/resource.rb, line 146</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">set_context</span>(<span class="ruby-identifier">context</span>)
+      <span class="ruby-ivar">@context</span> = <span class="ruby-identifier">context</span>
+    <span class="ruby-keyword kw">end</span>
+</pre></div>
+</div>
+</div>
+<div id="method-M000136" class="method-detail"><a name="M000136" id="M000136"></a>
+<div class="method-heading"><a href="#M000136" class="method-signature"><span class="method-name">set_type</span><span class="method-args">(type,context=@context)</span></a></div>
+<div class="method-description">
+<p>Set the <a href="Resource.html#M000135">type</a> of this <a href="Resource.html">Resource</a></p>
+<p><a class="source-toggle" href="#" onclick="toggleCode('M000136-source');return false;">[Source]</a></p>
+<div class="method-source-code" id="M000136-source">
+<pre>
+<span class="ruby-comment cmt"># File rdf/redland/resource.rb, line 139</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">set_type</span>(<span class="ruby-identifier">type</span>,<span class="ruby-identifier">context</span>=<span class="ruby-ivar">@context</span>)
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">delete_property</span>(<span class="ruby-constant">TYPE</span>)
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">add_property</span>(<span class="ruby-constant">TYPE</span>,<span class="ruby-identifier">type</span>,<span class="ruby-identifier">context</span>)
+      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">self</span>
+    <span class="ruby-keyword kw">end</span>
+</pre></div>
+</div>
+</div>
+<div id="method-M000135" class="method-detail"><a name="M000135" id="M000135"></a>
+<div class="method-heading"><a href="#M000135" class="method-signature"><span class="method-name">type</span><span class="method-args">()</span></a></div>
+<div class="method-description">
+<p>returns the RDF <a href="Resource.html#M000135">type</a> of this <a href="Resource.html">Resource</a> where RDF <a href="Resource.html#M000135">type</a> is &lt;<a href="http://www.w3.org/1999/02/22-rdf-syntax-ns#TYPE">www.w3.org/1999/02/22-rdf-syntax-ns#TYPE</a>&gt;</p>
+<p><a class="source-toggle" href="#" onclick="toggleCode('M000135-source');return false;">[Source]</a></p>
+<div class="method-source-code" id="M000135-source">
+<pre>
+<span class="ruby-comment cmt"># File rdf/redland/resource.rb, line 134</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">type</span>
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">get_property</span>(<span class="ruby-constant">TYPE</span>)
+    <span class="ruby-keyword kw">end</span>
+</pre></div>
+</div>
+</div>
+<div id="method-M000134" class="method-detail"><a name="M000134" id="M000134"></a>
+<div class="method-heading"><a href="#M000134" class="method-signature"><span class="method-name">type=</span><span class="method-args">(type,context=@context)</span></a></div>
+<div class="method-description">
+<p>Sets the RDF <a href="Resource.html#M000135">type</a> of this <a href="Resource.html">Resource</a> where RDF <a href="Resource.html#M000135">type</a> is &lt;<a href="http://www.w3.org/1999/02/22-rdf-syntax-ns#TYPE">www.w3.org/1999/02/22-rdf-syntax-ns#TYPE</a>&gt;</p>
+<p><a class="source-toggle" href="#" onclick="toggleCode('M000134-source');return false;">[Source]</a></p>
+<div class="method-source-code" id="M000134-source">
+<pre>
+<span class="ruby-comment cmt"># File rdf/redland/resource.rb, line 126</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">type=</span>(<span class="ruby-identifier">type</span>,<span class="ruby-identifier">context</span>=<span class="ruby-ivar">@context</span>)
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">delete_property</span>(<span class="ruby-constant">TYPE</span>)
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">add_property</span>(<span class="ruby-constant">TYPE</span>,<span class="ruby-identifier">type</span>,<span class="ruby-identifier">context</span>)
+      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">self</span>
+    <span class="ruby-keyword kw">end</span>
+</pre></div>
+</div>
+</div>
+<div id="method-M000132" class="method-detail"><a name="M000132" id="M000132"></a>
+<div class="method-heading"><a href="#M000132" class="method-signature"><span class="method-name">type?</span><span class="method-args">(type)</span></a></div>
+<div class="method-description">
+<p>Determine if this resource is of a given <a href="Resource.html#M000135">type</a></p>
+<p><a class="source-toggle" href="#" onclick="toggleCode('M000132-source');return false;">[Source]</a></p>
+<div class="method-source-code" id="M000132-source">
+<pre>
+<span class="ruby-comment cmt"># File rdf/redland/resource.rb, line 113</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">type?</span>(<span class="ruby-identifier">type</span>)
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">model</span>.<span class="ruby-identifier">find</span>(<span class="ruby-keyword kw">self</span>,<span class="ruby-constant">TYPE</span>,<span class="ruby-identifier">type</span>).<span class="ruby-identifier">size</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
+    <span class="ruby-keyword kw">end</span>
+</pre></div>
+</div>
+</div>
+<div id="method-M000133" class="method-detail"><a name="M000133" id="M000133"></a>
+<div class="method-heading"><a href="#M000133" class="method-signature"><span class="method-name">update_property</span><span class="method-args">(prop,value,context=nil)</span></a></div>
+<div class="method-description">
+<p>Change the value of the given property</p>
+<p><a class="source-toggle" href="#" onclick="toggleCode('M000133-source');return false;">[Source]</a></p>
+<div class="method-source-code" id="M000133-source">
+<pre>
+<span class="ruby-comment cmt"># File rdf/redland/resource.rb, line 118</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">update_property</span>(<span class="ruby-identifier">prop</span>,<span class="ruby-identifier">value</span>,<span class="ruby-identifier">context</span>=<span class="ruby-keyword kw">nil</span>)
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">delete_property</span>(<span class="ruby-identifier">prop</span>)
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">add_property</span>(<span class="ruby-identifier">prop</span>,<span class="ruby-identifier">value</span>,<span class="ruby-identifier">context</span>)
+      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">self</span>
+   <span class="ruby-keyword kw">end</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<hr />
+
+<div class="outerHeader">
+Go to <a href="/" target="_parent">Redland Home</a> - 
+<a href="/bindings/" target="_parent">Language Bindings Home</a> - 
+<a href="/docs/ruby.html" target="_parent">Ruby API Home</a>
+</div>
+
+<p>(C) Copyright 2004-2011 <a href="http://www.dajobe.org/" target="_parent">Dave Beckett</a>, (C) Copyright 2004-2005 <a href="http://www.bristol.ac.uk/" target="_parent">University of Bristol</a></p>
+
+</div> <!-- end outerBlock -->
+
+</body>
+</html>
